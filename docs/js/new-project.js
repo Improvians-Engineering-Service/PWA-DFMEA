@@ -271,6 +271,15 @@
     document.getElementById("npReqStandard").textContent = standard === "None" ? "No specific standard" : standard;
     document.getElementById("npReqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(specs);
 
+    // A quick at-a-glance summary of what just got built, right in the
+    // success banner -- so the headline numbers are visible without
+    // reading either table below.
+    document.getElementById("npStats").innerHTML = [
+      [specs.length, specs.length === 1 ? "requirement" : "requirements"],
+      [FUNCTION_SET.length, "DFMEAs"],
+      [matched.length + matchedReqDocs.length, "references used"]
+    ].map(function(s){ return '<span class="np-stat"><b>' + s[0] + '</b>' + s[1] + '</span>'; }).join("");
+
     var dfmeaBody = document.getElementById("npDfmeaTable");
     dfmeaBody.innerHTML = generatedRows.map(function(r){
       return '<tr data-doc-id="' + r.docId + '" data-tip="Open this DFMEA"><td>' + escapeHtml(r.name) + '</td><td>' + escapeHtml(r.fn) + '</td><td>' + severityChip(r.severity) + '</td></tr>';
@@ -308,7 +317,9 @@
 
     var actions = document.getElementById("npDoneActions");
     var openBtn = document.createElement("button");
-    openBtn.type = "button"; openBtn.className = "nd-btn primary"; openBtn.textContent = "Open project";
+    openBtn.type = "button"; openBtn.className = "nd-btn primary";
+    openBtn.innerHTML = "Open project"
+      + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-left:3px"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
     openBtn.addEventListener("click", function(){ window.location.href = "project.html?id=" + encodeURIComponent(projectId); });
     var homeBtn = document.createElement("button");
     homeBtn.type = "button"; homeBtn.className = "nd-btn"; homeBtn.textContent = "Back to Projects";
