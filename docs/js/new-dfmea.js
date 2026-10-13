@@ -1,7 +1,6 @@
 (function(){
   "use strict";
   var params = new URLSearchParams(window.location.search);
-  var mode = params.get("mode") === "ai" ? "ai" : "blank";
 
   // Every DFMEA belongs to a project -- this list is the same set the
   // Projects pages use (the one real project plus the two placeholders),
@@ -45,12 +44,9 @@
   // #ndCrumb child it originally shipped with to still be there.
   var pageTitle = document.getElementById("ndPageTitle");
   var crumbEl = document.querySelector(".crumb");
-  var crumbLabel = mode === "ai" ? "New DFMEA with AI" : "New DFMEA";
-  if(crumbEl) crumbEl.innerHTML = 'DFMEA &rsaquo; <b>' + crumbLabel + '</b>';
-  if(pageTitle) pageTitle.textContent = mode === "ai" ? "Create a new DFMEA with AI" : "Create a new DFMEA";
+  if(crumbEl) crumbEl.innerHTML = 'DFMEA &rsaquo; <b>New DFMEA</b>';
+  if(pageTitle) pageTitle.textContent = "Create a new DFMEA";
 
-  var templateField = document.getElementById("ndTemplateField");
-  if(templateField) templateField.hidden = mode !== "blank";
   document.getElementById("ndCancel").addEventListener("click", function(){
     window.location.href = requestedProject ? "project.html?id=" + encodeURIComponent(projectSelect.value) : "projects.html";
   });
@@ -153,18 +149,14 @@
       document.querySelector(".nd-field.has-err input, .nd-field.has-err textarea").focus();
       return;
     }
-    if(mode === "blank"){
-      finishBlank();
-      return;
-    }
     buildCandidates();
     showStep(step2);
   });
 
   // Same shared worksheet library Legacy DFMEA shows -- a DFMEA this
-  // workspace already has on file is exactly the kind of thing AI
-  // matching should be drawing candidates from, not just the one
-  // reference document and whatever the visitor personally uploaded.
+  // workspace already has on file is exactly the kind of thing matching
+  // should be drawing candidates from, not just the one reference
+  // document and whatever the visitor personally uploaded.
   var DEFAULT_LIBRARY = [
     { name: "Sensor_Bracket_DFMEA.xlsx", size: "142 KB", when: "Mar 28, 2024, 10:33 AM" },
     { name: "Busbar_Joint_DFMEA.xlsx", size: "198 KB", when: "Jun 5, 2024, 2:10 PM" },
@@ -204,7 +196,7 @@
       var row = document.createElement("label");
       row.className = "nd-candidate";
       row.innerHTML = '<input type="checkbox" data-id="' + c.id + '"' + (matched ? " checked" : "") + '>'
-        + '<div><div class="ndc-name">' + escapeHtml(c.name) + (matched ? '<span class="ndc-badge">AI matched</span>' : "") + '</div>'
+        + '<div><div class="ndc-name">' + escapeHtml(c.name) + (matched ? '<span class="ndc-badge">Matched</span>' : "") + '</div>'
         + '<div class="ndc-meta">' + escapeHtml(c.meta) + '</div></div>';
       box.appendChild(row);
     });
@@ -237,7 +229,7 @@
     fill.style.width = "0%";
     (function tick(){
       if(i >= steps.length){
-        setTimeout(function(){ finishAi(selected); }, 350);
+        setTimeout(function(){ finish(selected); }, 350);
         return;
       }
       fill.style.width = steps[i][0] + "%";
@@ -247,37 +239,7 @@
     })();
   }
 
-  function finishBlank(){
-    var name = nameInput.value.trim();
-    var fn = functionInput.value.trim();
-    var failure = failureInput.value.trim();
-    var severity = Number(severityInput.value);
-    var projectId = projectSelect.value;
-    var docId = makeDocId();
-    saveDocRecord({ id: docId, name: name, function: fn, severity: severity, projectId: projectId, mode: "blank", createdAt: new Date().toLocaleString() });
-    // A brand new DFMEA still needs *something* to open -- rather than a
-    // dead end, it starts from the same default worksheet structure every
-    // new document gets here, clearly labelled as a starting point you're
-    // meant to edit, not a locked example.
-    saveOverride(docId, {
-      name: name, function: fn, failureMode: failure, severity: severity, mode: "blank", projectId: projectId, generatedAt: new Date().toISOString()
-    });
-    document.getElementById("ndDoneTitle").textContent = "“" + name + "” created";
-    document.getElementById("ndDoneBody").textContent = "Started from the Electrical termination foundation template (64 causes, 26 paths). Everything is editable.";
-    var actions = document.getElementById("ndDoneActions");
-    actions.innerHTML = "";
-    var aiBtn = document.createElement("button");
-    aiBtn.type = "button"; aiBtn.className = "nd-btn"; aiBtn.textContent = "Generate with AI instead";
-    aiBtn.addEventListener("click", function(){ window.location.href = "new-dfmea.html?mode=ai&project=" + encodeURIComponent(projectId); });
-    var openBtn = document.createElement("button");
-    openBtn.type = "button"; openBtn.className = "nd-btn primary"; openBtn.textContent = "Open and edit";
-    openBtn.addEventListener("click", function(){ window.location.href = "index.html?doc=" + encodeURIComponent(docId); });
-    actions.appendChild(aiBtn);
-    actions.appendChild(openBtn);
-    showStep(step4);
-  }
-
-  function finishAi(selected){
+  function finish(selected){
     var name = nameInput.value.trim();
     var fn = functionInput.value.trim();
     var failure = failureInput.value.trim();
