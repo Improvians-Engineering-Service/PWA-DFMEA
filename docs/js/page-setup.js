@@ -521,10 +521,6 @@
     tabContainer.innerHTML = sectionLabels.map(function(label, index){
       return '<a class="tab" href="#' + sectionIds[index] + '">' + label + '</a>';
     }).join("") + '<div class="tabs-actions">'
-      + '<button type="button" class="tab-add" disabled data-tip="Not available in this preview yet -- causes can already be added from the Risk Tree and Worksheet tabs.">+ Function</button>'
-      + '<button type="button" class="tab-add" disabled data-tip="Not available in this preview yet -- causes can already be added from the Risk Tree and Worksheet tabs.">+ Failure mode</button>'
-      + '<button type="button" class="tab-add" id="tabImportExcel" data-tip="Import an existing DFMEA from an Excel workbook."><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>Import Excel</button>'
-      + '<input type="file" id="tabImportExcelInput" accept=".xlsx,.xls" hidden>'
       + '<button type="button" class="tab-add acc" id="tabNewDfmeaAi" data-tip="Describe the issue to find related past DFMEAs and build a starting structure from them."><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px"><path d="M12 5v14M5 12h14"/></svg>New DFMEA</button>'
       + '</div>';
     var sectionTabs = Array.prototype.slice.call(tabContainer.querySelectorAll(".tab"));
@@ -558,16 +554,5 @@
     window.addEventListener("scroll", syncActiveTab, {passive:true});
     window.addEventListener("hashchange", syncActiveTab);
     syncActiveTab();
-    var importBtn = document.getElementById("tabImportExcel");
-    var importInput = document.getElementById("tabImportExcelInput");
-    if(importBtn && importInput){
-      importBtn.addEventListener("click", function(){ importInput.click(); });
-      importInput.addEventListener("change", function(){
-        var file = importInput.files && importInput.files[0];
-        importInput.value = "";
-        if(!file) return;
-        if(window.showToast) window.showToast('"' + file.name + '" received. Full Excel import is coming soon.');
-      });
-    }
   }
 })();
