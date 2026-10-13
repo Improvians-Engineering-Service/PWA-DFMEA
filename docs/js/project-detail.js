@@ -44,7 +44,7 @@
   var docs = project.docs.concat(readMyDocuments().filter(function(d){ return d.projectId === projectId; }).map(function(d){
     return {
       name: d.name, docId: d.id, fn: d.function, severity: d.severity,
-      updated: d.mode === "ai" ? "Generated with AI · " + d.createdAt : "Created " + d.createdAt
+      updated: d.mode === "ai" ? "Generated · " + d.createdAt : "Created " + d.createdAt
     };
   }));
 
