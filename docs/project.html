@@ -33,8 +33,7 @@
       <div class="crumb" id="projCrumb">DFMEA &rsaquo; <a href="projects.html" style="color:inherit">Projects</a> &rsaquo; <b>Project</b></div>
       <div class="ttl" id="projTitle">Project</div>
     </div>
-    <button type="button" class="tab-add" id="tabNewDfmea" style="margin-left:auto" data-tip="Start a brand new, empty DFMEA document."><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px"><path d="M12 5v14M5 12h14"/></svg>New DFMEA</button>
-    <button type="button" class="tab-add acc" id="tabNewDfmeaAi" data-tip="Describe the issue and let AI suggest related past DFMEAs to build a starting structure from."><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px"><path d="M12 3v3m0 12v3M5.6 5.6l2.1 2.1m8.6 8.6l2.1 2.1M3 12h3m12 0h3M5.6 18.4l2.1-2.1m8.6-8.6l2.1-2.1"/></svg>New DFMEA with AI</button>
+    <button type="button" class="tab-add acc" id="tabNewDfmeaAi" style="margin-left:auto" data-tip="Describe the issue to find related past DFMEAs and build a starting structure from them."><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:2px"><path d="M12 5v14M5 12h14"/></svg>New DFMEA</button>
   </div>
 
   <div class="content">
@@ -44,7 +43,7 @@
         <thead><tr><th>DFMEA document</th><th>Function</th><th>Severity</th><th>Structure</th><th>Updated</th></tr></thead>
         <tbody id="docTableBody"></tbody>
       </table>
-      <div class="data-empty" id="docEmpty" hidden>No DFMEA documents in this project yet. Use "New DFMEA" or "New DFMEA with AI" above to add one.</div>
+      <div class="data-empty" id="docEmpty" hidden>No DFMEA documents in this project yet. Use "New DFMEA" above to add one.</div>
     </div>
     <div id="reqSection" hidden>
       <div class="seclab"><span class="secn">2</span>Design requirement specification</div>
