@@ -4,9 +4,9 @@
   // page-setup.js overwrites .crumb/.ttl with the dashboard's own title --
   // this page sets its own right after, same pattern as new-dfmea.js.
   var crumbEl = document.querySelector(".crumb");
-  if(crumbEl) crumbEl.innerHTML = 'DFMEA &rsaquo; <a href="projects.html" style="color:inherit">Projects</a> &rsaquo; <b>New Project with AI</b>';
+  if(crumbEl) crumbEl.innerHTML = 'DFMEA &rsaquo; <a href="projects.html" style="color:inherit">Projects</a> &rsaquo; <b>New Project</b>';
   var pageTitle = document.querySelector(".ttl");
-  if(pageTitle) pageTitle.textContent = "Create a new project with AI";
+  if(pageTitle) pageTitle.textContent = "Create a new project";
 
   var nameInput = document.getElementById("npName");
   var descInput = document.getElementById("npDesc");
