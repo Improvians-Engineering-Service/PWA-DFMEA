@@ -162,6 +162,38 @@
         tspan.textContent = line;
         titleEl.appendChild(tspan);
       });
+
+      // Only for an override (newText given) -- a renamed FUNCTION/FAILURE
+      // MODE can need a second line where the card's own original text
+      // never did, and that card was sized for the original, usually
+      // one-line, text. Without this, the subtitle below it ("Severity N")
+      // stays wherever it already was and ends up overlapping the new
+      // second line instead of sitting under it. Grown mostly downward
+      // (a little upward too, kept small) rather than centred, since
+      // centred growth here would push the box's top edge into the column
+      // header text sitting just a few units above it.
+      if(newText != null){
+        var sub = g.querySelector(".tsub");
+        var outerRect = g.querySelectorAll("rect")[0];
+        var accentRect = g.querySelectorAll("rect")[2];
+        var titleY = Number(titleEl.getAttribute("y"));
+        if(sub && outerRect && Number.isFinite(titleY)){
+          var SUB_GAP = 14, SUB_CLEARANCE = 6, UP_SHARE = 0.25;
+          var lastLineY = titleY + (lines.length - 1) * LINE_HEIGHT;
+          var desiredSubY = lastLineY + SUB_GAP;
+          var innerBottom = Number(innerRect.getAttribute("y")) + Number(innerRect.getAttribute("height"));
+          var shortfall = (desiredSubY + SUB_CLEARANCE) - innerBottom;
+          if(shortfall > 0){
+            var growUp = shortfall * UP_SHARE;
+            [outerRect, innerRect, accentRect].forEach(function(r){
+              if(!r) return;
+              r.setAttribute("y", Number(r.getAttribute("y")) - growUp);
+              r.setAttribute("height", Number(r.getAttribute("height")) + shortfall);
+            });
+          }
+          sub.setAttribute("y", desiredSubY);
+        }
+      }
     };
 
     // Must run after treeContent is actually attached above --
