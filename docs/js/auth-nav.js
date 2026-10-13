@@ -121,17 +121,13 @@
     titleBlock.insertBefore(backBtn, titleBlock.firstChild);
   }
 
-  // "+ New DFMEA" defaults to whichever project this page is already
+  // "New DFMEA" defaults to whichever project this page is already
   // showing, so creating one doesn't force picking the project again when
   // it's already obvious from context.
-  var newDfmeaSuffix = currentProjectId ? "&project=" + encodeURIComponent(currentProjectId) : "";
-  var newDfmeaBtn = document.getElementById("tabNewDfmea");
+  var newDfmeaSuffix = currentProjectId ? "?project=" + encodeURIComponent(currentProjectId) : "";
+  var newDfmeaBtn = document.getElementById("tabNewDfmeaAi");
   if(newDfmeaBtn) newDfmeaBtn.addEventListener("click", function(){
-    window.location.href = "new-dfmea.html?mode=blank" + newDfmeaSuffix;
-  });
-  var newDfmeaAiBtn = document.getElementById("tabNewDfmeaAi");
-  if(newDfmeaAiBtn) newDfmeaAiBtn.addEventListener("click", function(){
-    window.location.href = "new-dfmea.html?mode=ai" + newDfmeaSuffix;
+    window.location.href = "new-dfmea.html" + newDfmeaSuffix;
   });
 
   var override = null;
