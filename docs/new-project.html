@@ -17,6 +17,13 @@
 .nd-field input,.nd-field textarea,.nd-field select{width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #D8E0EA;
  border-radius:8px;font-size:13px;color:#1E293B;font-family:inherit;background:#fff;cursor:pointer}
 .nd-field textarea{resize:vertical;min-height:64px;cursor:text}
+/* The shared rule above sets the same padding on every field type,
+   including select -- which quietly overwrites the extra right-side
+   padding the global select{} rule reserves for its dropdown arrow,
+   so the arrow renders squashed under the text instead of visible.
+   Restoring just that one property here, after the shared rule, puts
+   the arrow back without touching the rest of the field's look. */
+.nd-field select{padding-right:26px}
 .nd-field input:focus,.nd-field textarea:focus,.nd-field select:focus{outline:none;border-color:#818CF8;box-shadow:0 0 0 3px #EEF2FF}
 .nd-field input.err,.nd-field textarea.err{border-color:#FCA5A5;background:#FEF2F2}
 .nd-err-msg{display:none;color:#B91C1C;font-size:10.5px;margin-top:5px;font-weight:600}
@@ -131,11 +138,7 @@
         </div>
         <div class="nd-field" id="npStandardField">
           <label for="npStandard">Reference standard</label>
-          <select id="npStandard">
-            <option value="LV214">LV 214 (automotive connector standard)</option>
-            <option value="USCAR-2">USCAR-2 (automotive connector standard)</option>
-            <option value="None">No specific standard</option>
-          </select>
+          <select id="npStandard"></select>
         </div>
         <div class="nd-actions">
           <button type="button" class="nd-btn" id="npCancel">Cancel</button>
@@ -175,14 +178,11 @@
                 <div class="np-sectitle">Design requirement specification</div>
               </div>
               <div class="np-tablecard spec">
-                <div class="np-reqhead"><span class="np-prod" id="npReqProduct"></span><span class="req-standard" id="npReqStandard"></span></div>
-                <div class="np-reqscroll" id="npReqSpecs"></div>
-              </div>
-              <div class="np-refs" id="npReqRefs" hidden>
-                <div class="np-reflabel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Reference specifications used, from Design Requirements</div>
-                <div class="np-tablecard muted">
-                  <table class="np-table"><thead><tr><th>Specification</th><th>Standard</th><th>Requirements</th></tr></thead><tbody id="npReqRefBody"></tbody></table>
+                <div class="np-reqhead">
+                  <span class="np-prod" id="npReqProduct"></span><span class="req-standard" id="npReqStandard"></span>
+                  <div class="np-built" id="npReqBuilt" hidden></div>
                 </div>
+                <div class="np-reqscroll" id="npReqSpecs"></div>
               </div>
             </div>
             <div class="np-col">

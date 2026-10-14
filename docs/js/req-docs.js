@@ -190,6 +190,31 @@
       "Material — Housing material flammability rating UL94 V-0, UV-stabilized for exterior exposure",
       "Manufacturing — 100% functional cycle test (open/close/latch) on every finished actuator assembly",
       "Quality — Lot traceability required for motor, gear train, and position sensor batches"
+    ]},
+    // The one built-in project (not generated through "Create project") --
+    // its own requirement spec, covering the same ground its five DFMEAs
+    // do: crimp, terminal retention, housing seal, mating durability and
+    // lock retention. projectId ties it to that project directly, the
+    // same way a generated project's spec is tied to its own.
+    { id: "default-10", projectId: "aster-ev-connector", productName: "Aster EV Connector", standard: "USCAR-2", createdAt: "Jan 15, 2024", specs: [
+      "Mechanical — Crimp pull-out force ≥ 70 N per terminal, verified per USCAR-2 Section 4.2 tensile test",
+      "Mechanical — Terminal retention force ≥ 55 N in the housing cavity, verified after 50 insertion cycles",
+      "Mechanical — Locking mechanism retention force ≥ 80 N before primary lock release",
+      "Mechanical — Secondary lock (TPA) must prevent terminal insertion unless fully seated",
+      "Mechanical — Minimum 50 mating/unmating cycles without contact degradation or increased insertion force",
+      "Mechanical — Connector mating force ≤ 60 N, unmating force ≤ 50 N per USCAR-2 Section 5.2",
+      "Electrical — Contact resistance ≤ 0.55 mΩ after crimping, measured by 4-wire Kelvin method",
+      "Electrical — Low-level contact resistance ≤ 10 mΩ per terminal position across the full mating cycle life",
+      "Electrical — Dielectric withstand voltage 1500V AC for 60 seconds between adjacent terminal positions",
+      "Environmental — Housing sealing rated to IP67 (1m, 30 min submersion) at the connector mating face",
+      "Environmental — Operating temperature range -40°C to +105°C per USCAR-2 thermal cycling requirements",
+      "Environmental — Vibration resistance per USCAR-2 Section 5.6, no electrical discontinuity greater than 1μs",
+      "Environmental — Thermal shock resistance: 100 cycles -40°C to +105°C, 30 min dwell each, no cracking",
+      "Material — Housing material flammability rating UL94 V-0, verified per USCAR-2 Section 5.4 flame test",
+      "Material — Terminal plating minimum 2μm thickness over base alloy, no exposed base metal after crimping",
+      "Manufacturing — Crimp force monitoring on 100% of production units with automatic reject of out-of-window crimps",
+      "Manufacturing — Process capability Cpk ≥ 1.33 on crimp height, width, and pull-out force at full production rate",
+      "Quality — Lot traceability required for terminal plating batch and housing resin batch used per connector"
     ]}
   ];
 
