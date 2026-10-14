@@ -11,6 +11,24 @@
   var nameInput = document.getElementById("npName");
   var descInput = document.getElementById("npDesc");
   var standardInput = document.getElementById("npStandard");
+
+  // Every standard already in use across the Design Requirement
+  // Specification library, not a fixed short list -- one added there
+  // (or via an uploaded spec document) shows up as a choice here too,
+  // instead of staying out of sync with what the library actually has.
+  (function populateStandards(){
+    var fromLibrary = [];
+    try{
+      fromLibrary = window.DfmeaReqDocs.readAll()
+        .map(function(d){ return d.standard; })
+        .filter(function(s){ return s && s !== "None"; });
+    }catch(error){ /* falls back to the defaults below */ }
+    var standards = Array.from(new Set(fromLibrary.concat(["LV214", "USCAR-2"]))).sort();
+    standardInput.innerHTML = standards.map(function(s){
+      return '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>';
+    }).join("") + '<option value="None">No specific standard</option>';
+    standardInput.value = "LV214";
+  })();
   var step1 = document.getElementById("npStep1");
   var step2 = document.getElementById("npStep2");
   var step3 = document.getElementById("npStep3");
@@ -71,7 +89,7 @@
 
   // The DFMEAs matching draws on to find which existing ones fit the
   // product description: worksheets listed on the Legacy DFMEA page
-  // (client-shared ones first, same as there) plus this workspace's own
+  // (externally-shared ones first, same as there) plus this workspace's own
   // reference DFMEA. Shown as the reference table on the results screen.
   var REFERENCE_DOCS = [
     { name: "OEM_Connector_Interface_DFMEA.xlsx", source: "client" },
@@ -85,7 +103,7 @@
     { name: "Terminal_Retention_DFMEA_Rev3.xlsx", source: "library" }
   ];
   var SOURCE_LABELS = {
-    client: "Legacy DFMEA · Shared by client",
+    client: "Legacy DFMEA · External",
     library: "Legacy DFMEA · Library",
     project: "Aster EV Connector project"
   };
