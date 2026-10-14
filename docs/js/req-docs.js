@@ -7,7 +7,7 @@
   // Design Requirements page, and showing it on a project's page all agree.
   var KEY = "dfmeaRequirementDocs";
   var DEFAULTS_VERSION_KEY = "dfmeaRequirementDocsDefaultsVersion";
-  var DEFAULTS_VERSION = "5";
+  var DEFAULTS_VERSION = "6";
   var DEFAULTS = [
     { id: "default-0", projectId: null, productName: "Titan Connector Housing", standard: "USCAR-2", createdAt: "Feb 11, 2024", specs: [
       "Mechanical — Housing dimensional tolerance ±0.15mm on all mating interface features, verified by CMM inspection",

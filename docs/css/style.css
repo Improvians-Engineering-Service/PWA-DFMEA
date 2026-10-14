@@ -1,5 +1,10 @@
 
 *{box-sizing:border-box;margin:0;padding:0}
+/* Form controls don't inherit the page font on their own -- without this
+   every <button> falls back to the OS system font instead of Inter. */
+button,input,select,textarea{font-family:inherit}
+::selection{background:#E0E7FF;color:#1E1B4B}
+a:focus-visible,button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #A5B4FC;outline-offset:2px}
 /* The browser's own <select> chrome (bulky padding, a mismatched native
    arrow, inconsistent height per OS) never matches the rest of the app's
    controls. This one rule normalises every dropdown site-wide, without
@@ -43,8 +48,9 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
 .brand{padding:16px 18px 14px;display:flex;align-items:center;gap:11px;
  border-bottom:1px solid #EEF2F7}
 .logo{width:34px;height:34px;display:flex;align-items:center;justify-content:center;
- color:#4F46E5;flex:none}
-.logo svg{width:22px;height:22px}
+ color:#4F46E5;flex:none;border-radius:10px;background:linear-gradient(135deg,#EEF2FF 0%,#E0E7FF 100%);
+ box-shadow:inset 0 0 0 1px rgba(99,102,241,.14)}
+.logo svg{width:19px;height:19px}
 .bn{font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;font-size:14.5px;font-weight:700;color:#0F172A;
  line-height:1.15;letter-spacing:-.1px}
 .bs{font-size:9.4px;color:#94A3B8;letter-spacing:.6px;margin-top:2px}
@@ -53,10 +59,14 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
 .wsl{font-size:8.4px;letter-spacing:.9px;color:#94A3B8;font-weight:700}
 .wsn{font-size:11.8px;color:#0F172A;font-weight:600;margin-top:2px}
 .sh{font-size:8.6px;letter-spacing:1.4px;color:#A3B0C2;padding:15px 18px 6px;font-weight:700}
-.nav{display:flex;align-items:center;gap:11px;padding:8.5px 18px;font-size:12.8px;
- font-weight:500;color:#475569;cursor:pointer}
-.nav.on{background:#EEF2FF;color:#4338CA;font-weight:700;box-shadow:inset 3px 0 0 #4F46E5}
-.ni{display:flex;width:17px;flex:none}
+.brand+.nav{margin-top:10px}
+.nav{display:flex;align-items:center;gap:10px;margin:1px 10px;padding:8px 10px;border-radius:8px;
+ font-size:12.8px;font-weight:500;color:#475569;cursor:pointer}
+.nav:hover{background:#F6F8FC;color:#1E293B}
+.nav.on{background:#EEF2FF;color:#4338CA;font-weight:600}
+.ni{display:flex;width:17px;flex:none;color:#94A3B8}
+.nav:hover .ni{color:#64748B}
+.nav.on .ni{color:#4F46E5}
 .cnt{margin-left:auto;background:#FEE2E2;color:#DC2626;border:1px solid #FCA5A5;font-size:9.5px;font-weight:700;
  padding:1.5px 6px;border-radius:9px}
 .subnav{display:flex;align-items:center;gap:8px;padding:5.5px 18px 5.5px 46px;font-size:11.2px;
@@ -64,8 +74,9 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
 .subnav.on{color:#4F46E5;font-weight:600}
 .project-filter{padding:8px 12px 0;animation:appIn .2s ease both}
 .project-search{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid #E4EAF2;
- border-radius:7px;background:#fff;color:#94A3B8}
-.project-search:focus-within{border-color:#A5B4FC;box-shadow:0 0 0 2px #EEF2FF}
+ border-radius:8px;background:#F8FAFC;color:#94A3B8;transition:border-color .15s ease,background-color .15s ease}
+.project-search:hover{border-color:#D5DEEA}
+.project-search:focus-within{border-color:#A5B4FC;background:#fff;box-shadow:0 0 0 3px #EEF2FF}
 .project-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#334155;
  font:inherit;font-size:10.8px}
 .project-search input::placeholder{color:#94A3B8}
@@ -76,8 +87,8 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
  color:#334155;font-size:11.5px;font-weight:600;line-height:1.3;text-decoration:none}
 .project-link .ic{flex:none;color:#94A3B8}
 .project-link span{min-width:0;overflow-wrap:anywhere}
-.project-link:hover{background:#F6F8FC}
-.project-link.on{background:#F1F5F9;color:#1E293B;font-weight:700;box-shadow:inset 2px 0 0 #6366F1}
+.project-link:hover{background:#F6F8FC;color:#1E293B}
+.project-link.on{background:#F5F7FF;color:#3730A3;font-weight:700}
 .project-link.on .ic{color:#6366F1}
 .risk-context{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:14px 17px 0;
  border:1px solid #E4EAF2;border-radius:8px;background:#F8FAFC;overflow:hidden}
@@ -104,20 +115,27 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
 #treeZoom .hitbox.is-tbd .ttag,#treeZoom .hitbox.is-tbd .ttl2,
 #treeZoom .hitbox.is-tbd .tsub{fill:#B91C1C!important}
 #treeZoom .hitbox.is-tbd .tsub{font-weight:700}
-.sfoot{margin-top:auto;padding:13px 18px;border-top:1px solid #EEF2F7;display:flex;gap:10px;
+.sfoot{margin-top:auto;padding:12px 14px 12px 16px;border-top:1px solid #EEF2F7;display:flex;gap:10px;
  align-items:center}
-.av{width:31px;height:31px;border-radius:9px;background:#6366F1;color:#fff;font-size:11.5px;
- font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
-.un{font-size:12px;color:#0F172A;font-weight:600} .ur{font-size:9.8px;color:#94A3B8}
-.coll{margin-left:auto;color:#B6C1D0}
+#sfootUser[data-tip]{cursor:default}
+.av{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#6366F1 0%,#8B5CF6 100%);
+ color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;
+ box-shadow:0 2px 6px -1px rgba(99,102,241,.4)}
+.sfoot>.av+div{min-width:0;flex:1}
+.un{font-size:12px;color:#0F172A;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ur{font-size:9.8px;color:#94A3B8}
+.sfoot .coll{margin-left:auto;flex:none;display:flex;padding:7px;border-radius:8px;color:#94A3B8;cursor:pointer;
+ transition:background-color .15s ease,color .15s ease}
+.sfoot .coll:hover{background:#FEF2F2;color:#DC2626}
 
 /* ---------- TOP ---------- */
 .main{flex:1;min-width:0}
-.top{background:#fff;border-bottom:1px solid #E4EAF2;padding:11px 22px;display:flex;
- align-items:center;gap:16px}
-.crumb{font-size:9.5px;color:#94A3B8} .crumb b{color:#0F172A;font-weight:600}
-.ttl{font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;font-size:16px;font-weight:700;
- letter-spacing:-.25px;margin-top:3px;display:flex;align-items:center;gap:9px}
+.top{background:#fff;border-bottom:1px solid #E4EAF2;padding:12px 22px;display:flex;
+ align-items:center;gap:16px;box-shadow:0 1px 2px rgba(15,23,42,.03)}
+.crumb{font-size:10.5px;color:#94A3B8} .crumb b{color:#334155;font-weight:600}
+.crumb a{text-decoration:none} .crumb a:hover{color:#4F46E5!important}
+.ttl{font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;font-size:17px;font-weight:700;
+ color:#0F172A;letter-spacing:-.35px;margin-top:2px;display:flex;align-items:center;gap:9px}
 .stat{font-size:9.6px;font-weight:700;letter-spacing:.6px;padding:3px 9px;border-radius:5px;
  background:#FEF3E2;color:#B45309;text-transform:uppercase}
 /* Back button: auth-nav.js prepends it into the title block, which then
@@ -126,10 +144,22 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
 .top>div.has-back{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-items:center}
 .backbtn{grid-row:1 / span 2;display:flex;align-items:center;gap:5px;padding:7px 11px 7px 8px;
  border:1px solid #E4EAF2;border-radius:8px;background:#fff;color:#475569;font-size:11.5px;
- font-weight:600;text-decoration:none;white-space:nowrap}
+ font-weight:600;text-decoration:none;white-space:nowrap;box-shadow:0 1px 2px rgba(15,23,42,.04)}
 .backbtn:hover{background:#F6F8FC;border-color:#C7D2FE;color:#4338CA}
 .req-link{margin-left:14px;align-self:center;font-size:11.5px;font-weight:700;color:#4338CA;
  text-decoration:none;white-space:nowrap}
+.req-link:hover{color:#3730A3;text-decoration:underline}
+/* Slim header on the pages that open in their own tab (a requirement
+   spec, a legacy worksheet), which have no sidebar to navigate back with. */
+.sa-head{display:flex;align-items:center;gap:10px;padding:10px 22px;border-bottom:1px solid #E4EAF2;background:#fff}
+.sa-head .logo{width:28px;height:28px;border-radius:8px}
+.sa-head .logo svg{width:16px;height:16px}
+.sa-brand{font-size:13px;font-weight:700;color:#0F172A;letter-spacing:-.1px}
+.sa-sep{width:1px;height:18px;background:#E2E8F0;margin:0 4px}
+.sa-back{display:inline-flex;align-items:center;padding:6px 11px;border:1px solid #E4EAF2;border-radius:8px;
+ background:#fff;color:#475569;font-size:11.5px;font-weight:600;text-decoration:none;white-space:nowrap;
+ box-shadow:0 1px 2px rgba(15,23,42,.04);transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.sa-back:hover{background:#F6F8FC;border-color:#C7D2FE;color:#4338CA}
 .rev{font-size:9.6px;font-weight:700;padding:3px 9px;border-radius:5px;background:#F1F5F9;
  color:#475569}
 .srch{margin-left:auto;display:flex;align-items:center;gap:8px;background:#F6F8FC;
@@ -143,19 +173,23 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
  align-items:center;justify-content:center;color:#64748B;background:#fff;position:relative;cursor:pointer}
 .dot{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:#F87171;
  border:1.5px solid #fff}
-.btn{display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:7px;font-size:11px;
- font-weight:600;border:1px solid #E4EAF2;background:#fff;color:#334155;white-space:nowrap;cursor:pointer;text-decoration:none}
-.btn.acc{background:#6366F1;border-color:#6366F1;color:#fff}
-.btn.pri{background:#6366F1;border-color:#6366F1;color:#fff}
+.btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;font-size:11.5px;
+ font-weight:600;border:1px solid #E2E8F0;background:#fff;color:#334155;white-space:nowrap;cursor:pointer;text-decoration:none;
+ box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.btn:hover{background:#F8FAFC;border-color:#CBD5E1}
+.btn.acc{background:#4F46E5;border-color:#4F46E5;color:#fff;
+ box-shadow:0 1px 2px rgba(79,70,229,.2),0 4px 12px -3px rgba(79,70,229,.4)}
+.btn.acc:hover{background:#4338CA;border-color:#4338CA}
 .saved{font-size:11px;color:#16A34A;display:flex;align-items:center;gap:5px}
 .tabs-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
-.tab-add{align-self:center;padding:6px 12px;border:1px solid #E4EAF2;border-radius:7px;
- background:#fff;color:#4F46E5;font-size:11.2px;font-weight:700;white-space:nowrap;cursor:pointer}
+.tab-add{align-self:center;padding:7px 13px;border:1px solid #E4EAF2;border-radius:8px;
+ background:#fff;color:#4F46E5;font-size:11.5px;font-weight:600;white-space:nowrap;cursor:pointer}
 .tab-add:hover{background:#EEF2FF;border-color:#C7D2FE}
 .tab-add:disabled{opacity:.5;cursor:not-allowed}
 .tab-add:disabled:hover{background:#fff;border-color:#E4EAF2}
-.tab-add.acc{background:#6366F1;border-color:#6366F1;color:#fff}
-.tab-add.acc:hover{background:#4F46E5;border-color:#4F46E5}
+.tab-add.acc{background:#4F46E5;border-color:#4F46E5;color:#fff;
+ box-shadow:0 1px 2px rgba(79,70,229,.2),0 4px 12px -3px rgba(79,70,229,.4)}
+.tab-add.acc:hover{background:#4338CA;border-color:#4338CA}
 .tabs{background:#fff;border-bottom:1px solid #E4EAF2;display:flex;gap:2px;padding:0 22px;
  overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
@@ -188,7 +222,7 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
 }
 
 /* ---------- CONTENT ---------- */
-.content{padding:10px 16px 16px}
+.content{padding:14px 22px 28px}
 .kpis{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:14px}
 .kp{background:#fff;border:1px solid #E4EAF2;border-radius:10px;padding:9px 12px}
 .kpt{font-size:9px;font-weight:700;color:#7A8AA0;text-transform:uppercase;display:flex;
@@ -198,7 +232,7 @@ body{background:#F4F6FB;font-family:"Inter", -apple-system, BlinkMacSystemFont, 
 .kpn{font-size:9.2px;color:#9AA8BB;margin-top:2px;line-height:1.3}
 
 .card{background:#fff;border:1px solid #E4EAF2;border-radius:12px;overflow:hidden;
- display:flex;flex-direction:column}
+ display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(15,23,42,.04)}
 .chd{padding:12px 17px;border-bottom:1px solid #EEF2F7;display:flex;align-items:flex-start;
  justify-content:space-between;gap:16px;background:#FBFCFE;flex:none}
 .chd h3{font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;font-size:13.8px;font-weight:700;
@@ -556,14 +590,14 @@ tr.sel td:first-child{box-shadow:inset 3px 0 0 #4F46E5}
 .vactive{font-size:8.6px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
  color:#4F46E5;background:#EEF2FF;border:1px solid #C7D2FE;padding:2px 6px;border-radius:5px}
 .vcs{font-family:Consolas,monospace;font-size:10.4px;color:#64748B;margin-top:6px}
-.seclab{display:flex;align-items:center;gap:11px;margin:14px 2px 8px;font-size:9.6px;
- font-weight:800;letter-spacing:1.7px;color:#94A3B8;text-transform:uppercase}
+.seclab{display:flex;align-items:center;gap:10px;margin:20px 0 10px;font-size:10px;
+ font-weight:700;letter-spacing:1.3px;color:#64748B;text-transform:uppercase}
 .seclab:first-child{margin-top:4px}
 .seclab b{color:#4F46E5;font-weight:800}
-.seclab:after{content:"";flex:1;height:1px;background:#E4EAF2}
-.secn{width:19px;height:19px;border-radius:6px;background:#EEF2FF;color:#4F46E5;
+.seclab:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#E2E8F0,rgba(226,232,240,0))}
+.secn{width:20px;height:20px;border-radius:6px;background:#EEF2FF;color:#4F46E5;
  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;
- letter-spacing:0;flex:none}
+ letter-spacing:0;flex:none;box-shadow:inset 0 0 0 1px #E0E7FF}
 
 /* tree preview + full-screen modal */
 .treewrap{position:relative;height:460px;overflow:hidden;border:1px solid #E4EAF2;
@@ -860,60 +894,114 @@ dialog[open]::backdrop{animation:backdropIn .18s ease forwards}
   .project-link.project-blink{animation:none;background-color:#E0E7FF}
 }
 
+/* ---------- CREATE WIZARDS (New Project, New DFMEA) ---------- */
+/* Each step is one centred column; a step with a wider table or the
+   full results view opts into more width. */
+.nd-step{display:none;max-width:680px;margin:0 auto}
+.nd-step.on{display:block}
+.nd-step.nd-step-mid{max-width:860px}
+.nd-step.nd-step-wide{max-width:none}
+.nd-card{background:#fff;border:1px solid #E4EAF2;border-radius:14px;padding:28px 30px 24px;
+ box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 32px -16px rgba(15,23,42,.14)}
+.nd-field{margin-bottom:18px}
+.nd-field[hidden]{display:none}
+.nd-field label{display:block;font-size:11.5px;font-weight:600;color:#334155;margin-bottom:7px}
+/* background-color, never the background shorthand: the shorthand would
+   wipe out the dropdown arrow the global select{} rule draws. */
+.nd-field input,.nd-field textarea,.nd-field select{width:100%;padding:10px 12px;border:1px solid #DCE3EC;
+ border-radius:9px;font-size:13px;color:#0F172A;background-color:#fff;
+ transition:border-color .15s ease,box-shadow .15s ease}
+.nd-field select{padding-right:32px;background-position:right 12px center;cursor:pointer}
+.nd-field textarea{resize:vertical;min-height:76px;line-height:1.5}
+.nd-field input:hover,.nd-field textarea:hover,.nd-field select:hover{border-color:#C3CEDC}
+.nd-field input:focus,.nd-field textarea:focus,.nd-field select:focus{outline:none;border-color:#818CF8;
+ box-shadow:0 0 0 3px #EEF2FF}
+.nd-field input.err,.nd-field textarea.err{border-color:#FCA5A5;background-color:#FEF2F2}
+.nd-err-msg{display:none;color:#B91C1C;font-size:10.5px;margin-top:6px;font-weight:600}
+.nd-field.has-err .nd-err-msg{display:block}
+.nd-actions{display:flex;align-items:center;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid #F1F5F9}
+.nd-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:38px;padding:0 18px;
+ border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid #DCE3EC;background:#fff;
+ color:#334155;white-space:nowrap;box-shadow:0 1px 2px rgba(15,23,42,.04);
+ transition:background-color .15s ease,border-color .15s ease,transform .12s ease}
+.nd-btn:hover{background:#F8FAFC;border-color:#C3CEDC}
+.nd-btn:active{transform:scale(.98)}
+.nd-btn.primary{background:#4F46E5;border-color:#4F46E5;color:#fff;margin-left:auto;
+ box-shadow:0 1px 2px rgba(79,70,229,.2),0 6px 14px -4px rgba(79,70,229,.45)}
+.nd-btn.primary:hover{background:#4338CA;border-color:#4338CA}
+.nd-progress-track{height:8px;border-radius:999px;background:#EEF2F7;overflow:hidden;margin:4px 0 14px}
+.nd-progress-fill{position:relative;height:100%;width:0%;border-radius:999px;overflow:hidden;
+ background:linear-gradient(90deg,#6366F1,#8B5CF6);transition:width .35s ease}
+.nd-progress-fill::after{content:"";position:absolute;inset:0;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:ndShimmer 1.2s linear infinite}
+@keyframes ndShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.nd-progress-label{font-size:12px;color:#475569;font-weight:600;text-align:center}
+@media (prefers-reduced-motion:reduce){.nd-btn:active{transform:none}.nd-progress-fill::after{animation:none}}
+
 /* ---------- SHARED TABLES ---------- */
 /* Clickable list tables: Projects, and a project's DFMEA documents. */
-.data-card{background:#fff;border:1px solid #E4EAF2;border-radius:12px;overflow:hidden}
+.data-card{background:#fff;border:1px solid #E4EAF2;border-radius:12px;overflow:hidden;
+ box-shadow:0 1px 2px rgba(15,23,42,.04)}
 /* table-layout:auto overrides the global fixed layout (meant for the
    wide worksheet) so columns size to their content instead of splitting
    the width evenly and squeezing the name column. */
 .data-table{width:100%;border-collapse:collapse;table-layout:auto}
-.data-table th{text-align:left;padding:9px 14px;background:#F8FAFC;color:#64748B;font-weight:700;
- font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #E4EAF2;white-space:nowrap}
-.data-table td{padding:11px 14px;border-bottom:1px solid #F1F5F9;color:#334155;font-size:12px;
- line-height:1.4;vertical-align:middle}
+.data-table th{text-align:left;padding:10px 16px;background:#F8FAFC;color:#64748B;font-weight:600;
+ font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #E4EAF2;white-space:nowrap}
+.data-table td{padding:12px 16px;border-bottom:1px solid #F1F5F9;color:#334155;font-size:12.5px;
+ line-height:1.45;vertical-align:middle;transition:background-color .12s ease}
 .data-table tbody tr{cursor:pointer}
 .data-table tbody tr:last-child td{border-bottom:none}
 .data-table tbody tr:hover td{background:#F8FAFF}
-.data-name{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;color:#1E293B}
-.data-icon{width:30px;height:30px;border-radius:8px;background:#EEF2FF;color:#4338CA;display:flex;
- align-items:center;justify-content:center;flex:none}
-.data-icon.empty{background:#F1F5F9;color:#94A3B8}
-.data-table td.data-muted{font-size:11.5px;color:#64748B}
-.data-table .chip{text-align:center}
-.data-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:5px;font-size:9.5px;
- font-weight:700;white-space:nowrap}
-.data-badge.active{background:#EEF2FF;color:#4338CA}
-.data-badge.draft{background:#F1F5F9;color:#475569}
-.data-badge.empty{background:#F1F5F9;color:#94A3B8}
+.data-name{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:600;color:#0F172A}
+.data-icon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#EEF2FF 0%,#E0E7FF 100%);
+ color:#4F46E5;display:flex;align-items:center;justify-content:center;flex:none;
+ box-shadow:inset 0 0 0 1px rgba(99,102,241,.12)}
+tbody tr:hover .data-icon{color:#4338CA;box-shadow:inset 0 0 0 1px rgba(99,102,241,.3)}
+.data-icon.empty{background:#F1F5F9;color:#94A3B8;box-shadow:inset 0 0 0 1px #E2E8F0}
+.data-table td.data-muted{font-size:12px;color:#64748B}
+.data-table .chip,.np-table .chip{display:inline-flex;align-items:center;justify-content:center;
+ width:26px;height:22px;padding:0;border-radius:6px;font:700 11.5px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.data-count{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:22px;
+ padding:0 8px;border-radius:999px;background:#F1F5F9;color:#334155;font-size:11.5px;font-weight:700}
+.data-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
+ font-size:10.5px;font-weight:600;white-space:nowrap}
+.data-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.data-badge.active{background:#ECFDF5;color:#047857;box-shadow:inset 0 0 0 1px #D1FAE5}
+.data-badge.draft{background:#FFFBEB;color:#B45309;box-shadow:inset 0 0 0 1px #FEF3C7}
+.data-badge.empty{background:#F8FAFC;color:#64748B;box-shadow:inset 0 0 0 1px #E2E8F0}
 .data-empty{padding:28px;text-align:center;color:#94A3B8;font-size:12px}
 
 /* A design requirement specification as a table (number, category,
    requirement). DfmeaReqDocs.specTableHtml renders it everywhere a spec
    is shown, so every page reads the same way. */
 .spec-table{width:100%;border-collapse:collapse}
-.spec-table th{text-align:left;padding:8px 12px;background:#F8FAFC;color:#64748B;font-weight:700;
- font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #E4EAF2;white-space:nowrap}
-.spec-table td{padding:8px 12px;border-bottom:1px solid #F1F5F9;color:#334155;font-size:11.5px;
- line-height:1.5;vertical-align:top}
+.spec-table th{text-align:left;padding:9px 14px;background:#F8FAFC;color:#64748B;font-weight:600;
+ font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #E4EAF2;white-space:nowrap}
+.spec-table td{padding:10px 14px;border-bottom:1px solid #F1F5F9;color:#334155;font-size:12px;
+ line-height:1.55;vertical-align:top}
 .spec-table tr:last-child td{border-bottom:none}
-.spec-table th.spec-num,.spec-table td.spec-num{width:34px}
-.spec-table td.spec-num{color:#94A3B8;font-weight:700}
-.spec-table th.spec-cat-cell,.spec-table td.spec-cat-cell{width:118px}
-.spec-cat{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:9.5px;
- font-weight:700;white-space:nowrap;background:#F1F5F9;color:#475569}
-.spec-cat[data-cat="mechanical"]{background:#EEF2FF;color:#4338CA}
-.spec-cat[data-cat="electrical"]{background:#FFFBEB;color:#B45309}
-.spec-cat[data-cat="environmental"]{background:#ECFDF5;color:#047857}
-.spec-cat[data-cat="material"]{background:#F5F3FF;color:#6D28D9}
-.spec-cat[data-cat="manufacturing"]{background:#FFF7ED;color:#C2410C}
-.spec-cat[data-cat="quality"]{background:#F0F9FF;color:#0369A1}
-.req-standard{display:inline-flex;align-items:center;padding:2px 9px;border-radius:5px;background:#EEF2FF;
- color:#4338CA;font-size:10px;font-weight:700;white-space:nowrap}
+.spec-table tbody tr:hover td{background:#FAFBFF}
+.spec-table th.spec-num,.spec-table td.spec-num{width:40px}
+.spec-table td.spec-num{color:#94A3B8;font-weight:600}
+.spec-table th.spec-cat-cell,.spec-table td.spec-cat-cell{width:132px}
+.spec-cat{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:10px;
+ font-weight:600;white-space:nowrap;background:#F1F5F9;color:#475569;box-shadow:inset 0 0 0 1px rgba(15,23,42,.05)}
+.spec-cat[data-cat="mechanical"]{background:#EEF2FF;color:#4338CA;box-shadow:inset 0 0 0 1px #E0E7FF}
+.spec-cat[data-cat="electrical"]{background:#FFFBEB;color:#B45309;box-shadow:inset 0 0 0 1px #FEF3C7}
+.spec-cat[data-cat="environmental"]{background:#ECFDF5;color:#047857;box-shadow:inset 0 0 0 1px #D1FAE5}
+.spec-cat[data-cat="material"]{background:#F5F3FF;color:#6D28D9;box-shadow:inset 0 0 0 1px #EDE9FE}
+.spec-cat[data-cat="manufacturing"]{background:#FFF7ED;color:#C2410C;box-shadow:inset 0 0 0 1px #FFEDD5}
+.spec-cat[data-cat="quality"]{background:#F0F9FF;color:#0369A1;box-shadow:inset 0 0 0 1px #E0F2FE}
+.req-standard{display:inline-flex;align-items:center;padding:2px 9px;border-radius:6px;background:#EEF2FF;
+ color:#4338CA;font-size:10.5px;font-weight:700;white-space:nowrap;box-shadow:inset 0 0 0 1px #E0E7FF}
 
 /* The project's requirement spec, collapsed, at the top of a DFMEA. */
-.req-panel{margin:0 0 14px;border:1px solid #E4EAF2;border-radius:10px;background:#fff;overflow:hidden}
+.req-panel{margin:0 0 14px;border:1px solid #E4EAF2;border-radius:12px;background:#fff;overflow:hidden;
+ box-shadow:0 1px 2px rgba(15,23,42,.04)}
 .req-panel>summary{display:flex;align-items:center;gap:8px;padding:12px 16px;cursor:pointer;list-style:none;
- font-size:12px;font-weight:700;color:#1E293B}
+ font-size:12.5px;font-weight:700;color:#1E293B;transition:background-color .12s ease}
+.req-panel>summary:hover{background:#FAFBFF}
 .req-panel>summary::-webkit-details-marker{display:none}
 .req-panel>summary::after{content:"";margin-left:auto;width:7px;height:7px;border-right:2px solid #94A3B8;
  border-bottom:2px solid #94A3B8;transform:rotate(45deg);transition:transform .15s ease}
