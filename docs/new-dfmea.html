@@ -17,6 +17,10 @@
 .nd-field input,.nd-field textarea,.nd-field select{width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #D8E0EA;
  border-radius:8px;font-size:13px;color:#1E293B;font-family:inherit;background:#fff;cursor:pointer}
 .nd-field textarea{resize:vertical;min-height:64px}
+/* See new-project.html for why this is needed: the shared rule above
+   overwrites the global select{} rule's reserved space for its dropdown
+   arrow, so without this the arrow renders squashed under the text. */
+.nd-field select{padding-right:26px}
 .nd-field input:focus,.nd-field textarea:focus{outline:none;border-color:#818CF8;box-shadow:0 0 0 3px #EEF2FF}
 .nd-field input.err,.nd-field textarea.err{border-color:#FCA5A5;background:#FEF2F2}
 .nd-err-msg{display:none;color:#B91C1C;font-size:10.5px;margin-top:5px;font-weight:600}

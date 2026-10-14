@@ -63,9 +63,9 @@
     // the Crimp DFMEA being the one document that's already populated --
     // real uploads (readHistory/saveHistory below) are entirely separate
     // from this and are what the "no data yet" checks elsewhere key off of.
-    // Two kinds of pre-existing files: ones the client themselves shared
-    // (external, authoritative, kept pinned at the top) and this
-    // workspace's own library of prior work (everything else).
+    // Two kinds of pre-existing files: ones shared from outside this
+    // workspace (external, authoritative, kept pinned at the top) and
+    // this workspace's own library of prior work (everything else).
     var DEFAULT_LIBRARY = [
       { name: "OEM_Connector_Interface_DFMEA.xlsx", size: "224 KB", when: "Jul 18, 2025, 2:45 PM", rows: 64, source: "client" },
       { name: "Customer_Battery_Terminal_DFMEA.xlsx", size: "196 KB", when: "Aug 5, 2025, 10:12 AM", rows: 52, source: "client" },
@@ -96,7 +96,7 @@
       return (bytes / (1024 * 1024)).toFixed(2) + " MB";
     }
     function allRows(){
-      // Client-shared files always lead the list -- they're the
+      // Externally-shared files always lead the list -- they're the
       // authoritative external reference, not just more library data --
       // then your own uploads (newest first), then this workspace's own
       // library (newest first).
@@ -136,7 +136,7 @@
         return true;
       });
 
-      var SOURCE_LABELS = { client: "Shared by client", mine: "Uploaded by you", library: "Library" };
+      var SOURCE_LABELS = { client: "External", mine: "Uploaded by you", library: "Library" };
       historyBody.innerHTML = "";
       historyEmpty.hidden = visible.length > 0;
       visible.forEach(function(item){
