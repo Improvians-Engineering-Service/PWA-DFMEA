@@ -264,10 +264,15 @@
     document.getElementById("ndDoneBody").textContent = "A starting cause structure was built from the DFMEAs below. Everything is editable.";
     var summary = document.getElementById("ndSummaryBox");
     summary.hidden = false;
-    summary.innerHTML = "<b>Function:</b> " + escapeHtml(fn) + "<br><b>Failure mode:</b> " + escapeHtml(failure)
-      + "<br><b>Severity:</b> " + severity
-      + "<br><b>Built from:</b> " + (fromNames.length ? escapeHtml(fromNames.join(", ")) : "Crimp Contact Resistance (default reference)")
-      + "<br><b>Structure:</b> 64 causes across 26 paths, up to 11 levels deep";
+    // Same severity tiers as every other table in the app.
+    var severityTier = severity >= 9 ? "s-crit" : (severity >= 6 ? "s-high" : "s-low");
+    summary.innerHTML = "<table>" + [
+      ["Function", escapeHtml(fn)],
+      ["Failure mode", escapeHtml(failure)],
+      ["Severity", '<span class="chip ' + severityTier + '">' + severity + "</span>"],
+      ["Built from", fromNames.length ? escapeHtml(fromNames.join(", ")) : "Crimp Contact Resistance (default reference)"],
+      ["Structure", "64 causes across 26 paths, up to 11 levels deep"]
+    ].map(function(row){ return "<tr><th>" + row[0] + "</th><td>" + row[1] + "</td></tr>"; }).join("") + "</table>";
 
     var actions = document.getElementById("ndDoneActions");
     actions.innerHTML = "";
