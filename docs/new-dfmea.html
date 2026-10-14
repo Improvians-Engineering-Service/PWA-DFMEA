@@ -9,45 +9,30 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css">
 <style>
-.nd-card{max-width:640px;background:#fff;border:1px solid #E4EAF2;border-radius:12px;padding:26px 28px}
-.nd-step{display:none}
-.nd-step.on{display:block}
-.nd-field{margin-bottom:16px}
-.nd-field label{display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:6px}
-.nd-field input,.nd-field textarea,.nd-field select{width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #D8E0EA;
- border-radius:8px;font-size:13px;color:#1E293B;font-family:inherit;background:#fff;cursor:pointer}
-.nd-field textarea{resize:vertical;min-height:64px}
-/* See new-project.html for why this is needed: the shared rule's
-   "background:#fff" and plain padding both reset what the global
-   select{} rule needs to show its dropdown arrow. */
-.nd-field select{padding-right:26px;background-color:#fff;
- background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
- background-repeat:no-repeat;background-position:right 8px center;background-size:14px}
-.nd-field input:focus,.nd-field textarea:focus{outline:none;border-color:#818CF8;box-shadow:0 0 0 3px #EEF2FF}
-.nd-field input.err,.nd-field textarea.err{border-color:#FCA5A5;background:#FEF2F2}
-.nd-err-msg{display:none;color:#B91C1C;font-size:10.5px;margin-top:5px;font-weight:600}
-.nd-field.has-err .nd-err-msg{display:block}
-.nd-actions{display:flex;gap:10px;margin-top:20px}
-.nd-btn{padding:9px 18px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid #D8E0EA;background:#fff;color:#334155}
-.nd-btn.primary{background:#4338CA;border-color:#4338CA;color:#fff;margin-left:auto}
-.nd-btn.primary:hover{background:#3730A3}
-.nd-btn:hover{background:#F8FAFF}
-.nd-card-mid{max-width:820px}
-.ndc-check{width:34px}
-.ndc-check input{cursor:pointer}
-.ndc-name{font-size:12.5px;font-weight:700;color:#1E293B}
-.ndc-meta{font-size:10.5px;color:#64748B;margin-top:2px}
-.ndc-badge{display:inline-flex;align-items:center;gap:4px;margin-left:7px;padding:1px 7px;
- border-radius:5px;background:#EEF2FF;color:#4338CA;font-size:9.5px;font-weight:700}
+/* Shared wizard styles (.nd-*) live in css/style.css. */
+.ndc-check{width:46px}
+.ndc-check input{width:16px;height:16px;margin:0;vertical-align:middle;cursor:pointer;accent-color:#4F46E5}
+.ndc-name{font-size:12.5px;font-weight:600;color:#0F172A}
+.ndc-meta{font-size:11px;color:#64748B;margin-top:3px}
+.ndc-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
+ background:#ECFDF5;color:#047857;font-size:10.5px;font-weight:600;box-shadow:inset 0 0 0 1px #D1FAE5;white-space:nowrap}
+.ndc-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .data-table tbody tr.ndc-row{cursor:pointer}
-.nd-progress-track{height:7px;border-radius:4px;background:#E4EAF2;overflow:hidden;margin:18px 0 8px}
-.nd-progress-fill{height:100%;width:0%;background:#4F46E5;border-radius:4px;transition:width .2s ease}
-.nd-progress-label{font-size:11.5px;color:#64748B;font-weight:600;text-align:center}
-.nd-success-icon{width:46px;height:46px;border-radius:50%;background:#F0FDF4;color:#16A34A;
- display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-.nd-summary{background:#F8FAFF;border:1px solid #E4EAF2;border-radius:9px;padding:13px 15px;margin:14px 0;font-size:11.5px;color:#334155}
-.nd-summary b{color:#1E293B}
-.nd-field[hidden]{display:none}
+.data-table tbody tr.ndc-row:has(input:checked) td{background:#F7F8FF}
+.data-table tbody tr.ndc-row:has(input:checked) td:first-child{box-shadow:inset 3px 0 0 #6366F1}
+.nd-success-icon{width:50px;height:50px;border-radius:50%;background:#fff;color:#16A34A;
+ display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+ box-shadow:0 0 0 6px rgba(22,163,74,.09),0 6px 16px rgba(15,23,42,.07)}
+.nd-done-title{font-size:18px;font-weight:800;color:#0F172A;letter-spacing:-.3px;margin-bottom:5px}
+.nd-summary{margin:18px 0 0;border:1px solid #E4EAF2;border-radius:10px;overflow:hidden}
+.nd-summary table{width:100%;border-collapse:collapse;table-layout:auto}
+.nd-summary th{width:130px;padding:10px 14px;background:#F8FAFC;color:#64748B;font-size:10px;font-weight:600;
+ text-transform:uppercase;letter-spacing:.5px;text-align:left;vertical-align:top;white-space:nowrap;
+ border-bottom:1px solid #EEF2F7;border-right:1px solid #EEF2F7}
+.nd-summary td{padding:10px 14px;color:#1E293B;font-size:12px;line-height:1.5;border-bottom:1px solid #EEF2F7}
+.nd-summary tr:last-child th,.nd-summary tr:last-child td{border-bottom:none}
+.nd-summary .chip{display:inline-flex;align-items:center;justify-content:center;width:26px;height:22px;padding:0;
+ border-radius:6px;font:700 11.5px "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
 </style>
 </head>
 <body><div class="app">
@@ -107,10 +92,10 @@
     </div>
 
     <!-- Step 2: related DFMEA suggestions -->
-    <div class="nd-step" id="ndStep2">
+    <div class="nd-step nd-step-mid" id="ndStep2">
       <div class="seclab"><span class="secn">2</span>Related DFMEAs</div>
-      <div class="nd-card nd-card-mid">
-        <div class="sm" style="margin-bottom:14px">Based on what you described, these look related. Pre-checked ones were matched automatically -- review and adjust before generating.</div>
+      <div class="nd-card">
+        <div class="sm" style="margin-bottom:14px">Based on what you described, these look related. Pre-checked ones were matched automatically &mdash; review and adjust before generating.</div>
         <div class="data-card">
           <table class="data-table">
             <thead><tr><th class="ndc-check"></th><th>Reference DFMEA</th><th style="width:100px">Match</th></tr></thead>
@@ -138,7 +123,7 @@
       <div class="seclab"><span class="secn">4</span>Done</div>
       <div class="nd-card">
         <div class="nd-success-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-        <div id="ndDoneTitle" style="font-size:15px;font-weight:800;color:#1E293B;margin-bottom:6px">DFMEA created</div>
+        <div id="ndDoneTitle" class="nd-done-title">DFMEA created</div>
         <div id="ndDoneBody" class="sm"></div>
         <div class="nd-summary" id="ndSummaryBox" hidden></div>
         <div class="nd-actions" id="ndDoneActions"></div>

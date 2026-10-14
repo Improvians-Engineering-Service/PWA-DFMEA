@@ -2,30 +2,37 @@
 <title>Sign in - DFMEA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css">
 <style>
-body.login-body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#F7F9FC;
+body.login-body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px 16px;
+ background:radial-gradient(900px 520px at 12% -8%,#E9ECFF 0%,rgba(233,236,255,0) 62%),
+  radial-gradient(760px 480px at 100% 108%,#F1EAFE 0%,rgba(241,234,254,0) 60%),#F7F8FC;
  font-family:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif}
-.login-card{width:360px;max-width:calc(100vw - 32px);background:#fff;border:1px solid #E4EAF2;border-radius:14px;
- box-shadow:0 20px 50px rgba(15,23,42,.08);padding:30px 28px}
-.login-brand{display:flex;align-items:center;gap:10px;margin-bottom:22px}
-.login-brand .logo{width:34px;height:34px;border-radius:9px;background:#EEF2FF;color:#4338CA;
- display:flex;align-items:center;justify-content:center;flex:none}
-.login-brand .bn{font-weight:800;font-size:15px;color:#1E293B}
-.login-brand .bs{font-size:9.5px;letter-spacing:.5px;color:#94A3B8;font-weight:700}
-.login-title{font-size:18px;font-weight:800;color:#1E293B;margin-bottom:4px}
-.login-sub{font-size:12px;color:#64748B;margin-bottom:22px}
-.login-field{margin-bottom:14px}
-.login-field label{display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:6px}
-.login-field input{width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #D8E0EA;border-radius:8px;
- font-size:13px;color:#1E293B;font-family:inherit}
+.login-card{width:380px;max-width:100%;background:#fff;border:1px solid #E4EAF2;border-radius:16px;
+ box-shadow:0 1px 2px rgba(15,23,42,.04),0 24px 60px -20px rgba(30,27,75,.18);padding:34px 32px 32px}
+.login-brand{display:flex;align-items:center;gap:11px;margin-bottom:26px}
+.login-brand .logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#6366F1 0%,#8B5CF6 100%);
+ color:#fff;display:flex;align-items:center;justify-content:center;flex:none;
+ box-shadow:0 6px 14px -4px rgba(99,102,241,.55)}
+.login-brand .bn{font-weight:800;font-size:15.5px;color:#0F172A;letter-spacing:-.2px}
+.login-brand .bs{font-size:9.5px;letter-spacing:.6px;color:#94A3B8;font-weight:700;margin-top:2px}
+.login-title{font-size:21px;font-weight:800;color:#0F172A;letter-spacing:-.4px;margin-bottom:5px}
+.login-sub{font-size:12.5px;color:#64748B;margin-bottom:24px}
+.login-field{margin-bottom:16px}
+.login-field label{display:block;font-size:11.5px;font-weight:600;color:#334155;margin-bottom:7px}
+.login-field input{width:100%;box-sizing:border-box;height:40px;padding:0 12px;border:1px solid #DCE3EC;border-radius:9px;
+ font-size:13px;color:#0F172A;background-color:#fff;transition:border-color .15s ease,box-shadow .15s ease}
+.login-field input:hover{border-color:#C3CEDC}
 .login-field input:focus{outline:none;border-color:#818CF8;box-shadow:0 0 0 3px #EEF2FF}
-.login-field input.err{border-color:#FCA5A5;background:#FEF2F2}
-.login-field .err-msg{display:none;color:#B91C1C;font-size:10.5px;margin-top:5px;font-weight:600}
+.login-field input.err{border-color:#FCA5A5;background-color:#FEF2F2}
+.login-field .err-msg{display:none;color:#B91C1C;font-size:10.5px;margin-top:6px;font-weight:600}
 .login-field.has-err .err-msg{display:block}
-.login-btn{width:100%;padding:10px;border:none;border-radius:8px;background:#4338CA;color:#fff;
- font-size:13px;font-weight:700;cursor:pointer;margin-top:6px}
-.login-btn:hover{background:#3730A3}
-.login-form-err{display:none;margin-bottom:14px;padding:9px 11px;border-left:3px solid #DC2626;background:#FEF2F2;
- color:#B91C1C;font-size:11px;font-weight:600;border-radius:4px}
+.login-btn{width:100%;height:42px;border:none;border-radius:10px;background:#4F46E5;color:#fff;
+ font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;
+ box-shadow:0 1px 2px rgba(79,70,229,.2),0 8px 18px -6px rgba(79,70,229,.55);
+ transition:background-color .15s ease,transform .12s ease}
+.login-btn:hover{background:#4338CA}
+.login-btn:active{transform:scale(.99)}
+.login-form-err{display:none;margin-bottom:16px;padding:10px 12px;border-left:3px solid #DC2626;background:#FEF2F2;
+ color:#B91C1C;font-size:11.5px;font-weight:600;border-radius:6px}
 .login-form-err.show{display:block}
 </style>
 </head>
