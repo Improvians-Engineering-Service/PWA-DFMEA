@@ -302,7 +302,7 @@
     // own tooltip listing the rest) so a long match list never turns the
     // cell into another list to read.
     function refChip(label, url){
-      return '<a class="np-chip-mini" href="' + url + '" target="_blank" data-tip="Open this reference" onclick="event.stopPropagation()">' + escapeHtml(label) + '</a>';
+      return '<a class="np-chip-mini" href="' + url + '" target="_blank" data-tip="' + escapeHtml(label) + ' — open this reference" onclick="event.stopPropagation()">' + escapeHtml(label) + '</a>';
     }
     function chipRowHtml(items, cap, toUrl){
       if(!items.length) return "&mdash;";
