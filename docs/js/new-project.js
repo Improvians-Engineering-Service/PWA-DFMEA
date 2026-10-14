@@ -274,10 +274,11 @@
     // A quick at-a-glance summary of what just got built, right in the
     // success banner -- so the headline numbers are visible without
     // reading either table below.
+    var shownRefCount = Math.min(matched.length, 4) + Math.min(matchedReqDocs.length, 3);
     document.getElementById("npStats").innerHTML = [
       [specs.length, specs.length === 1 ? "requirement" : "requirements"],
       [FUNCTION_SET.length, "DFMEAs"],
-      [matched.length + matchedReqDocs.length, "references used"]
+      [shownRefCount, shownRefCount === 1 ? "reference used" : "references used"]
     ].map(function(s){ return '<span class="np-stat"><b>' + s[0] + '</b>' + s[1] + '</span>'; }).join("");
 
     var dfmeaBody = document.getElementById("npDfmeaTable");
