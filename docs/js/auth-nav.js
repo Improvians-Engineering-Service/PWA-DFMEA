@@ -25,6 +25,10 @@
   if(uploadNav) uploadNav.addEventListener("click", function(){
     window.location.href = "upload.html";
   });
+  var reqSpecsNav = document.getElementById("navReqSpecs");
+  if(reqSpecsNav) reqSpecsNav.addEventListener("click", function(){
+    window.location.href = "requirement-specs.html";
+  });
 
   // "Projects" (id="navDfmea" in the markup, named for the sidebar slot
   // it occupies) is the one real entry point into the Projects browsing
@@ -281,7 +285,7 @@
   // the create-DFMEA stub buttons use is cheap and closes that gap
   // everywhere at once, without having to fake a whole module per click.
   Array.prototype.slice.call(document.querySelectorAll(".side .nav")).forEach(function(item){
-    if(item === projectsNav || item.id === "navUploadData") return;
+    if(item === projectsNav || item.id === "navUploadData" || item.id === "navReqSpecs") return;
     item.addEventListener("click", function(){
       window.showToast(item.textContent.trim() + " isn't available in this preview yet.");
     });
