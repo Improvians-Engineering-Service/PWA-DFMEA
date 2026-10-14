@@ -193,11 +193,18 @@
     box.innerHTML = "";
     candidates.forEach(function(c){
       var matched = c.isReference || sharesWord(queryText, c.name);
-      var row = document.createElement("label");
-      row.className = "nd-candidate";
-      row.innerHTML = '<input type="checkbox" data-id="' + c.id + '"' + (matched ? " checked" : "") + '>'
-        + '<div><div class="ndc-name">' + escapeHtml(c.name) + (matched ? '<span class="ndc-badge">Matched</span>' : "") + '</div>'
-        + '<div class="ndc-meta">' + escapeHtml(c.meta) + '</div></div>';
+      var row = document.createElement("tr");
+      row.className = "ndc-row";
+      row.innerHTML = '<td class="ndc-check"><input type="checkbox" data-id="' + c.id + '"' + (matched ? " checked" : "") + '></td>'
+        + '<td><div class="ndc-name">' + escapeHtml(c.name) + '</div><div class="ndc-meta">' + escapeHtml(c.meta) + '</div></td>'
+        + '<td>' + (matched ? '<span class="ndc-badge">Matched</span>' : "&mdash;") + '</td>';
+      // Clicking anywhere in the row toggles it, not just the checkbox
+      // itself -- same click-to-select pattern as every other table here.
+      row.addEventListener("click", function(event){
+        if(event.target.tagName === "INPUT") return;
+        var input = row.querySelector("input");
+        input.checked = !input.checked;
+      });
       box.appendChild(row);
     });
   }
