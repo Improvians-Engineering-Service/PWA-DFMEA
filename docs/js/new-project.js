@@ -88,25 +88,20 @@
   }
 
   // The DFMEAs matching draws on to find which existing ones fit the
-  // product description: worksheets listed on the Legacy DFMEA page
-  // (externally-shared ones first, same as there) plus this workspace's own
-  // reference DFMEA. Shown as the reference table on the results screen.
+  // product description: worksheets listed on the Legacy DFMEA page plus
+  // this workspace's own reference DFMEA. Shown as "Built from" chips on
+  // the results screen.
   var REFERENCE_DOCS = [
-    { name: "OEM_Connector_Interface_DFMEA.xlsx", source: "client" },
-    { name: "Customer_Battery_Terminal_DFMEA.xlsx", source: "client" },
-    { name: "Tier1_Harness_Routing_DFMEA.xlsx", source: "client" },
-    { name: "Crimp Contact Resistance", source: "project" },
-    { name: "Sensor_Bracket_DFMEA.xlsx", source: "library" },
-    { name: "Busbar_Joint_DFMEA.xlsx", source: "library" },
-    { name: "Wire_Harness_DFMEA_2023.xlsx", source: "library" },
-    { name: "Connector_Housing_DFMEA.xlsx", source: "library" },
-    { name: "Terminal_Retention_DFMEA_Rev3.xlsx", source: "library" }
+    { name: "OEM_Connector_Interface_DFMEA.xlsx" },
+    { name: "Customer_Battery_Terminal_DFMEA.xlsx" },
+    { name: "Tier1_Harness_Routing_DFMEA.xlsx" },
+    { name: "Crimp Contact Resistance" },
+    { name: "Sensor_Bracket_DFMEA.xlsx" },
+    { name: "Busbar_Joint_DFMEA.xlsx" },
+    { name: "Wire_Harness_DFMEA_2023.xlsx" },
+    { name: "Connector_Housing_DFMEA.xlsx" },
+    { name: "Terminal_Retention_DFMEA_Rev3.xlsx" }
   ];
-  var SOURCE_LABELS = {
-    client: "Legacy DFMEA · External",
-    library: "Legacy DFMEA · Library",
-    project: "Aster EV Connector project"
-  };
   function severityChip(severity){
     var tier = severity >= 9 ? "s-crit" : (severity >= 6 ? "s-high" : "s-low");
     return '<span class="chip ' + tier + '">' + severity + '</span>';
@@ -290,18 +285,40 @@
     document.getElementById("npReqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(specs);
 
     // A quick at-a-glance summary of what just got built, right in the
-    // success banner -- so the headline numbers are visible without
-    // reading either table below.
-    var shownRefCount = Math.min(matched.length, 4) + Math.min(matchedReqDocs.length, 3);
+    // success banner.
+    var refCount = matched.length + matchedReqDocs.length;
     document.getElementById("npStats").innerHTML = [
       [specs.length, specs.length === 1 ? "requirement" : "requirements"],
       [FUNCTION_SET.length, "DFMEAs"],
-      [shownRefCount, shownRefCount === 1 ? "reference used" : "references used"]
+      [refCount, refCount === 1 ? "reference used" : "references used"]
     ].map(function(s){ return '<span class="np-stat"><b>' + s[0] + '</b>' + s[1] + '</span>'; }).join("");
+
+    // Each reference (an existing DFMEA or spec that fed this result) is a
+    // small chip -- its own name, opens that exact source in a new tab on
+    // click -- shown right where it was used: a "Built from" column on
+    // each generated DFMEA row, and a "Built from" line on the spec card.
+    // Every generated DFMEA was built from the same matched set, so the
+    // same chips repeat down the column -- capped, with a "+N" chip (its
+    // own tooltip listing the rest) so a long match list never turns the
+    // cell into another list to read.
+    function refChip(label, url){
+      return '<a class="np-chip-mini" href="' + url + '" target="_blank" data-tip="Open this reference" onclick="event.stopPropagation()">' + escapeHtml(label) + '</a>';
+    }
+    function chipRowHtml(items, cap, toUrl){
+      if(!items.length) return "&mdash;";
+      var shown = items.slice(0, cap).map(function(item){ return refChip(item.name, toUrl(item)); }).join("");
+      if(items.length > cap){
+        var rest = items.slice(cap).map(function(item){ return item.name; }).join(", ");
+        shown += '<span class="np-chip-mini" data-tip="' + escapeHtml(rest) + '">+' + (items.length - cap) + '</span>';
+      }
+      return shown;
+    }
+    var dfmeaRefChips = chipRowHtml(matched, 2, function(m){ return dfmeaReferenceUrl(m.name); });
 
     var dfmeaBody = document.getElementById("npDfmeaTable");
     dfmeaBody.innerHTML = generatedRows.map(function(r){
-      return '<tr data-doc-id="' + r.docId + '" data-tip="Open this DFMEA"><td>' + escapeHtml(r.name) + '</td><td>' + escapeHtml(r.fn) + '</td><td>' + severityChip(r.severity) + '</td></tr>';
+      return '<tr data-doc-id="' + r.docId + '" data-tip="Open this DFMEA"><td>' + escapeHtml(r.name) + '</td><td>' + escapeHtml(r.fn) + '</td><td>' + severityChip(r.severity) + '</td>'
+        + '<td><div class="np-chiprow-mini">' + dfmeaRefChips + '</div></td></tr>';
     }).join("");
     Array.prototype.slice.call(dfmeaBody.querySelectorAll("tr")).forEach(function(row){
       row.addEventListener("click", function(){
@@ -309,30 +326,14 @@
       });
     });
 
-    // Shown right under the thing it informed -- which existing specs fed
-    // the new requirement doc (left column), which existing DFMEAs fed the
-    // generated ones (right column) -- as a table whose rows each open
-    // that exact source record in a new tab.
     if(matchedReqDocs.length){
-      document.getElementById("npReqRefs").hidden = false;
-      document.getElementById("npReqRefBody").innerHTML = matchedReqDocs.slice(0, 3).map(function(d){
-        return '<tr data-url="requirement-view.html?id=' + encodeURIComponent(d.id) + '" data-tip="Open this specification">'
-          + '<td>' + escapeHtml(d.productName) + '</td>'
-          + '<td><span class="req-standard">' + escapeHtml(d.standard === "None" ? "No specific standard" : d.standard) + '</span></td>'
-          + '<td>' + (d.specs || []).length + '</td></tr>';
-      }).join("");
+      var reqBuilt = document.getElementById("npReqBuilt");
+      reqBuilt.hidden = false;
+      var specChips = chipRowHtml(matchedReqDocs.map(function(d){ return { name: d.productName, id: d.id }; }), 3, function(item){
+        return "requirement-view.html?id=" + encodeURIComponent(item.id);
+      });
+      reqBuilt.innerHTML = '<span class="np-built-label">Built from</span><div class="np-chiprow-mini">' + specChips + '</div>';
     }
-    if(matched.length){
-      document.getElementById("npDfmeaRefs").hidden = false;
-      document.getElementById("npDfmeaRefBody").innerHTML = matched.slice(0, 4).map(function(m){
-        return '<tr data-url="' + dfmeaReferenceUrl(m.name) + '" data-tip="Open this DFMEA">'
-          + '<td>' + escapeHtml(m.name) + '</td>'
-          + '<td><span class="np-src ' + m.source + '">' + SOURCE_LABELS[m.source] + '</span></td></tr>';
-      }).join("");
-    }
-    Array.prototype.slice.call(document.querySelectorAll("#npReqRefBody tr, #npDfmeaRefBody tr")).forEach(function(row){
-      row.addEventListener("click", function(){ window.open(row.dataset.url, "_blank"); });
-    });
 
     var actions = document.getElementById("npDoneActions");
     var openBtn = document.createElement("button");
