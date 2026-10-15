@@ -66,23 +66,7 @@
     // Two kinds of pre-existing files: ones shared from outside this
     // workspace (external, authoritative, kept pinned at the top) and
     // this workspace's own library of prior work (everything else).
-    var DEFAULT_LIBRARY = [
-      { name: "OEM_Connector_Interface_DFMEA.xlsx", size: "224 KB", when: "Jul 18, 2025, 2:45 PM", rows: 64, source: "client" },
-      { name: "Customer_Battery_Terminal_DFMEA.xlsx", size: "196 KB", when: "Aug 5, 2025, 10:12 AM", rows: 52, source: "client" },
-      { name: "Tier1_Harness_Routing_DFMEA.xlsx", size: "178 KB", when: "Sep 12, 2025, 3:30 PM", rows: 47, source: "client" },
-      { name: "Sensor_Bracket_DFMEA.xlsx", size: "142 KB", when: "Mar 28, 2024, 10:33 AM", rows: 33, source: "library" },
-      { name: "Busbar_Joint_DFMEA.xlsx", size: "198 KB", when: "Jun 5, 2024, 2:10 PM", rows: 55, source: "library" },
-      { name: "Wire_Harness_DFMEA_2023.xlsx", size: "156 KB", when: "Aug 19, 2024, 11:20 AM", rows: 39, source: "library" },
-      { name: "Connector_Housing_DFMEA.xlsx", size: "211 KB", when: "Nov 2, 2024, 3:45 PM", rows: 61, source: "library" },
-      { name: "Terminal_Retention_DFMEA_Rev3.xlsx", size: "184 KB", when: "Jan 14, 2025, 9:02 AM", rows: 48, source: "library" },
-      { name: "Battery_Tray_Mounting_DFMEA.xlsx", size: "167 KB", when: "Feb 7, 2025, 1:18 PM", rows: 42, source: "library" },
-      { name: "Coolant_Hose_Fitting_DFMEA.xlsx", size: "129 KB", when: "Mar 3, 2025, 9:54 AM", rows: 27, source: "library" },
-      { name: "PCB_Connector_Interface_DFMEA.xlsx", size: "203 KB", when: "Mar 21, 2025, 4:02 PM", rows: 58, source: "library" },
-      { name: "Door_Latch_Actuator_DFMEA.xlsx", size: "176 KB", when: "Apr 9, 2025, 10:47 AM", rows: 45, source: "library" },
-      { name: "Seat_Belt_Buckle_DFMEA.xlsx", size: "151 KB", when: "Apr 30, 2025, 2:36 PM", rows: 36, source: "library" },
-      { name: "Headlamp_Housing_Seal_DFMEA.xlsx", size: "188 KB", when: "May 16, 2025, 11:09 AM", rows: 50, source: "library" },
-      { name: "Charging_Port_Cover_DFMEA.xlsx", size: "160 KB", when: "Jun 2, 2025, 3:27 PM", rows: 38, source: "library" }
-    ];
+    var DEFAULT_LIBRARY = window.DfmeaRefs.LEGACY;
 
     function readHistory(){
       try{ return JSON.parse(localStorage.getItem(historyKey) || "[]"); }catch(error){ return []; }
