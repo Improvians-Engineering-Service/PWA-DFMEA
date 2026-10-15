@@ -259,6 +259,38 @@
     }
   }
 
+  // The legacy DFMEAs this document was built from, so it's clear where
+  // its starting structure came from -- including the ones shared with the
+  // project, which are listed first and marked External. A legacy
+  // worksheet preview is itself a legacy file, so it has none.
+  if(isDashboard && window.DfmeaRefs){
+    var legacyNames = null;
+    if(!activeDocId || SEED_OVERRIDES[activeDocId]) legacyNames = window.DfmeaRefs.seedDocRefs(activeDocId);
+    else if(override && override.mode !== "sample") legacyNames = override.generatedFrom || [];
+    var contentHost = document.querySelector(".content");
+    if(legacyNames && legacyNames.length && contentHost){
+      var externalCount = legacyNames.filter(function(n){ var i = window.DfmeaRefs.legacyInfo(n); return i && i.source === "client"; }).length;
+      var legacyPanel = document.createElement("details");
+      legacyPanel.id = "legacyRefPanel";
+      legacyPanel.className = "req-panel";
+      var legacySummary = document.createElement("summary");
+      legacySummary.appendChild(document.createTextNode("Built from legacy DFMEAs: " + legacyNames.length));
+      if(externalCount){
+        var extChip = document.createElement("span");
+        extChip.className = "req-standard";
+        extChip.textContent = externalCount + " external";
+        legacySummary.appendChild(extChip);
+      }
+      legacyPanel.appendChild(legacySummary);
+      var legacyBody = document.createElement("div");
+      legacyBody.className = "req-panel-body";
+      legacyBody.innerHTML = window.DfmeaRefs.legacyTableHtml(legacyNames);
+      legacyPanel.appendChild(legacyBody);
+      var specPanelEl = document.getElementById("reqSpecPanel");
+      if(specPanelEl) specPanelEl.after(legacyPanel); else contentHost.insertBefore(legacyPanel, contentHost.firstChild);
+    }
+  }
+
   // it1_app.js (dashboard only) defines a richer showToast -- this is a
   // minimal fallback so every other page can show the same honest
   // "not available yet" feedback instead of a nav item just doing nothing.
