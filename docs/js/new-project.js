@@ -243,7 +243,8 @@
     // --- requirement doc ---
     saveRequirementDoc({ id: "req-" + Date.now().toString(36), projectId: projectId, productName: name,
       standard: standard, specs: specs, createdAt: new Date().toLocaleString(),
-      builtFrom: matchedReqDocs.map(function(d){ return { id: d.id, name: d.productName }; }) });
+      builtFrom: matchedReqDocs.map(function(d){ return { id: d.id, name: d.productName }; }),
+      builtFromDfmeas: matched.map(function(m){ return m.name; }) });
 
     // --- generated DFMEAs, each a real, editable document like New DFMEA (with AI) produces ---
     var generatedRows = FUNCTION_SET.map(function(f){
@@ -260,7 +261,7 @@
     document.getElementById("npDoneTitle").textContent = "“" + name + "” created";
     document.getElementById("npReqProduct").textContent = name;
     document.getElementById("npReqStandard").textContent = standard === "None" ? "No specific standard" : standard;
-    document.getElementById("npReqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(specs, matchedReqDocs.map(function(d){ return { id: d.id, name: d.productName }; }));
+    document.getElementById("npReqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(specs, { builtFrom: matchedReqDocs.map(function(d){ return { id: d.id, name: d.productName }; }), builtFromDfmeas: matched.map(function(m){ return m.name; }) });
 
     // A quick at-a-glance summary of what just got built, right in the
     // success banner.
