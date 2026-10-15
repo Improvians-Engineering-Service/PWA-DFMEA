@@ -45,7 +45,7 @@
       + (status === "empty" ? "Open this project, then use + New DFMEA to add one." : "Open this project") + '">'
       + '<td><div class="data-name"><span class="data-icon' + (status === "empty" ? " empty" : "") + '">' + icon + '</span>'
       + escapeHtml(project.name) + '</div></td>'
-      + '<td class="data-muted">' + (description ? escapeHtml(description) : "&mdash;") + '</td>'
+      + '<td class="data-muted">' + (description ? escapeHtml(description) : "") + '</td>'
       + '<td><span class="data-count">' + docCount + '</span></td>'
       + '<td><span class="data-badge ' + status + '">' + STATUS_LABELS[status] + '</span></td>'
       + '</tr>';

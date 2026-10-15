@@ -195,7 +195,7 @@
             standard: "None",
             createdAt: new Date().toLocaleString(),
             specs: [
-              "Requirements extracted from the uploaded document -- open this specification to review and edit each line",
+              "Requirements extracted from the uploaded document. Open this specification to review and edit each line",
               "Re-run extraction or edit the list directly once the document has been reviewed"
             ]
           });
