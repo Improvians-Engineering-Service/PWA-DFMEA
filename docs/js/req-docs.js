@@ -285,6 +285,15 @@
     var match = /^([A-Za-z][A-Za-z &\/-]{1,24}) — ([\s\S]+)$/.exec(String(spec));
     return match ? { category: match[1], text: match[2] } : { category: "General", text: String(spec) };
   }
+  // The distinct categories a spec covers, in the order they first appear.
+  function categoriesOf(specs){
+    var out = [];
+    (specs || []).forEach(function(spec){
+      var c = splitSpec(spec).category;
+      if(out.indexOf(c) === -1) out.push(c);
+    });
+    return out;
+  }
   // What a project's spec was drawn from: other specs, and existing
   // DFMEAs. A spec made by Create project carries its own lists; the
   // built-in Aster one is fixed.
@@ -340,5 +349,5 @@
       + '</tbody></table>';
   }
 
-  window.DfmeaReqDocs = { readAll: readAll, getById: getById, updateSpecs: updateSpecs, add: add, specTableHtml: specTableHtml, refsFor: refsFor };
+  window.DfmeaReqDocs = { readAll: readAll, getById: getById, updateSpecs: updateSpecs, add: add, specTableHtml: specTableHtml, refsFor: refsFor, sourcesFor: rowSources, categoriesOf: categoriesOf };
 })();

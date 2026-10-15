@@ -48,6 +48,9 @@
 .uh-table th.req-open-col{width:58px;padding-right:0}
 .uh-table td.req-open-cell{padding-right:0}
 .uh-table td.req-open-cell .data-icon{width:30px;height:30px;border-radius:8px}
+.uh-table td.req-date{white-space:nowrap}
+.uh-table .np-chiprow-mini{flex-wrap:nowrap}
+.uh-table .req-built-cell{max-width:230px}
 .uh-table td.req-product{color:#0F172A;font-weight:600}
 .uh-table tbody tr{cursor:pointer}
 .uh-table tbody tr:last-child td{border-bottom:none}
@@ -101,7 +104,7 @@
       </div>
       <div class="up-msg" id="reqUploadSuccess"></div>
       <table class="uh-table" id="reqTable">
-        <thead><tr><th class="req-open-col"></th><th>Product</th><th>Standard</th><th>Specs</th><th>Date</th></tr></thead>
+        <thead><tr><th class="req-open-col"></th><th>Specification</th><th>Standard</th><th>Covers</th><th>Requirements</th><th>Built from</th><th>Created</th></tr></thead>
         <tbody id="reqTableBody"></tbody>
       </table>
       <div class="uh-empty" id="reqEmpty">No specifications match this search/filter.</div>
@@ -116,5 +119,6 @@
 <script src="js/worksheet-ui.js"></script>
 <script src="js/auth-nav.js"></script>
 <script src="js/req-docs.js"></script>
+<script src="js/references.js"></script>
 <script src="js/req-specs.js"></script>
 </body></html>

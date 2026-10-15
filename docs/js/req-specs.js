@@ -60,7 +60,7 @@
     var myProjects = readMyProjectsForReq();
     return window.DfmeaReqDocs.readAll().map(function(r){
       var project = myProjects.find(function(p){ return p.id === r.projectId; });
-      return { id: r.id, product: r.productName, standard: r.standard, when: r.createdAt, specs: r.specs, projectId: project ? r.projectId : null };
+      return { id: r.id, product: r.productName, standard: r.standard, when: r.createdAt, specs: r.specs, projectId: project ? r.projectId : null, record: r };
     }).slice().reverse();
   }
 
@@ -71,6 +71,17 @@
       return '<option value="' + escapeHtml(s) + '">' + escapeHtml(s === "None" ? "No specific standard" : s) + '</option>';
     }).join("");
     if(standards.indexOf(current) !== -1) standardFilter.value = current;
+  }
+
+  // One small coloured chip per category the spec covers (same colours as
+  // the category column inside a spec), capped with a "+N" for the rest.
+  function categoryChips(specs){
+    var cats = window.DfmeaReqDocs.categoriesOf(specs);
+    var html = cats.slice(0, 2).map(function(c){
+      return '<span class="spec-cat" data-cat="' + escapeHtml(c.toLowerCase()) + '">' + escapeHtml(c) + '</span>';
+    }).join("");
+    if(cats.length > 2) html += '<span class="spec-cat" data-tip="' + escapeHtml(cats.slice(2).join(", ")) + '">+' + (cats.length - 2) + '</span>';
+    return html;
   }
 
   function render(){
@@ -92,8 +103,10 @@
         + '<td class="req-open-cell"><span class="data-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14L21 3"/></svg></span></td>'
         + '<td class="req-product">' + escapeHtml(doc.product) + '</td>'
         + '<td><span class="req-standard">' + escapeHtml(standardLabel) + '</span></td>'
-        + '<td>' + (doc.specs || []).length + ' specs</td>'
-        + '<td>' + escapeHtml(doc.when) + '</td>'
+        + '<td><div class="np-chiprow-mini">' + categoryChips(doc.specs) + '</div></td>'
+        + '<td><span class="data-count">' + (doc.specs || []).length + '</span></td>'
+        + '<td><div class="np-chiprow-mini req-built-cell">' + window.DfmeaRefs.chipRowHtml(window.DfmeaReqDocs.sourcesFor(doc.record), 1, function(item){ return item.url; }) + '</div></td>'
+        + '<td class="req-date">' + escapeHtml(doc.when) + '</td>'
         + '</tr>';
     }).join("");
 
