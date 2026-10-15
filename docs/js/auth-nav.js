@@ -253,7 +253,7 @@
       panel.appendChild(summary);
       var panelBody = document.createElement("div");
       panelBody.className = "req-panel-body";
-      panelBody.innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs);
+      panelBody.innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs, window.DfmeaReqDocs.refsFor(reqDoc));
       panel.appendChild(panelBody);
       contentEl.insertBefore(panel, contentEl.firstChild);
     }
