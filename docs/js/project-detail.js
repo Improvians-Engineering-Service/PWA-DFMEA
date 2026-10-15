@@ -100,6 +100,6 @@
         return "requirement-view.html?id=" + encodeURIComponent(item.id);
       });
     }
-    document.getElementById("reqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs, specRefs);
+    document.getElementById("reqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs, reqDoc);
   }
 })();
