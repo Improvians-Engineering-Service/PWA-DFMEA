@@ -49,6 +49,7 @@
 </div>
 </div>
 <script src="js/req-docs.js"></script>
+<script src="js/references.js"></script>
 <script>
 (function(){
   "use strict";
@@ -91,7 +92,7 @@
 
     var body;
     if(!editing){
-      body = '<div class="rv-specs">' + window.DfmeaReqDocs.specTableHtml(doc.specs) + '</div>'
+      body = '<div class="rv-specs">' + window.DfmeaReqDocs.specTableHtml(doc.specs, window.DfmeaReqDocs.refsFor(doc)) + '</div>'
         + '<div class="rv-actions" style="margin-top:20px">'
         + (doc.projectId ? '<a class="rv-link" href="project.html?id=' + encodeURIComponent(doc.projectId) + '">View project &rsaquo;</a>' : "")
         + '<button type="button" class="rv-btn" id="rvDownloadBtn">Download</button>'

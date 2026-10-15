@@ -35,7 +35,7 @@
 .np-hero-actions .nd-btn{margin:0}
 
 .np-body{padding:26px 32px 30px}
-.np-top-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.np-top-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:start}
 .np-col{min-width:0}
 .np-col-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .np-col-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
@@ -53,6 +53,7 @@
 .np-reqhead .req-standard{margin-left:auto}
 .np-built{flex:0 0 100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .np-built-label{font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px}
+.np-tablecard.spec .spec-table th.spec-ref-cell,.np-tablecard.spec .spec-table td.spec-ref-cell{width:165px;max-width:165px}
 .np-reqscroll{max-height:420px;overflow-y:auto}
 .np-table{width:100%;border-collapse:collapse;table-layout:auto}
 .np-tablecard.dfmea .np-table{table-layout:fixed}
@@ -68,14 +69,6 @@
 .np-table tbody tr{cursor:pointer}
 .np-table tbody tr:last-child td{border-bottom:none}
 .np-table tbody tr:hover td{background:#F8FAFF}
-/* inline-block, not inline-flex: text-overflow has no effect on the text
-   inside a flex container, so a long name would just be cut off. */
-.np-chip-mini{display:inline-block;max-width:100%;padding:3px 9px;border-radius:999px;line-height:1.4;
- font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;
- cursor:pointer;border:1px solid #E4EAF2;background:#fff;color:#475569;
- transition:border-color .12s ease,background-color .12s ease,color .12s ease}
-.np-chip-mini:hover{background:#F5F7FF;border-color:#C7D2FE;color:#4338CA}
-.np-chiprow-mini{display:flex;flex-wrap:wrap;gap:5px}
 @media (max-width:860px){.np-top-grid{grid-template-columns:1fr}}
 @media (max-width:640px){.np-hero{padding:22px 20px}.np-body{padding:20px}.np-hero-actions{margin-left:0;flex:1 1 100%}}
 </style>
@@ -192,5 +185,6 @@
 <script src="js/worksheet-ui.js"></script>
 <script src="js/auth-nav.js"></script>
 <script src="js/req-docs.js"></script>
+<script src="js/references.js"></script>
 <script src="js/new-project.js"></script>
 </body></html>
