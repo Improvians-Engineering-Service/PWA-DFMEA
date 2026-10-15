@@ -285,19 +285,49 @@
     var match = /^([A-Za-z][A-Za-z &\/-]{1,24}) — ([\s\S]+)$/.exec(String(spec));
     return match ? { category: match[1], text: match[2] } : { category: "General", text: String(spec) };
   }
+  // The existing specs a project's spec was drawn from. A spec made by
+  // Create project carries its own list; the built-in Aster one is fixed.
+  var KNOWN_SPEC_REFS = { "aster-ev-connector": [
+    { id: "default-0", name: "Titan Connector Housing" }, { id: "default-3", name: "Vantage Sensor Harness" },
+    { id: "default-8", name: "Comet Wiring Harness Grommet" }, { id: "default-1", name: "Nova Terminal Block" } ] };
+  function refsFor(doc){
+    return (doc && (doc.builtFrom || KNOWN_SPEC_REFS[doc.projectId])) || [];
+  }
+  // Each requirement cites its own references: a category leans on
+  // different source specs (mechanical ones differ from electrical ones),
+  // rotating through the list row by row within that category.
+  function rowRefs(refs, category, indexInCategory){
+    var seed = 0;
+    for(var i = 0; i < category.length; i++) seed += category.charCodeAt(i);
+    var count = Math.min(2, refs.length);
+    var picks = [];
+    for(var k = 0; k < count; k++) picks.push(refs[(seed + indexInCategory + k) % refs.length]);
+    return picks;
+  }
   // The one way a specification is rendered everywhere it appears (the
   // viewer, a project's page, the new-project result, inside a DFMEA):
-  // a numbered table with the category as its own column.
-  function specTableHtml(specs){
-    return '<table class="spec-table"><thead><tr><th class="spec-num">#</th><th class="spec-cat-cell">Category</th><th>Requirement</th></tr></thead><tbody>'
+  // a numbered table with the category as its own column, and -- when the
+  // spec was built from other specs -- a Reference column per requirement.
+  function specTableHtml(specs, refs){
+    refs = refs || [];
+    var seen = {};
+    return '<table class="spec-table"><thead><tr><th class="spec-num">#</th><th class="spec-cat-cell">Category</th><th>Requirement</th>'
+      + (refs.length ? '<th class="spec-ref-cell">Reference</th>' : '') + '</tr></thead><tbody>'
       + (specs || []).map(function(spec, index){
           var parts = splitSpec(spec);
+          var cat = parts.category.toLowerCase();
+          var n = seen[cat] = (seen[cat] === undefined ? 0 : seen[cat] + 1);
+          var refCell = refs.length
+            ? '<td class="spec-ref-cell"><div class="np-chiprow-mini">' + window.DfmeaRefs.chipRowHtml(rowRefs(refs, cat, n), 2, function(item){
+                return "requirement-view.html?id=" + encodeURIComponent(item.id);
+              }) + '</div></td>'
+            : "";
           return '<tr><td class="spec-num">' + (index + 1) + '</td>'
-            + '<td class="spec-cat-cell"><span class="spec-cat" data-cat="' + escapeHtml(parts.category.toLowerCase()) + '">' + escapeHtml(parts.category) + '</span></td>'
-            + '<td>' + escapeHtml(parts.text) + '</td></tr>';
+            + '<td class="spec-cat-cell"><span class="spec-cat" data-cat="' + escapeHtml(cat) + '">' + escapeHtml(parts.category) + '</span></td>'
+            + '<td>' + escapeHtml(parts.text) + '</td>' + refCell + '</tr>';
         }).join("")
       + '</tbody></table>';
   }
 
-  window.DfmeaReqDocs = { readAll: readAll, getById: getById, updateSpecs: updateSpecs, add: add, specTableHtml: specTableHtml };
+  window.DfmeaReqDocs = { readAll: readAll, getById: getById, updateSpecs: updateSpecs, add: add, specTableHtml: specTableHtml, refsFor: refsFor };
 })();

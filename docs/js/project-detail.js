@@ -12,11 +12,11 @@
     "aster-ev-connector": {
       name: "Aster EV Connector",
       docs: [
-        { name: "Crimp DFMEA", fn: "Crimp Contact Resistance", severity: 9, updated: "Today" },
-        { name: "Terminal Durability DFMEA", docId: "seed-terminal-durability", fn: "Terminal Contact Resistance After Cycling", severity: 9, updated: "3 days ago" },
-        { name: "Housing Seal Integrity DFMEA", docId: "seed-housing-seal", fn: "Housing Seal Integrity", severity: 7, updated: "6 days ago" },
-        { name: "Mating Cycle Durability DFMEA", docId: "seed-mating-cycle", fn: "Mating Cycle Durability", severity: 7, updated: "9 days ago" },
-        { name: "Connector Lock Retention DFMEA", docId: "seed-lock-retention", fn: "Connector Lock Retention", severity: 8, updated: "2 weeks ago" }
+        { name: "Crimp DFMEA", refs: ["Tier1_Harness_Routing_DFMEA.xlsx", "Customer_Battery_Terminal_DFMEA.xlsx", "Terminal_Retention_DFMEA_Rev3.xlsx"], fn: "Crimp Contact Resistance", severity: 9, updated: "Today" },
+        { name: "Terminal Durability DFMEA", refs: ["Terminal_Retention_DFMEA_Rev3.xlsx", "Crimp Contact Resistance", "Wire_Harness_DFMEA_2023.xlsx"], docId: "seed-terminal-durability", fn: "Terminal Contact Resistance After Cycling", severity: 9, updated: "3 days ago" },
+        { name: "Housing Seal Integrity DFMEA", refs: ["Connector_Housing_DFMEA.xlsx", "Headlamp_Housing_Seal_DFMEA.xlsx", "OEM_Connector_Interface_DFMEA.xlsx"], docId: "seed-housing-seal", fn: "Housing Seal Integrity", severity: 7, updated: "6 days ago" },
+        { name: "Mating Cycle Durability DFMEA", refs: ["Connector_Housing_DFMEA.xlsx", "Door_Latch_Actuator_DFMEA.xlsx", "Crimp Contact Resistance"], docId: "seed-mating-cycle", fn: "Mating Cycle Durability", severity: 7, updated: "9 days ago" },
+        { name: "Connector Lock Retention DFMEA", refs: ["Seat_Belt_Buckle_DFMEA.xlsx", "Door_Latch_Actuator_DFMEA.xlsx", "Terminal_Retention_DFMEA_Rev3.xlsx"], docId: "seed-lock-retention", fn: "Connector Lock Retention", severity: 8, updated: "2 weeks ago" }
       ]
     }
   };
@@ -44,6 +44,7 @@
   var docs = project.docs.concat(readMyDocuments().filter(function(d){ return d.projectId === projectId; }).map(function(d){
     return {
       name: d.name, docId: d.id, fn: d.function, severity: d.severity,
+      refs: d.generatedFrom || [],
       updated: d.mode === "ai" ? "Generated · " + d.createdAt : "Created " + d.createdAt
     };
   }));
@@ -71,6 +72,7 @@
       + '<td>' + escapeHtml(doc.fn || "") + '</td>'
       + '<td>' + severityChip(doc.severity) + '</td>'
       + '<td class="data-muted">64 causes &middot; 26 paths</td>'
+      + '<td><div class="ref-cell">' + window.DfmeaRefs.chipRowHtml((doc.refs || []).map(function(n){ return { name: n }; }), 2, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</div></td>'
       + '<td class="data-muted">' + escapeHtml(doc.updated) + '</td>'
       + '</tr>';
   }).join("");
@@ -90,6 +92,14 @@
     document.getElementById("reqProduct").textContent = reqDoc.productName;
     document.getElementById("reqStandard").textContent = reqDoc.standard === "None" ? "No specific standard" : reqDoc.standard;
     document.getElementById("reqOpen").href = "requirement-view.html?id=" + encodeURIComponent(reqDoc.id);
-    document.getElementById("reqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs);
+    var specRefs = window.DfmeaReqDocs.refsFor(reqDoc);
+    if(specRefs.length){
+      var builtEl = document.getElementById("reqBuilt");
+      builtEl.hidden = false;
+      builtEl.innerHTML = '<span class="req-built-label">Built from</span>' + window.DfmeaRefs.chipRowHtml(specRefs, 3, function(item){
+        return "requirement-view.html?id=" + encodeURIComponent(item.id);
+      });
+    }
+    document.getElementById("reqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs, specRefs);
   }
 })();
