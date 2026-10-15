@@ -938,6 +938,16 @@ dialog[open]::backdrop{animation:backdropIn .18s ease forwards}
 .nd-progress-label{font-size:12px;color:#475569;font-weight:600;text-align:center}
 @media (prefers-reduced-motion:reduce){.nd-btn:active{transform:none}.nd-progress-fill::after{animation:none}}
 
+/* Reference chips: one per DFMEA / spec a result was built from. */
+/* inline-block, not inline-flex: text-overflow has no effect on the text
+   inside a flex container, so a long name would just be cut off. */
+.np-chip-mini{display:inline-block;max-width:100%;padding:3px 9px;border-radius:999px;line-height:1.4;
+ font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;
+ cursor:pointer;border:1px solid #E4EAF2;background:#fff;color:#475569;
+ transition:border-color .12s ease,background-color .12s ease,color .12s ease}
+.np-chip-mini:hover{background:#F5F7FF;border-color:#C7D2FE;color:#4338CA}
+.np-chiprow-mini{display:flex;flex-wrap:wrap;gap:5px}
+
 /* ---------- SHARED TABLES ---------- */
 /* Clickable list tables: Projects, and a project's DFMEA documents. */
 .data-card{background:#fff;border:1px solid #E4EAF2;border-radius:12px;overflow:hidden;
@@ -985,6 +995,7 @@ tbody tr:hover .data-icon{color:#4338CA;box-shadow:inset 0 0 0 1px rgba(99,102,2
 .spec-table th.spec-num,.spec-table td.spec-num{width:40px}
 .spec-table td.spec-num{color:#94A3B8;font-weight:600}
 .spec-table th.spec-cat-cell,.spec-table td.spec-cat-cell{width:132px}
+.spec-table th.spec-ref-cell,.spec-table td.spec-ref-cell{width:210px;max-width:210px}
 .spec-cat{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:10px;
  font-weight:600;white-space:nowrap;background:#F1F5F9;color:#475569;box-shadow:inset 0 0 0 1px rgba(15,23,42,.05)}
 .spec-cat[data-cat="mechanical"]{background:#EEF2FF;color:#4338CA;box-shadow:inset 0 0 0 1px #E0E7FF}
