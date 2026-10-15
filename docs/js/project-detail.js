@@ -59,7 +59,7 @@
   var DOC_ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>';
   function severityChip(value){
     var severity = Number(value);
-    if(!Number.isInteger(severity) || severity < 1 || severity > 10) return "&mdash;";
+    if(!Number.isInteger(severity) || severity < 1 || severity > 10) return "";
     var tier = severity >= 9 ? "s-crit" : (severity >= 6 ? "s-high" : "s-low");
     return '<span class="chip ' + tier + '">' + severity + '</span>';
   }

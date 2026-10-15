@@ -144,7 +144,7 @@
         row.dataset.tip = "Open this worksheet";
         row.innerHTML = "<td>" + escapeHtml(item.name) + "</td>"
           + "<td>" + escapeHtml(item.size) + "</td>"
-          + "<td>" + escapeHtml(item.rows != null ? item.rows + " rows" : "—") + "</td>"
+          + "<td>" + escapeHtml(item.rows != null ? item.rows + " rows" : "") + "</td>"
           + "<td>" + escapeHtml(item.when) + "</td>"
           + "<td><span class=\"uh-source " + item.source + "\">" + SOURCE_LABELS[item.source] + "</span></td>"
           + "<td><span class=\"uh-status ok\">Trained</span></td>";
