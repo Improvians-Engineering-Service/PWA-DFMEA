@@ -948,6 +948,15 @@ dialog[open]::backdrop{animation:backdropIn .18s ease forwards}
 .np-chip-mini:hover{background:#F5F7FF;border-color:#C7D2FE;color:#4338CA}
 .np-chiprow-mini{display:flex;flex-wrap:wrap;gap:5px}
 
+/* Where a legacy DFMEA came from: External (shared with the project), Library, Mine. */
+.uh-source{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:10.5px;font-weight:600;white-space:nowrap;
+ background:#F1F5F9;color:#475569;box-shadow:inset 0 0 0 1px #E2E8F0}
+.uh-source.mine{background:#EEF2FF;color:#4338CA;box-shadow:inset 0 0 0 1px #E0E7FF}
+.uh-source.client{background:#FFF7ED;color:#C2410C;box-shadow:inset 0 0 0 1px #FFEDD5}
+.ref-legacy-name{color:#0F172A;font-weight:600;text-decoration:none}
+.ref-legacy-name:hover{color:#4338CA;text-decoration:underline}
+.ref-legacy tbody tr{cursor:default}
+
 /* ---------- SHARED TABLES ---------- */
 /* Clickable list tables: Projects, and a project's DFMEA documents. */
 .data-card{background:#fff;border:1px solid #E4EAF2;border-radius:12px;overflow:hidden;
