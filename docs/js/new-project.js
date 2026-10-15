@@ -63,29 +63,6 @@
     var setB = new Set(wordsOf(b));
     return wordsOf(a).some(function(w){ return w.length > 3 && setB.has(w); });
   }
-  function slugify(text){
-    return String(text).toLowerCase().replace(/\.(xlsx|xls)$/i, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  }
-  // The real Crimp DFMEA opens directly -- every other reference name here
-  // matches a file in Legacy DFMEA's uploaded-worksheets table, which
-  // opens the same way clicking that row there does: seeded once with the
-  // same "upload-<slug>" override id data-warehouse.js uses, so the title
-  // shown in the opened worksheet matches the reference's name.
-  function dfmeaReferenceUrl(refName){
-    if(refName === "Crimp Contact Resistance") return "index.html";
-    var docId = "upload-" + slugify(refName);
-    try{
-      var map = JSON.parse(localStorage.getItem("dfmeaDocOverrides") || "{}");
-      if(!map[docId]){
-        // Same trailing-"DFMEA" trim data-warehouse.js uses, so the title
-        // doesn't repeat the page's own DFMEA badge right next to it.
-        var title = refName.replace(/\.(xlsx|xls)$/i, "").replace(/[_-]+/g, " ").replace(/\s+dfmea\s*$/i, "").trim();
-        map[docId] = { name: title, function: title, failureMode: "Missing or Degraded Function", severity: 9, mode: "sample" };
-        localStorage.setItem("dfmeaDocOverrides", JSON.stringify(map));
-      }
-    }catch(error){ /* override just won't persist -- the reference still opens, unlabeled */ }
-    return "worksheet-view.html?doc=" + encodeURIComponent(docId);
-  }
 
   // The DFMEAs matching draws on to find which existing ones fit the
   // product description: worksheets listed on the Legacy DFMEA page plus
@@ -265,7 +242,8 @@
 
     // --- requirement doc ---
     saveRequirementDoc({ id: "req-" + Date.now().toString(36), projectId: projectId, productName: name,
-      standard: standard, specs: specs, createdAt: new Date().toLocaleString() });
+      standard: standard, specs: specs, createdAt: new Date().toLocaleString(),
+      builtFrom: matchedReqDocs.map(function(d){ return { id: d.id, name: d.productName }; }) });
 
     // --- generated DFMEAs, each a real, editable document like New DFMEA (with AI) produces ---
     var generatedRows = FUNCTION_SET.map(function(f){
@@ -282,7 +260,7 @@
     document.getElementById("npDoneTitle").textContent = "“" + name + "” created";
     document.getElementById("npReqProduct").textContent = name;
     document.getElementById("npReqStandard").textContent = standard === "None" ? "No specific standard" : standard;
-    document.getElementById("npReqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(specs);
+    document.getElementById("npReqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(specs, matchedReqDocs.map(function(d){ return { id: d.id, name: d.productName }; }));
 
     // A quick at-a-glance summary of what just got built, right in the
     // success banner.
@@ -301,19 +279,8 @@
     // same chips repeat down the column -- capped, with a "+N" chip (its
     // own tooltip listing the rest) so a long match list never turns the
     // cell into another list to read.
-    function refChip(label, url){
-      return '<a class="np-chip-mini" href="' + url + '" target="_blank" data-tip="' + escapeHtml(label) + ' — open this reference" onclick="event.stopPropagation()">' + escapeHtml(label) + '</a>';
-    }
-    function chipRowHtml(items, cap, toUrl){
-      if(!items.length) return "&mdash;";
-      var shown = items.slice(0, cap).map(function(item){ return refChip(item.name, toUrl(item)); }).join("");
-      if(items.length > cap){
-        var rest = items.slice(cap).map(function(item){ return item.name; }).join(", ");
-        shown += '<span class="np-chip-mini" data-tip="' + escapeHtml(rest) + '">+' + (items.length - cap) + '</span>';
-      }
-      return shown;
-    }
-    var dfmeaRefChips = chipRowHtml(matched, 2, function(m){ return dfmeaReferenceUrl(m.name); });
+    var chipRowHtml = window.DfmeaRefs.chipRowHtml;
+    var dfmeaRefChips = chipRowHtml(matched, 2, function(m){ return window.DfmeaRefs.dfmeaUrl(m.name); });
 
     var dfmeaBody = document.getElementById("npDfmeaTable");
     dfmeaBody.innerHTML = generatedRows.map(function(r){
