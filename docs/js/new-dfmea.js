@@ -197,7 +197,7 @@
       row.className = "ndc-row";
       row.innerHTML = '<td class="ndc-check"><input type="checkbox" data-id="' + c.id + '"' + (matched ? " checked" : "") + '></td>'
         + '<td><div class="ndc-name">' + escapeHtml(c.name) + '</div><div class="ndc-meta">' + escapeHtml(c.meta) + '</div></td>'
-        + '<td>' + (matched ? '<span class="ndc-badge">Matched</span>' : "&mdash;") + '</td>';
+        + '<td>' + (matched ? '<span class="ndc-badge">Matched</span>' : "") + '</td>';
       // Clicking anywhere in the row toggles it, not just the checkbox
       // itself -- same click-to-select pattern as every other table here.
       row.addEventListener("click", function(event){

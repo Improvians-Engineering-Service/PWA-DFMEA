@@ -34,12 +34,12 @@
   }
 
   function chip(label, url){
-    return '<a class="np-chip-mini" href="' + url + '" target="_blank" data-tip="' + escapeHtml(label) + ' — open this reference" onclick="event.stopPropagation()">' + escapeHtml(label) + '</a>';
+    return '<a class="np-chip-mini" href="' + url + '" target="_blank" data-tip="Open ' + escapeHtml(label) + '" onclick="event.stopPropagation()">' + escapeHtml(label) + '</a>';
   }
   // Capped, with a "+N" chip (its own tooltip listing the rest) so a long
   // match list never turns the cell into another list to read.
   function chipRowHtml(items, cap, toUrl){
-    if(!items.length) return "&mdash;";
+    if(!items.length) return "";
     var shown = items.slice(0, cap).map(function(item){ return chip(item.name, toUrl(item)); }).join("");
     if(items.length > cap){
       var rest = items.slice(cap).map(function(item){ return item.name; }).join(", ");
