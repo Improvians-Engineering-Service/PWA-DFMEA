@@ -29,7 +29,7 @@
   dialog.className = "cause-editor";
   dialog.innerHTML = '<form id="causeEditorForm"><header><h2 id="causeEditorTitle">Add or link a cause</h2><p id="causeEditorParent"></p></header><div class="ce-body"><label class="ce-field" id="causeParentField">Add under<select id="causeParentSelect"></select></label><label class="ce-field">Action<select id="causeAction"><option value="add">Add child cause</option><option value="link">Link existing cause</option><option value="both">Add child and link cause</option></select></label>'
     + '<label class="ce-field" id="causeDescriptionField">Cause description<input id="causeDescription" maxlength="180" required placeholder="Describe the cause"></label>'
-    + '<label class="ce-tbd-toggle"><input type="checkbox" id="causeTbd"> Mark as TBD <span>(the cause is not yet identified -- no description needed)</span></label>'
+    + '<label class="ce-tbd-toggle"><input type="checkbox" id="causeTbd"> Mark as TBD <span>(the cause is not yet identified, no description needed)</span></label>'
     + '<div class="ce-field" id="causeCategoryField"><span>Category</span><div class="ce-cat-toggle" id="causeCategoryToggle">'
     + '<button type="button" class="ce-cat-opt on" data-value="none">None</button>'
     + '<button type="button" class="ce-cat-opt" data-value="design">Design</button>'
@@ -91,7 +91,7 @@
       card.innerHTML = '<div class="rate-h"></div><div class="rate-inputs">'
         + '<label>Occ.<input type="number" min="1" max="10" step="1" required></label>'
         + '<label>Det.<input type="number" min="1" max="10" step="1" required></label>'
-        + '</div><div class="rate-rpn">RPN &ndash;</div>';
+        + '</div><div class="rate-rpn">RPN</div>';
       card.querySelector(".rate-h").textContent = variant.name;
       var inputs = card.querySelectorAll("input");
       var occInput = inputs[0], detInput = inputs[1];
@@ -1133,7 +1133,7 @@
       // what they were last set to from a previous add-cause use.
       var isTbdEdit = tbdCheckbox.checked;
       descriptionInput.disabled = isTbdEdit;
-      descriptionInput.placeholder = isTbdEdit ? "TBD -- no description needed" : "Describe the cause";
+      descriptionInput.placeholder = isTbdEdit ? "TBD, no description needed" : "Describe the cause";
       if(isTbdEdit) descriptionInput.value = "";
       descriptionInput.required = !isTbdEdit;
       document.getElementById("causeEditorForm").querySelector('[type="submit"]').disabled = false;
@@ -1157,7 +1157,7 @@
     ratingField.hidden = mode === "link";
     if(categoryField) categoryField.hidden = mode === "link";
     descriptionInput.disabled = isTbd;
-    descriptionInput.placeholder = isTbd ? "TBD -- no description needed" : "Describe the cause";
+    descriptionInput.placeholder = isTbd ? "TBD, no description needed" : "Describe the cause";
     if(isTbd) descriptionInput.value = "";
     descriptionInput.required = mode !== "link" && !isTbd;
     variantInputs.forEach(function(v){ v.occInput.required = mode !== "link"; v.detInput.required = mode !== "link"; });
@@ -1263,7 +1263,7 @@
     descriptionField.hidden = false;
     ratingField.hidden = false;
     descriptionInput.disabled = isTbd;
-    descriptionInput.placeholder = isTbd ? "TBD -- no description needed" : "Describe the cause";
+    descriptionInput.placeholder = isTbd ? "TBD, no description needed" : "Describe the cause";
     descriptionInput.required = !isTbd;
     // Read this row's CURRENT category straight from its own Summary
     // cells -- if one of them already holds this exact cause's title,

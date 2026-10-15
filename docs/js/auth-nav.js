@@ -245,7 +245,7 @@
       panel.id = "reqSpecPanel";
       panel.className = "req-panel";
       var summary = document.createElement("summary");
-      summary.appendChild(document.createTextNode("Design requirement specification — " + (reqDoc.specs || []).length + " requirements"));
+      summary.appendChild(document.createTextNode("Design requirement specification: " + (reqDoc.specs || []).length + " requirements"));
       var standardChip = document.createElement("span");
       standardChip.className = "req-standard";
       standardChip.textContent = reqDoc.standard === "None" ? "No specific standard" : reqDoc.standard;
