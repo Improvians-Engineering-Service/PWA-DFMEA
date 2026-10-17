@@ -9,7 +9,7 @@
     return div.innerHTML;
   }
   function slugify(text){
-    return String(text).toLowerCase().replace(/\.(xlsx|xls)$/i, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return String(text).toLowerCase().replace(/\.(xlsx|xls|pdf)$/i, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
   }
 
   // The real Crimp DFMEA opens directly -- every other reference name
@@ -25,7 +25,7 @@
       if(!map[docId]){
         // Same trailing-"DFMEA" trim data-warehouse.js uses, so the title
         // doesn't repeat the page's own DFMEA badge right next to it.
-        var title = refName.replace(/\.(xlsx|xls)$/i, "").replace(/[_-]+/g, " ").replace(/\s+dfmea\s*$/i, "").trim();
+        var title = refName.replace(/\.(xlsx|xls|pdf)$/i, "").replace(/[_-]+/g, " ").replace(/\s+dfmea\s*$/i, "").trim();
         map[docId] = { name: title, function: title, failureMode: "Missing or Degraded Function", severity: 9, mode: "sample" };
         localStorage.setItem("dfmeaDocOverrides", JSON.stringify(map));
       }
@@ -38,9 +38,14 @@
   // DFMEA lists them (plus anything uploaded); a DFMEA lists the ones it
   // was built from.
   var LEGACY = [
-    { name: "OEM_Connector_Interface_DFMEA.xlsx", size: "224 KB", when: "Jul 18, 2025, 2:45 PM", rows: 64, source: "client" },
-    { name: "Customer_Battery_Terminal_DFMEA.xlsx", size: "196 KB", when: "Aug 5, 2025, 10:12 AM", rows: 52, source: "client" },
-    { name: "Tier1_Harness_Routing_DFMEA.xlsx", size: "178 KB", when: "Sep 12, 2025, 3:30 PM", rows: 47, source: "client" }
+    { name: "Crimp DFMEA - Page 1.pdf", size: "121 KB", when: "Sep 22, 2026, 5:55 PM", rows: 12, source: "client" },
+    { name: "Crimp DFMEA - Page 2.pdf", size: "96 KB", when: "Sep 22, 2026, 5:55 PM", rows: 9, source: "client" },
+    { name: "Crimp DFMEA - Page 3.pdf", size: "132 KB", when: "Sep 22, 2026, 5:55 PM", rows: 14, source: "client" },
+    { name: "Crimp DFMEA - Page 4.pdf", size: "71 KB", when: "Sep 22, 2026, 5:55 PM", rows: 7, source: "client" },
+    { name: "Crimp DFMEA - Page 5.pdf", size: "73 KB", when: "Sep 22, 2026, 5:55 PM", rows: 8, source: "client" },
+    { name: "Crimp DFMEA - Page 6.pdf", size: "71 KB", when: "Sep 22, 2026, 5:55 PM", rows: 7, source: "client" },
+    { name: "Crimp DFMEA - Page 7.pdf", size: "132 KB", when: "Sep 22, 2026, 5:55 PM", rows: 14, source: "client" },
+    { name: "Interface Contact Ressitance Cause & Effect Diagram.pdf", size: "147 KB", when: "Sep 22, 2026, 5:56 PM", rows: 11, source: "client" }
   ];
   function legacyInfo(name){
     return LEGACY.filter(function(f){ return f.name === name; })[0] || null;
@@ -49,11 +54,11 @@
   // Which legacy DFMEAs each built-in Aster document was built from
   // ("" is the Crimp DFMEA, which has no ?doc= id).
   var SEED_DOC_REFS = {
-    "": ["OEM_Connector_Interface_DFMEA.xlsx", "Tier1_Harness_Routing_DFMEA.xlsx", "Customer_Battery_Terminal_DFMEA.xlsx"],
-    "seed-terminal-durability": ["Customer_Battery_Terminal_DFMEA.xlsx", "Crimp Contact Resistance"],
-    "seed-housing-seal": ["OEM_Connector_Interface_DFMEA.xlsx"],
-    "seed-mating-cycle": ["Tier1_Harness_Routing_DFMEA.xlsx", "Crimp Contact Resistance"],
-    "seed-lock-retention": ["OEM_Connector_Interface_DFMEA.xlsx", "Tier1_Harness_Routing_DFMEA.xlsx"]
+    "": ["Crimp DFMEA - Page 1.pdf", "Crimp DFMEA - Page 2.pdf", "Crimp DFMEA - Page 3.pdf", "Crimp DFMEA - Page 4.pdf", "Crimp DFMEA - Page 5.pdf", "Crimp DFMEA - Page 6.pdf", "Crimp DFMEA - Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"],
+    "seed-terminal-durability": ["Crimp DFMEA - Page 2.pdf", "Crimp DFMEA - Page 3.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"],
+    "seed-housing-seal": ["Crimp DFMEA - Page 4.pdf", "Crimp DFMEA - Page 5.pdf"],
+    "seed-mating-cycle": ["Crimp DFMEA - Page 6.pdf", "Crimp DFMEA - Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"],
+    "seed-lock-retention": ["Crimp DFMEA - Page 5.pdf", "Crimp DFMEA - Page 6.pdf"]
   };
   function seedDocRefs(docId){ return SEED_DOC_REFS[docId || ""] || null; }
 
