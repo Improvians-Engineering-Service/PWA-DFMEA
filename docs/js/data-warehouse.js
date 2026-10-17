@@ -15,7 +15,7 @@
     return div.innerHTML;
   }
   function slugify(text){
-    return String(text).toLowerCase().replace(/\.(xlsx|xls)$/i, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return String(text).toLowerCase().replace(/\.(xlsx|xls|pdf)$/i, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
   }
   // A plain CSV export -- good enough for a row set this small, and it's
   // a real file download, not a fake button that does nothing on click.
@@ -94,7 +94,7 @@
           // Trailing "DFMEA" is dropped -- the page already shows a DFMEA
           // badge next to the title, so a name ending in it would read
           // like "Busbar Joint DFMEA DFMEA" once both are on screen.
-          var title = item.name.replace(/\.(xlsx|xls)$/i, "").replace(/[_-]+/g, " ").replace(/\s+dfmea\s*$/i, "").trim();
+          var title = item.name.replace(/\.(xlsx|xls|pdf)$/i, "").replace(/[_-]+/g, " ").replace(/\s+dfmea\s*$/i, "").trim();
           map[docId] = { name: title, function: title, failureMode: "Missing or Degraded Function", severity: 9, mode: "sample" };
           localStorage.setItem("dfmeaDocOverrides", JSON.stringify(map));
         }
@@ -129,6 +129,7 @@
       };
     }
     searchInput.addEventListener("input", renderHistory);
+    if(window.TableTools) window.TableTools.attach(document.getElementById("uploadHistoryTable"), { search: false, noun: "files" });
 
     function showError(message){
       errBox.textContent = message;
