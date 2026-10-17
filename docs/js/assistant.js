@@ -259,8 +259,9 @@
       nav.id = "navAi";
       nav.innerHTML = '<span class="ni">' + SPARK.replace('width="14" height="14"', 'width="17" height="17"') + '</span>AI Assistant';
       nav.addEventListener("click", function(){ window.location.href = "ai-assistant.html"; });
-      var foot = side.querySelector(".sfoot");
-      side.insertBefore(nav, foot);
+      // First item in the sidebar, above Legacy DFMEA.
+      var brand = side.querySelector(".brand");
+      side.insertBefore(nav, brand ? brand.nextSibling : side.firstChild);
     }
     if(page === "ai-assistant.html" || page === "ai-summary.html" || page === "login.html") return;
     var host = document.querySelector(".top") || document.querySelector(".sa-head");
