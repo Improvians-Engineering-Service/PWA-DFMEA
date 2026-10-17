@@ -86,7 +86,7 @@
     // and some titles (like "Excessive conductor back chamfer angle")
     // break wrong and spill text past the card's right edge into the
     // next card. Re-wrap every title here using its ACTUAL rendered
-    // width (getComputedTextLength, against the real Inter font this
+    // width (getComputedTextLength, against the real font this
     // renders with) instead of trusting that estimate -- cards keep
     // their fixed height/width (unlike titles, nothing else was shown
     // to overflow, and growing cards individually previously desynced
