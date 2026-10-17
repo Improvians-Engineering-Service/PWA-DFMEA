@@ -63,6 +63,12 @@
     var tier = severity >= 9 ? "s-crit" : (severity >= 6 ? "s-high" : "s-low");
     return '<span class="chip ' + tier + '">' + severity + '</span>';
   }
+  // The short AI summary of a document, and the link to its detailed one.
+  function aiSummary(doc){ return window.DfmeaAI.dfmeaShort(doc.fn, doc.severity); }
+  function aiSummaryUrl(doc){
+    return "ai-summary.html?type=dfmea&project=" + encodeURIComponent(projectId) + "&doc=" + encodeURIComponent(doc.docId || "")
+      + "&name=" + encodeURIComponent(doc.name) + "&fn=" + encodeURIComponent(doc.fn || "") + "&sev=" + encodeURIComponent(doc.severity || "");
+  }
   var tableBody = document.getElementById("docTableBody");
   document.getElementById("docTable").hidden = !docs.length;
   document.getElementById("docEmpty").hidden = docs.length > 0;
@@ -72,10 +78,16 @@
       + '<td>' + escapeHtml(doc.fn || "") + '</td>'
       + '<td>' + severityChip(doc.severity) + '</td>'
       + '<td class="data-muted">64 causes &middot; 26 paths</td>'
-      + '<td><div class="ref-cell">' + window.DfmeaRefs.chipRowHtml((doc.refs || window.DfmeaRefs.seedDocRefs(doc.docId) || []).map(function(n){ return { name: n }; }), 2, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</div></td>'
+      + '<td><div class="ref-cell">' + window.DfmeaRefs.chipRowHtml((doc.refs || window.DfmeaRefs.seedDocRefs(doc.docId) || []).map(function(n){ return { name: n }; }), 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</div></td>'
+      + '<td><a class="ai-sum" href="' + aiSummaryUrl(doc) + '" target="_blank" onclick="event.stopPropagation()" data-tip="' + escapeHtml(aiSummary(doc)) + '">'
+      + window.DfmeaAI.spark + '<span>' + escapeHtml(aiSummary(doc)) + '</span></a></td>'
       + '<td class="data-muted">' + escapeHtml(doc.updated) + '</td>'
       + '</tr>';
   }).join("");
+  if(docs.length && window.TableTools){
+    window.TableTools.attach(document.getElementById("docTable"), { noun: "DFMEAs", placeholder: "Search DFMEAs",
+      filters: [{ col: 2, label: "All severities" }], pageSize: 10 });
+  }
   Array.prototype.slice.call(tableBody.querySelectorAll("tr")).forEach(function(row){
     row.addEventListener("click", function(){
       var docId = row.dataset.docId;
@@ -86,20 +98,21 @@
   // A project created through "Create project with AI" has a generated
   // design requirement specification attached to it -- shown below its
   // documents as the same table every other page renders a spec with.
+  document.getElementById("docSecN").textContent = "1";
   var reqDoc = window.DfmeaReqDocs.readAll().find(function(r){ return r.projectId === projectId; });
   if(reqDoc){
     document.getElementById("reqSection").hidden = false;
+    document.getElementById("docSecN").textContent = "2";
     document.getElementById("reqProduct").textContent = reqDoc.productName;
     document.getElementById("reqStandard").textContent = reqDoc.standard === "None" ? "No specific standard" : reqDoc.standard;
     document.getElementById("reqOpen").href = "requirement-view.html?id=" + encodeURIComponent(reqDoc.id);
-    var specRefs = window.DfmeaReqDocs.refsFor(reqDoc);
+    var specRefs = window.DfmeaReqDocs.dfmeaRefsFor(reqDoc).map(function(n){ return { name: n }; });
     if(specRefs.length){
       var builtEl = document.getElementById("reqBuilt");
       builtEl.hidden = false;
-      builtEl.innerHTML = '<span class="req-built-label">References</span>' + window.DfmeaRefs.chipRowHtml(specRefs, 3, function(item){
-        return "requirement-view.html?id=" + encodeURIComponent(item.id);
-      });
+      builtEl.innerHTML = '<span class="req-built-label">References</span>' + window.DfmeaRefs.chipRowHtml(specRefs, 3, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); });
     }
     document.getElementById("reqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs, reqDoc);
+    window.DfmeaReqDocs.enhanceSpecTable(document.getElementById("reqSpecs"));
   }
 })();

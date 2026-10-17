@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8">
+<!doctype html><html><head><meta charset="utf-8"><script src="js/theme.js"></script>
 <script>
 (function(){
   try{
@@ -11,15 +11,15 @@
 <style>
 /* Shared wizard styles (.nd-*) live in css/style.css. */
 .ndc-check{width:46px}
-.ndc-check input{width:16px;height:16px;margin:0;vertical-align:middle;cursor:pointer;accent-color:#4F46E5}
+.ndc-check input{width:16px;height:16px;margin:0;vertical-align:middle;cursor:pointer;accent-color:var(--p600)}
 .ndc-name{font-size:12.5px;font-weight:600;color:#0F172A}
 .ndc-meta{font-size:11px;color:#64748B;margin-top:3px}
 .ndc-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;
  background:#ECFDF5;color:#047857;font-size:10.5px;font-weight:600;box-shadow:inset 0 0 0 1px #D1FAE5;white-space:nowrap}
 .ndc-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .data-table tbody tr.ndc-row{cursor:pointer}
-.data-table tbody tr.ndc-row:has(input:checked) td{background:#F7F8FF}
-.data-table tbody tr.ndc-row:has(input:checked) td:first-child{box-shadow:inset 3px 0 0 #6366F1}
+.data-table tbody tr.ndc-row:has(input:checked) td{background:var(--p25)}
+.data-table tbody tr.ndc-row:has(input:checked) td:first-child{box-shadow:inset 3px 0 0 var(--p500)}
 .nd-success-icon{width:50px;height:50px;border-radius:50%;background:#fff;color:#16A34A;
  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
  box-shadow:0 0 0 6px rgba(22,163,74,.09),0 6px 16px rgba(15,23,42,.07)}
@@ -151,5 +151,7 @@
 </script>
 <script src="js/req-docs.js"></script>
 <script src="js/references.js"></script>
+<script src="js/table-tools.js"></script>
 <script src="js/new-dfmea.js"></script>
+<script src="js/assistant.js"></script>
 </body></html>
