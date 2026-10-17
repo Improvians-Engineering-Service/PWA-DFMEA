@@ -274,7 +274,7 @@
       legacyPanel.id = "legacyRefPanel";
       legacyPanel.className = "req-panel";
       var legacySummary = document.createElement("summary");
-      legacySummary.appendChild(document.createTextNode("Built from legacy DFMEAs: " + legacyNames.length));
+      legacySummary.appendChild(document.createTextNode("Legacy DFMEA references: " + legacyNames.length));
       if(externalCount){
         var extChip = document.createElement("span");
         extChip.className = "req-standard";

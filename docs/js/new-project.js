@@ -295,7 +295,7 @@
       var specChips = chipRowHtml(matchedReqDocs.map(function(d){ return { name: d.productName, id: d.id }; }), 3, function(item){
         return "requirement-view.html?id=" + encodeURIComponent(item.id);
       });
-      reqBuilt.innerHTML = '<span class="np-built-label">Built from</span><div class="np-chiprow-mini">' + specChips + '</div>';
+      reqBuilt.innerHTML = '<span class="np-built-label">References</span><div class="np-chiprow-mini">' + specChips + '</div>';
     }
 
     var actions = document.getElementById("npDoneActions");
