@@ -29,6 +29,26 @@
     }).join("") + '<option value="None">No specific standard</option>';
     standardInput.value = "LV214";
   })();
+
+  // Every design requirement specification already on file: pick one to
+  // base this project's spec on (it leads the generated spec and is listed
+  // first under References), or leave it on auto-match.
+  var specInput = document.getElementById("npSpec");
+  (function populateSpecs(){
+    var docs = [];
+    try{ docs = window.DfmeaReqDocs.readAll(); }catch(error){ /* auto-match only */ }
+    specInput.innerHTML = '<option value="">Auto-match from description</option>' + docs.map(function(d){
+      var label = d.standard === "None" ? d.productName : d.standard + " · " + d.productName;
+      return '<option value="' + escapeHtml(d.id) + '">' + escapeHtml(label) + '</option>';
+    }).join("");
+    // Choosing a spec also sets the standard it was written to.
+    specInput.addEventListener("change", function(){
+      var picked = specInput.value && window.DfmeaReqDocs.getById(specInput.value);
+      if(picked && Array.prototype.some.call(standardInput.options, function(o){ return o.value === picked.standard; })){
+        standardInput.value = picked.standard;
+      }
+    });
+  })();
   var step1 = document.getElementById("npStep1");
   var step2 = document.getElementById("npStep2");
   var step3 = document.getElementById("npStep3");
@@ -219,13 +239,16 @@
     var matchedSpecs = SPEC_POOL.filter(function(entry){
       return wordsOf(description).some(function(w){ return w.length > 3 && entry.words.indexOf(w) !== -1; });
     }).map(function(entry){ return entry.spec; });
-    var specs = Array.from(new Set(matchedSpecs.concat(DEFAULT_SPECS))).slice(0, 18);
+    var chosenSpec = specInput.value ? window.DfmeaReqDocs.getById(specInput.value) : null;
+    var baseSpecs = chosenSpec ? chosenSpec.specs.slice(0, 8) : [];
+    var specs = Array.from(new Set(baseSpecs.concat(matchedSpecs, DEFAULT_SPECS))).slice(0, 18);
 
     // --- related DFMEAs and existing requirement specs that matched the
     // description -- shown together as one simple "what this was built
     // from" list, so the result is explainable, not a black box.
     var matched = REFERENCE_DOCS.filter(function(doc){ return sharesWord(description, doc.name); });
-    var matchedReqDocs = window.DfmeaReqDocs.readAll().filter(function(d){ return sharesWord(description, d.productName); });
+    var matchedReqDocs = window.DfmeaReqDocs.readAll().filter(function(d){ return sharesWord(description, d.productName) && (!chosenSpec || d.id !== chosenSpec.id); });
+    if(chosenSpec) matchedReqDocs.unshift(chosenSpec);
 
     // --- project ---
     var projectRecord = { id: projectId, name: name, description: description, createdAt: new Date().toLocaleString() };
