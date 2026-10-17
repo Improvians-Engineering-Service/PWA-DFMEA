@@ -96,7 +96,7 @@
     if(specRefs.length){
       var builtEl = document.getElementById("reqBuilt");
       builtEl.hidden = false;
-      builtEl.innerHTML = '<span class="req-built-label">Built from</span>' + window.DfmeaRefs.chipRowHtml(specRefs, 3, function(item){
+      builtEl.innerHTML = '<span class="req-built-label">References</span>' + window.DfmeaRefs.chipRowHtml(specRefs, 3, function(item){
         return "requirement-view.html?id=" + encodeURIComponent(item.id);
       });
     }

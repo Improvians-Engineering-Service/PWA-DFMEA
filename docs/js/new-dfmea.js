@@ -254,7 +254,7 @@
     });
 
     document.getElementById("ndDoneTitle").textContent = "“" + name + "” generated";
-    document.getElementById("ndDoneBody").textContent = "A starting cause structure was built from the DFMEAs below. Everything is editable.";
+    document.getElementById("ndDoneBody").textContent = "A starting cause structure was based on the reference DFMEAs below. Everything is editable.";
     var summary = document.getElementById("ndSummaryBox");
     summary.hidden = false;
     // Same severity tiers as every other table in the app.
@@ -263,7 +263,7 @@
       ["Function", escapeHtml(fn)],
       ["Failure mode", escapeHtml(failure)],
       ["Severity", '<span class="chip ' + severityTier + '">' + severity + "</span>"],
-      ["Built from", fromNames.length ? escapeHtml(fromNames.join(", ")) : "Crimp Contact Resistance (default reference)"],
+      ["References", fromNames.length ? escapeHtml(fromNames.join(", ")) : "Crimp Contact Resistance (default reference)"],
       ["Structure", "64 causes across 26 paths, up to 11 levels deep"]
     ].map(function(row){ return "<tr><th>" + row[0] + "</th><td>" + row[1] + "</td></tr>"; }).join("") + "</table>";
 
