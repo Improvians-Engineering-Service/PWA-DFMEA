@@ -59,13 +59,9 @@
     var sourceFilter = document.getElementById("uhSourceFilter");
     var historyKey = "dfmeaUploadHistory";
 
-    // A shared library this workspace already has on file, same idea as
-    // the Crimp DFMEA being the one document that's already populated --
-    // real uploads (readHistory/saveHistory below) are entirely separate
-    // from this and are what the "no data yet" checks elsewhere key off of.
-    // Two kinds of pre-existing files: ones shared from outside this
-    // workspace (external, authoritative, kept pinned at the top) and
-    // this workspace's own library of prior work (everything else).
+    // The legacy worksheets shared with the project (external, kept pinned
+    // at the top), then anything uploaded. Real uploads (readHistory/
+    // saveHistory below) are what the "no data yet" checks elsewhere key off of.
     var DEFAULT_LIBRARY = window.DfmeaRefs.LEGACY;
 
     function readHistory(){
@@ -81,13 +77,10 @@
     }
     function allRows(){
       // Externally-shared files always lead the list -- they're the
-      // authoritative external reference, not just more library data --
-      // then your own uploads (newest first), then this workspace's own
-      // library (newest first).
-      var client = DEFAULT_LIBRARY.filter(function(d){ return d.source === "client"; });
-      var library = DEFAULT_LIBRARY.filter(function(d){ return d.source === "library"; }).slice().reverse();
+      // authoritative external reference -- then your own uploads (newest
+      // first).
       var mine = readHistory().map(function(d){ return Object.assign({ source: "mine" }, d); }).slice().reverse();
-      return client.concat(mine, library);
+      return DEFAULT_LIBRARY.concat(mine);
     }
     // Opening an uploaded worksheet reuses the same per-document override
     // mechanism every DFMEA in this build already uses -- there's no real
@@ -120,7 +113,7 @@
         return true;
       });
 
-      var SOURCE_LABELS = { client: "External", mine: "Uploaded by you", library: "Library" };
+      var SOURCE_LABELS = { client: "External", mine: "Uploaded by you" };
       historyBody.innerHTML = "";
       historyEmpty.hidden = visible.length > 0;
       visible.forEach(function(item){
@@ -138,7 +131,7 @@
 
       document.getElementById("uhExportBtn").onclick = function(){
         downloadCsv("uploaded-worksheets.csv", ["File", "Size", "Rows parsed", "Uploaded", "Source", "Status"],
-          visible.map(function(r){ return [r.name, r.size, r.rows != null ? r.rows : "", r.when, r.mine ? "Uploaded by you" : "Library", "Trained"]; }));
+          visible.map(function(r){ return [r.name, r.size, r.rows != null ? r.rows : "", r.when, r.source === "mine" ? "Uploaded by you" : "External", "Trained"]; }));
       };
     }
     searchInput.addEventListener("input", renderHistory);

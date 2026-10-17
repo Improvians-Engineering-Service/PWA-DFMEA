@@ -33,26 +33,14 @@
     return "worksheet-view.html?doc=" + encodeURIComponent(docId);
   }
 
-  // The legacy DFMEA worksheets already on file: ones shared from outside
-  // this workspace ("client" source key, shown as External, kept first) and
-  // this workspace's own library. Legacy DFMEA lists them; a DFMEA lists
-  // the ones it was built from.
+  // The legacy DFMEA worksheets shared with the project: the only legacy
+  // files kept on file, so nothing else can be mistaken for them. Legacy
+  // DFMEA lists them (plus anything uploaded); a DFMEA lists the ones it
+  // was built from.
   var LEGACY = [
     { name: "OEM_Connector_Interface_DFMEA.xlsx", size: "224 KB", when: "Jul 18, 2025, 2:45 PM", rows: 64, source: "client" },
     { name: "Customer_Battery_Terminal_DFMEA.xlsx", size: "196 KB", when: "Aug 5, 2025, 10:12 AM", rows: 52, source: "client" },
-    { name: "Tier1_Harness_Routing_DFMEA.xlsx", size: "178 KB", when: "Sep 12, 2025, 3:30 PM", rows: 47, source: "client" },
-    { name: "Sensor_Bracket_DFMEA.xlsx", size: "142 KB", when: "Mar 28, 2024, 10:33 AM", rows: 33, source: "library" },
-    { name: "Busbar_Joint_DFMEA.xlsx", size: "198 KB", when: "Jun 5, 2024, 2:10 PM", rows: 55, source: "library" },
-    { name: "Wire_Harness_DFMEA_2023.xlsx", size: "156 KB", when: "Aug 19, 2024, 11:20 AM", rows: 39, source: "library" },
-    { name: "Connector_Housing_DFMEA.xlsx", size: "211 KB", when: "Nov 2, 2024, 3:45 PM", rows: 61, source: "library" },
-    { name: "Terminal_Retention_DFMEA_Rev3.xlsx", size: "184 KB", when: "Jan 14, 2025, 9:02 AM", rows: 48, source: "library" },
-    { name: "Battery_Tray_Mounting_DFMEA.xlsx", size: "167 KB", when: "Feb 7, 2025, 1:18 PM", rows: 42, source: "library" },
-    { name: "Coolant_Hose_Fitting_DFMEA.xlsx", size: "129 KB", when: "Mar 3, 2025, 9:54 AM", rows: 27, source: "library" },
-    { name: "PCB_Connector_Interface_DFMEA.xlsx", size: "203 KB", when: "Mar 21, 2025, 4:02 PM", rows: 58, source: "library" },
-    { name: "Door_Latch_Actuator_DFMEA.xlsx", size: "176 KB", when: "Apr 9, 2025, 10:47 AM", rows: 45, source: "library" },
-    { name: "Seat_Belt_Buckle_DFMEA.xlsx", size: "151 KB", when: "Apr 30, 2025, 2:36 PM", rows: 36, source: "library" },
-    { name: "Headlamp_Housing_Seal_DFMEA.xlsx", size: "188 KB", when: "May 16, 2025, 11:09 AM", rows: 50, source: "library" },
-    { name: "Charging_Port_Cover_DFMEA.xlsx", size: "160 KB", when: "Jun 2, 2025, 3:27 PM", rows: 38, source: "library" }
+    { name: "Tier1_Harness_Routing_DFMEA.xlsx", size: "178 KB", when: "Sep 12, 2025, 3:30 PM", rows: 47, source: "client" }
   ];
   function legacyInfo(name){
     return LEGACY.filter(function(f){ return f.name === name; })[0] || null;
@@ -61,11 +49,11 @@
   // Which legacy DFMEAs each built-in Aster document was built from
   // ("" is the Crimp DFMEA, which has no ?doc= id).
   var SEED_DOC_REFS = {
-    "": ["OEM_Connector_Interface_DFMEA.xlsx", "Tier1_Harness_Routing_DFMEA.xlsx", "Customer_Battery_Terminal_DFMEA.xlsx", "Terminal_Retention_DFMEA_Rev3.xlsx"],
-    "seed-terminal-durability": ["Customer_Battery_Terminal_DFMEA.xlsx", "Terminal_Retention_DFMEA_Rev3.xlsx", "Crimp Contact Resistance", "Wire_Harness_DFMEA_2023.xlsx"],
-    "seed-housing-seal": ["OEM_Connector_Interface_DFMEA.xlsx", "Connector_Housing_DFMEA.xlsx", "Headlamp_Housing_Seal_DFMEA.xlsx"],
-    "seed-mating-cycle": ["Tier1_Harness_Routing_DFMEA.xlsx", "Connector_Housing_DFMEA.xlsx", "Door_Latch_Actuator_DFMEA.xlsx", "Crimp Contact Resistance"],
-    "seed-lock-retention": ["OEM_Connector_Interface_DFMEA.xlsx", "Seat_Belt_Buckle_DFMEA.xlsx", "Door_Latch_Actuator_DFMEA.xlsx", "Terminal_Retention_DFMEA_Rev3.xlsx"]
+    "": ["OEM_Connector_Interface_DFMEA.xlsx", "Tier1_Harness_Routing_DFMEA.xlsx", "Customer_Battery_Terminal_DFMEA.xlsx"],
+    "seed-terminal-durability": ["Customer_Battery_Terminal_DFMEA.xlsx", "Crimp Contact Resistance"],
+    "seed-housing-seal": ["OEM_Connector_Interface_DFMEA.xlsx"],
+    "seed-mating-cycle": ["Tier1_Harness_Routing_DFMEA.xlsx", "Crimp Contact Resistance"],
+    "seed-lock-retention": ["OEM_Connector_Interface_DFMEA.xlsx", "Tier1_Harness_Routing_DFMEA.xlsx"]
   };
   function seedDocRefs(docId){ return SEED_DOC_REFS[docId || ""] || null; }
 
