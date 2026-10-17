@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8">
+<!doctype html><html><head><meta charset="utf-8"><script src="js/theme.js"></script>
 <script>
 (function(){
   try{
@@ -17,7 +17,7 @@
    there instead of a long scroll away at the very bottom of the page. */
 .np-hero{position:relative;padding:28px 32px 26px;background:
  radial-gradient(640px 220px at 85% -40%,rgba(129,140,248,.16),transparent 70%),
- linear-gradient(180deg,#F7F8FF 0%,#FBFCFE 100%);
+ linear-gradient(180deg,var(--p25) 0%,#FBFCFE 100%);
  border-bottom:1px solid #EEF0F7;display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap}
 .np-hero-icon{width:50px;height:50px;border-radius:50%;background:#fff;color:#16A34A;flex:none;
  display:flex;align-items:center;justify-content:center;
@@ -30,7 +30,7 @@
 .np-stat{display:inline-flex;align-items:center;gap:6px;padding:5px 12px 5px 10px;border-radius:999px;
  background:#fff;border:1px solid #E4EAF2;font-size:11px;font-weight:600;color:#475569;
  box-shadow:0 1px 2px rgba(15,23,42,.03)}
-.np-stat b{color:#4338CA;font-weight:800;font-size:12px}
+.np-stat b{color:var(--p700);font-weight:800;font-size:12px}
 .np-hero-actions{flex:none;display:flex;gap:8px;align-self:center;margin-left:auto}
 .np-hero-actions .nd-btn{margin:0}
 
@@ -39,13 +39,13 @@
 .np-col{min-width:0}
 .np-col-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .np-col-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
-.np-col-icon.spec{background:#EEF2FF;color:#4338CA}
+.np-col-icon.spec{background:var(--p50);color:var(--p700)}
 .np-col-icon.dfmea{background:#FFF7ED;color:#C2410C}
 .np-sectitle{font-size:12px;font-weight:700;color:#1E293B;letter-spacing:-.1px}
 .np-hint{margin-left:auto;font-size:10.5px;color:#94A3B8;white-space:nowrap}
 .np-tablecard{border:1px solid #E4EAF2;border-radius:12px;background:#fff;overflow:hidden;
  box-shadow:0 1px 2px rgba(15,23,42,.03)}
-.np-tablecard.spec{border-left:3px solid #818CF8}
+.np-tablecard.spec{border-left:3px solid var(--p400)}
 .np-tablecard.dfmea{border-left:3px solid #FDBA74}
 .np-reqhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:11px 14px;
  background:#FBFCFE;border-bottom:1px solid #E4EAF2}
@@ -68,7 +68,7 @@
 .np-tablecard.dfmea .np-table td:first-child{color:#0F172A;font-weight:600}
 .np-table tbody tr{cursor:pointer}
 .np-table tbody tr:last-child td{border-bottom:none}
-.np-table tbody tr:hover td{background:#F8FAFF}
+.np-table tbody tr:hover td{background:var(--p25)}
 @media (max-width:860px){.np-top-grid{grid-template-columns:1fr}}
 @media (max-width:640px){.np-hero{padding:22px 20px}.np-body{padding:20px}.np-hero-actions{margin-left:0;flex:1 1 100%}}
 </style>
@@ -100,12 +100,12 @@
       <div class="nd-card">
         <div class="nd-field" id="npNameField">
           <label for="npName">Project name</label>
-          <input type="text" id="npName" value="Orion Battery Busbar" placeholder="e.g. Orion Battery Busbar">
+          <input type="text" id="npName" value="TAK50" placeholder="e.g. TAK50">
           <div class="nd-err-msg" id="npNameErr">Give this project a name.</div>
         </div>
         <div class="nd-field" id="npDescField">
           <label for="npDesc">What are you building?</label>
-          <textarea id="npDesc" placeholder="Describe the product, e.g. a crimped terminal connector for a battery pack, sealed housing, high current.">A crimped terminal busbar connector for a high-current battery pack, sealed housing, vibration resistant</textarea>
+          <textarea id="npDesc" placeholder="Describe the product: what it is, what it must do, the limits it must meet and the standard it follows.">TAK50 is a sealed, high-current crimped terminal and connector interface for an EV battery system. The crimp joint between the wire strands and the terminal must keep contact resistance below 0.55 mOhm for the life of the vehicle, and the connector interface must hold its contact force after repeated mating, vibration and thermal cycling. The housing is sealed to IP67, the cause and effect of any resistance rise must be traceable, and the design follows LV214.</textarea>
           <div class="nd-err-msg">Describe the product so we can generate relevant specifications.</div>
         </div>
         <div class="nd-field" id="npStandardField">
@@ -191,4 +191,5 @@
 <script src="js/req-docs.js"></script>
 <script src="js/references.js"></script>
 <script src="js/new-project.js"></script>
+<script src="js/assistant.js"></script>
 </body></html>
