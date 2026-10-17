@@ -1,0 +1,145 @@
+<!doctype html><html><head><meta charset="utf-8"><script src="js/theme.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI summary - DFMEA</title>
+<script>
+(function(){
+  try{
+    var auth = JSON.parse(localStorage.getItem("dfmeaAuth") || "null");
+    if(!auth || !auth.loggedIn) window.location.replace("login.html");
+  }catch(error){ window.location.replace("login.html"); }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css">
+<style>
+.as-wrap{max-width:900px;margin:28px auto 48px;padding:0 22px}
+.as-card{background:#fff;border:1px solid #E4EAF2;border-radius:16px;padding:26px 28px;
+ box-shadow:0 1px 2px rgba(15,23,42,.04),0 16px 40px -18px rgba(15,23,42,.14)}
+.as-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:var(--p50);color:var(--p700);font-size:11px;font-weight:700;
+ box-shadow:inset 0 0 0 1px var(--p100);margin-bottom:12px}
+.as-title{font-size:20px;font-weight:800;color:#0F172A;letter-spacing:-.4px;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.as-sub{font-size:12px;color:#64748B;margin-top:5px}
+.as-quote{margin:18px 0 0;padding:13px 16px;border-left:3px solid var(--p400);border-radius:0 10px 10px 0;background:var(--p25);font-size:13px;line-height:1.55;color:#1E293B}
+.as-summary{margin-top:16px;padding:14px 16px;border:1px solid #E4EAF2;border-radius:12px;background:#FBFCFE;font-size:12.5px;line-height:1.65;color:#334155}
+.as-h{margin:24px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#64748B}
+.ai-table{width:100%;border-collapse:collapse;table-layout:auto;border:1px solid #E4EAF2;border-radius:12px;overflow:hidden}
+.ai-table th{width:210px;padding:11px 14px;background:#F8FAFC;color:#64748B;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;text-align:left;vertical-align:top;
+ border-bottom:1px solid #EEF2F7;border-right:1px solid #EEF2F7}
+.ai-table td{padding:11px 14px;font-size:12.5px;line-height:1.55;color:#1E293B;border-bottom:1px solid #EEF2F7}
+.ai-table tr:last-child th,.ai-table tr:last-child td{border-bottom:none}
+.ai-table a{color:var(--p700);font-weight:600;text-decoration:none}
+.ai-table a:hover{text-decoration:underline}
+.ai-table th a{text-transform:none;letter-spacing:0;font-size:12px}
+.as-chat{height:380px;border:1px solid #E4EAF2;border-radius:12px;overflow:hidden;display:flex}
+.as-notfound{text-align:center;color:#94A3B8;padding:60px 20px}
+</style>
+</head>
+<body><div class="app"><div class="main">
+  <div class="sa-head">
+    <div class="logo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h6l5 5v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M14 3v5h5"/><path d="M9.5 13.5l2 2 3.5-4"/></svg></div>
+    <span class="sa-brand">DFMEA</span>
+    <span class="sa-sep"></span>
+    <a href="projects.html" class="sa-back" id="asBack">&lsaquo; Back</a>
+  </div>
+  <div class="as-wrap" id="asWrap"></div>
+</div></div>
+<script src="js/req-docs.js"></script>
+<script src="js/references.js"></script>
+<script src="js/assistant.js"></script>
+<script>
+(function(){
+  "use strict";
+  var AI = window.DfmeaAI;
+  var params = new URLSearchParams(window.location.search);
+  var wrap = document.getElementById("asWrap");
+  var esc = AI.esc;
+
+  function linkFile(file){
+    return '<a href="' + window.DfmeaRefs.dfmeaUrl(file) + '" target="_blank">' + esc(file) + '</a>';
+  }
+  function table(rows, fileCol){
+    return '<table class="ai-table">' + rows.map(function(r){
+      var val = fileCol && fileCol(r) ? linkFile(r[1] === undefined ? r[0] : r[0]) : esc(r[1]);
+      return '<tr><th>' + esc(r[0]) + '</th><td>' + val + '</td></tr>';
+    }).join("") + '</table>';
+  }
+  function finish(opts){
+    document.title = opts.title + " - AI summary";
+    document.getElementById("asBack").setAttribute("href", opts.backHref);
+    document.getElementById("asBack").textContent = "\u2039 " + opts.backLabel;
+    wrap.innerHTML = '<div class="as-card">'
+      + '<div class="as-badge">' + AI.spark + 'AI summary</div>'
+      + '<div class="as-title">' + opts.titleHtml + '</div><div class="as-sub">' + esc(opts.sub) + '</div>'
+      + opts.bodyHtml
+      + '<div class="as-h">Ask a follow-up</div><div class="as-chat" id="asChat"></div></div>';
+    var chat = AI.mountChat(document.getElementById("asChat"), {
+      persist: false, alwaysSuggest: true, suggestions: opts.suggestions, context: opts.ctx,
+      placeholder: "Ask a follow-up question", welcome: opts.welcome
+    });
+  }
+  function notFound(){ wrap.innerHTML = '<div class="as-notfound">This summary could not be found.</div>'; }
+
+  var type = params.get("type");
+  if(type === "spec"){
+    var doc = window.DfmeaReqDocs.getById(params.get("id") || "");
+    var row = Number(params.get("row"));
+    if(!doc || !doc.specs || !doc.specs[row - 1]) return notFound();
+    var sources = window.DfmeaReqDocs.sourcesFor(doc);
+    var picks = window.DfmeaReqDocs.rowPicks(doc.specs.length, sources)[row - 1];
+    var files = picks.map(function(p){ return p.name; });
+    var d = AI.specDetail(doc, row, files[0] || "");
+    var std = doc.standard === "None" ? "No specific standard" : doc.standard;
+    var detailRows = d.rows.slice();
+    if(files[1]) detailRows.splice(2, 0, ["Also used", files[1]]);
+    var body = '<div class="as-quote"><span class="spec-cat" data-cat="' + esc(d.category.toLowerCase()) + '">' + esc(d.category) + '</span>&nbsp; ' + esc(d.text) + '</div>'
+      + '<div class="as-summary">' + esc(d.summary + (files[1] ? " " + files[1] + " backs it up with " + AI.fileNote(files[1]) + "." : "")) + '</div>'
+      + '<div class="as-h">Why this reference was used</div>'
+      + '<table class="ai-table">' + detailRows.map(function(r){
+          var isFile = (r[0] === "Reference used" || r[0] === "Also used") && /\.pdf$|\.xlsx?$|\.docx?$/i.test(r[1]);
+          return '<tr><th>' + esc(r[0]) + '</th><td>' + (isFile ? linkFile(r[1]) : esc(r[1])) + '</td></tr>';
+        }).join("") + '</table>';
+    var ev = d.rows.filter(function(r){ return r[0] === "How it is verified"; })[0];
+    finish({
+      title: doc.productName, titleHtml: 'Requirement ' + row + ' <span class="req-standard">' + esc(std) + '</span>',
+      sub: doc.productName + " \u00b7 design requirement specification", bodyHtml: body,
+      backHref: "requirement-view.html?id=" + encodeURIComponent(doc.id), backLabel: "Back to the specification",
+      suggestions: ["Why was this reference used?", "How is it verified?", "How confident is the match?", "Are there other references?"],
+      welcome: "This is the summary for requirement " + row + ". Ask me anything about why it cites its reference.",
+      ctx: function(){ return { page: "ai-summary.html", answers: [
+        { keys: ["why", "reason", "explain"], text: d.summary },
+        { keys: ["verif", "test", "check", "prove"], text: "It is verified by " + (ev ? ev[1].charAt(0).toLowerCase() + ev[1].slice(1) : "reviewing the listed causes") + "." },
+        { keys: ["confiden", "sure", "match", "accura"], text: files.length ? "The match confidence is **" + (row % 3 === 0 ? "Medium" : "High") + "**: " + (row % 3 === 0 ? "the file covers this failure mechanism only in part." : "the file covers the same failure mechanism as this requirement.") : "No customer file is cited, so there is no match to score. The requirement comes from the standard." },
+        { keys: ["other", "another", "alternative", "more reference", "else"], text: files.length > 1 ? "Yes. It also uses **" + files[1] + "**, which contains " + AI.fileNote(files[1]) + "." : "No. This requirement cites only " + (files[0] ? "**" + files[0] + "**" : "the standard") + ". The customer's other files cover different failure mechanisms." }
+      ] }; }
+    });
+  }else if(type === "dfmea"){
+    var docId = params.get("doc") || "";
+    var refs = null;
+    if(!docId || docId.indexOf("seed-") === 0) refs = window.DfmeaRefs.seedDocRefs(docId);
+    if(!refs){
+      try{
+        var rec = JSON.parse(localStorage.getItem("dfmeaMyDocuments") || "[]").filter(function(x){ return x.id === docId; })[0];
+        refs = (rec && rec.generatedFrom) || [];
+      }catch(error){ refs = []; }
+    }
+    var info = { name: params.get("name") || "DFMEA", fn: params.get("fn") || "", severity: Number(params.get("sev")) || 0, refs: refs };
+    var dd = AI.dfmeaDetail(info);
+    var body2 = '<div class="as-summary">' + esc(dd.summary) + '</div>'
+      + '<div class="as-h">Key facts</div>' + table(dd.rows)
+      + (dd.why.length ? '<div class="as-h">Why these references were used</div><table class="ai-table">' + dd.why.map(function(r){
+          return '<tr><th>' + linkFile(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>';
+        }).join("") + '</table>' : "");
+    finish({
+      title: info.name, titleHtml: esc(info.name), sub: info.fn ? "DFMEA \u00b7 " + info.fn : "DFMEA", bodyHtml: body2,
+      backHref: params.get("project") ? "project.html?id=" + encodeURIComponent(params.get("project")) : "projects.html", backLabel: "Back to the project",
+      suggestions: ["What is this DFMEA about?", "Why were these references used?", "What does severity mean?", "What should I do next?"],
+      welcome: "This is the summary for " + info.name + ". Ask me anything about it.",
+      ctx: function(){ return { page: "ai-summary.html", answers: [
+        { keys: ["about", "what is this", "summar"], text: dd.summary },
+        { keys: ["why", "reference"], text: refs.length ? "It was built from " + refs.length + " of the customer's files: " + refs.map(function(f){ return "**" + f + "**"; }).join(", ") + ". Each one is listed above with what it contributed." : "No customer file is attached to this DFMEA yet." }
+      ] }; }
+    });
+  }else{
+    notFound();
+  }
+})();
+</script>
+</body></html>

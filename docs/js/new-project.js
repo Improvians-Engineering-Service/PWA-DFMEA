@@ -84,16 +84,10 @@
     return wordsOf(a).some(function(w){ return w.length > 3 && setB.has(w); });
   }
 
-  // The DFMEAs matching draws on to find which existing ones fit the
-  // product description: worksheets listed on the Legacy DFMEA page plus
-  // this workspace's own reference DFMEA. Shown as "Built from" chips on
-  // the results screen.
-  var REFERENCE_DOCS = [
-    { name: "OEM_Connector_Interface_DFMEA.xlsx" },
-    { name: "Customer_Battery_Terminal_DFMEA.xlsx" },
-    { name: "Tier1_Harness_Routing_DFMEA.xlsx" },
-    { name: "Crimp Contact Resistance" }
-  ];
+  // The customer's own files matching draws on to find which ones fit the
+  // product description: exactly the worksheets listed on the Legacy DFMEA
+  // page, nothing else. Shown as References on the results screen.
+  var REFERENCE_DOCS = window.DfmeaRefs.LEGACY;
   function severityChip(severity){
     var tier = severity >= 9 ? "s-crit" : (severity >= 6 ? "s-high" : "s-low");
     return '<span class="chip ' + tier + '">' + severity + '</span>';
@@ -243,12 +237,9 @@
     var baseSpecs = chosenSpec ? chosenSpec.specs.slice(0, 8) : [];
     var specs = Array.from(new Set(baseSpecs.concat(matchedSpecs, DEFAULT_SPECS))).slice(0, 18);
 
-    // --- related DFMEAs and existing requirement specs that matched the
-    // description -- shown together as one simple "what this was built
-    // from" list, so the result is explainable, not a black box.
+    // --- the customer's files that match the description -- shown as the
+    // result's References, so it's explainable, not a black box.
     var matched = REFERENCE_DOCS.filter(function(doc){ return sharesWord(description, doc.name); });
-    var matchedReqDocs = window.DfmeaReqDocs.readAll().filter(function(d){ return sharesWord(description, d.productName) && (!chosenSpec || d.id !== chosenSpec.id); });
-    if(chosenSpec) matchedReqDocs.unshift(chosenSpec);
 
     // --- project ---
     var projectRecord = { id: projectId, name: name, description: description, createdAt: new Date().toLocaleString() };
@@ -261,7 +252,6 @@
     // --- requirement doc ---
     saveRequirementDoc({ id: "req-" + Date.now().toString(36), projectId: projectId, productName: name,
       standard: standard, specs: specs, createdAt: new Date().toLocaleString(),
-      builtFrom: matchedReqDocs.map(function(d){ return { id: d.id, name: d.productName }; }),
       builtFromDfmeas: matched.map(function(m){ return m.name; }) });
 
     // --- generated DFMEAs, each a real, editable document like New DFMEA (with AI) produces ---
@@ -279,11 +269,11 @@
     document.getElementById("npDoneTitle").textContent = "“" + name + "” created";
     document.getElementById("npReqProduct").textContent = name;
     document.getElementById("npReqStandard").textContent = standard === "None" ? "No specific standard" : standard;
-    document.getElementById("npReqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(specs, { builtFrom: matchedReqDocs.map(function(d){ return { id: d.id, name: d.productName }; }), builtFromDfmeas: matched.map(function(m){ return m.name; }) });
+    document.getElementById("npReqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(specs, { builtFromDfmeas: matched.map(function(m){ return m.name; }) });
 
     // A quick at-a-glance summary of what just got built, right in the
     // success banner.
-    var refCount = matched.length + matchedReqDocs.length;
+    var refCount = matched.length;
     document.getElementById("npStats").innerHTML = [
       [specs.length, specs.length === 1 ? "requirement" : "requirements"],
       [FUNCTION_SET.length, "DFMEAs"],
@@ -299,6 +289,7 @@
     // own tooltip listing the rest) so a long match list never turns the
     // cell into another list to read.
     var chipRowHtml = window.DfmeaRefs.chipRowHtml;
+    var dfmeaRefChips3 = chipRowHtml(matched, 3, function(m){ return window.DfmeaRefs.dfmeaUrl(m.name); });
     var dfmeaRefChips = chipRowHtml(matched, 2, function(m){ return window.DfmeaRefs.dfmeaUrl(m.name); });
 
     var dfmeaBody = document.getElementById("npDfmeaTable");
@@ -312,13 +303,10 @@
       });
     });
 
-    if(matchedReqDocs.length){
+    if(matched.length){
       var reqBuilt = document.getElementById("npReqBuilt");
       reqBuilt.hidden = false;
-      var specChips = chipRowHtml(matchedReqDocs.map(function(d){ return { name: d.productName, id: d.id }; }), 3, function(item){
-        return "requirement-view.html?id=" + encodeURIComponent(item.id);
-      });
-      reqBuilt.innerHTML = '<span class="np-built-label">References</span><div class="np-chiprow-mini">' + specChips + '</div>';
+      reqBuilt.innerHTML = '<span class="np-built-label">References</span><div class="np-chiprow-mini">' + dfmeaRefChips3 + '</div>';
     }
 
     var actions = document.getElementById("npDoneActions");
