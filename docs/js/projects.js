@@ -74,6 +74,8 @@
     });
   }
   render();
+  if(window.TableTools) window.TableTools.attach(document.getElementById("projTableBody").closest("table"), { noun: "projects", placeholder: "Search projects",
+    filters: [{ col: 3, label: "All statuses" }] });
   // A project or DFMEA created in another open tab shows up in this table
   // straight away too, the same way it does in the sidebar's project list.
   window.addEventListener("storage", function(event){
