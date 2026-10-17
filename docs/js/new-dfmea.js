@@ -176,17 +176,12 @@
 
   function buildCandidates(){
     var queryText = functionInput.value + " " + failureInput.value;
-    candidates = [{
-      id: "reference-crimp",
-      name: "Crimp Contact Resistance",
-      meta: "Reference DFMEA in this workspace · 64 causes · 26 paths · 11 levels deep",
-      isReference: true
-    }];
+    candidates = [];
     window.DfmeaRefs.LEGACY.forEach(function(file, index){
       candidates.push({
         id: "library-" + index,
         name: file.name,
-        meta: "Shared with the project · uploaded " + file.when + " · " + file.size,
+        meta: "Customer file · uploaded " + file.when + " · " + file.size,
         isReference: false
       });
     });
@@ -217,6 +212,7 @@
       box.appendChild(row);
     });
   }
+  if(window.TableTools) window.TableTools.attach(document.getElementById("ndCandidates").closest("table"), { noun: "files", placeholder: "Search files", sortable: false });
   function escapeHtml(value){
     var div = document.createElement("div");
     div.textContent = String(value);
@@ -280,7 +276,7 @@
       ["Failure mode", escapeHtml(failure)],
       ["Severity", '<span class="chip ' + severityTier + '">' + severity + "</span>"],
       ["Specification", specSelect.value ? escapeHtml(window.DfmeaReqDocs.getById(specSelect.value).productName) : "None selected"],
-      ["References", fromNames.length ? escapeHtml(fromNames.join(", ")) : "Crimp Contact Resistance (default reference)"],
+      ["References", fromNames.length ? escapeHtml(fromNames.join(", ")) : "None selected"],
       ["Structure", "64 causes across 26 paths, up to 11 levels deep"]
     ].map(function(row){ return "<tr><th>" + row[0] + "</th><td>" + row[1] + "</td></tr>"; }).join("") + "</table>";
 
