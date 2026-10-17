@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8">
+<!doctype html><html><head><meta charset="utf-8"><script src="js/theme.js"></script>
 <script>
 (function(){
   try{
@@ -15,9 +15,17 @@
 .req-built{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-left:10px;padding-left:14px;border-left:1px solid #E2E8F0}
 .req-built-label{font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-right:2px}
 #docTable td:nth-child(4){white-space:nowrap}
-.ref-cell{display:flex;flex-wrap:wrap;gap:5px;max-width:250px}
-.req-open{margin-left:auto;font-size:11.5px;font-weight:700;color:#4338CA;text-decoration:none;white-space:nowrap}
-.req-open:hover{color:#3730A3;text-decoration:underline}
+.ai-sum{display:flex;align-items:center;gap:7px;max-width:300px;color:#334155;text-decoration:none;font-size:11.5px}
+.ai-sum svg{flex:none;color:var(--p600)}
+.ai-sum span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ai-sum:hover span{color:var(--p700);text-decoration:underline}
+.ref-cell{display:flex;flex-wrap:nowrap;gap:5px;max-width:320px}
+#docTable td{padding-top:8px;padding-bottom:8px}
+#docTable td:first-child .data-name{white-space:nowrap}
+#docTable td:nth-child(4){white-space:nowrap}
+#docTable .data-icon{width:26px;height:26px;border-radius:7px}
+.req-open{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--p700);text-decoration:none;white-space:nowrap}
+.req-open:hover{color:var(--p800);text-decoration:underline}
 </style>
 </head>
 <body><div class="app">
@@ -41,20 +49,21 @@
   </div>
 
   <div class="content">
-    <div class="seclab"><span class="secn">1</span>DFMEA documents</div>
-    <div class="data-card" style="margin-bottom:14px">
-      <table class="data-table" id="docTable">
-        <thead><tr><th>DFMEA document</th><th>Function</th><th>Severity</th><th>Structure</th><th>References</th><th>Updated</th></tr></thead>
-        <tbody id="docTableBody"></tbody>
-      </table>
-      <div class="data-empty" id="docEmpty" hidden>No DFMEA documents in this project yet. Use "New DFMEA" above to add one.</div>
-    </div>
     <div id="reqSection" hidden>
-      <div class="seclab"><span class="secn">2</span>Design requirement specification</div>
-      <div class="data-card">
+      <div class="seclab"><span class="secn">1</span>Design requirement specification</div>
+      <div class="data-card" style="margin-bottom:14px">
         <div class="req-head"><span class="req-product" id="reqProduct"></span><span class="req-standard" id="reqStandard"></span><span class="req-built" id="reqBuilt" hidden></span><a class="req-open" id="reqOpen" target="_blank">Open, edit or download &rsaquo;</a></div>
         <div id="reqSpecs"></div>
       </div>
+    </div>
+    <div class="seclab"><span class="secn" id="docSecN">2</span>DFMEA documents</div>
+    <div class="data-card">
+      <table class="data-table" id="docTable">
+        <colgroup><col style="width:20%"><col style="width:17%"><col style="width:8%"><col style="width:12%"><col style="width:17%"><col style="width:18%"><col style="width:8%"></colgroup>
+        <thead><tr><th>DFMEA document</th><th>Function</th><th>Severity</th><th>Structure</th><th>References</th><th data-nosort>AI summary</th><th>Updated</th></tr></thead>
+        <tbody id="docTableBody"></tbody>
+      </table>
+      <div class="data-empty" id="docEmpty" hidden>No DFMEA documents in this project yet. Use "New DFMEA" above to add one.</div>
     </div>
   </div>
 </div>
@@ -66,6 +75,8 @@
 <script src="js/worksheet-ui.js"></script>
 <script src="js/req-docs.js"></script>
 <script src="js/references.js"></script>
+<script src="js/table-tools.js"></script>
 <script src="js/auth-nav.js"></script>
+<script src="js/assistant.js"></script>
 <script src="js/project-detail.js"></script>
 </body></html>

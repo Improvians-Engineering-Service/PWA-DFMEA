@@ -294,60 +294,83 @@
     });
     return out;
   }
-  // What a project's spec was drawn from: other specs, and existing
-  // DFMEAs. A spec made by Create project carries its own lists; the
-  // built-in Aster one is fixed.
-  var KNOWN_REFS = { "aster-ev-connector": {
-    specs: [{ id: "default-0", name: "Titan Connector Housing" }, { id: "default-3", name: "Vantage Sensor Harness" },
-      { id: "default-8", name: "Comet Wiring Harness Grommet" }, { id: "default-1", name: "Nova Terminal Block" }],
-    dfmeas: ["OEM_Connector_Interface_DFMEA.xlsx", "Customer_Battery_Terminal_DFMEA.xlsx", "Crimp Contact Resistance", "Tier1_Harness_Routing_DFMEA.xlsx"] } };
-  function refsFor(doc){
-    return (doc && (doc.builtFrom || (KNOWN_REFS[doc.projectId] || {}).specs)) || [];
-  }
+  // The customer's own files a spec's requirements were drawn from. A spec
+  // made by Create project carries its own list; the built-in Aster one is
+  // fixed.
+  var KNOWN_REFS = { "aster-ev-connector": [
+    "Crimp DFMEA - Page 1.pdf", "Crimp DFMEA - Page 2.pdf", "Crimp DFMEA - Page 3.pdf", "Crimp DFMEA - Page 4.pdf",
+    "Crimp DFMEA - Page 5.pdf", "Crimp DFMEA - Page 6.pdf", "Crimp DFMEA - Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"] };
   function dfmeaRefsFor(doc){
-    return (doc && (doc.builtFromDfmeas || (KNOWN_REFS[doc.projectId] || {}).dfmeas)) || [];
+    return (doc && (doc.builtFromDfmeas || KNOWN_REFS[doc.projectId])) || [];
   }
-  // Each requirement cites where it came from -- a DFMEA, a spec, or
-  // both -- one source at a time, cycling through them so neighbouring rows
-  // never repeat, and leaving some rows (taken from nowhere in particular)
-  // without a reference.
-  function rowSources(doc){
-    var dfmeas = dfmeaRefsFor(doc).map(function(n){ return { name: n, url: window.DfmeaRefs.dfmeaUrl(n) }; });
-    var specs = refsFor(doc).map(function(s){ return { name: s.name, url: "requirement-view.html?id=" + encodeURIComponent(s.id) }; });
-    var all = [];
-    for(var i = 0; i < Math.max(dfmeas.length, specs.length); i++){
-      if(dfmeas[i]) all.push(dfmeas[i]);
-      if(specs[i]) all.push(specs[i]);
+  // The file a spec was uploaded as (a generated one has none).
+  function sourceFileFor(doc){
+    if(doc.sourceFile) return doc.sourceFile;
+    if(/^default-(\d+)$/.test(doc.id)){
+      var n = Number(doc.id.slice(8));
+      return doc.productName.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "") + "_Requirements" + (n % 3 === 1 ? ".docx" : ".pdf");
     }
-    return all;
+    return "";
+  }
+  // Each requirement cites the customer file it came from, one source at a
+  // time, cycling through them so neighbouring rows never repeat, and
+  // leaving some rows without a reference.
+  function rowSources(doc){
+    return dfmeaRefsFor(doc).map(function(n){ return { name: n, url: window.DfmeaRefs.dfmeaUrl(n) }; });
   }
   // The one way a specification is rendered everywhere it appears (the
   // viewer, a project's page, the new-project result, inside a DFMEA):
   // a numbered table with the category as its own column, and -- when the
   // spec was built from other documents -- a one-line Reference column.
+  // Which customer file(s) each requirement cites, by row index (an empty
+  // list for the rows that cite none). Shared with the AI summary page so
+  // both always agree on what a row was drawn from.
+  function rowPicks(count, sources){
+    var out = [];
+    var cursor = 0;
+    for(var index = 0; index < count; index++){
+      var picks = [];
+      if(sources.length && index % 4 !== 2){
+        picks.push(sources[cursor++ % sources.length]);
+        if(index % 3 === 1) picks.push(sources[cursor++ % sources.length]);
+      }
+      out.push(picks);
+    }
+    return out;
+  }
+  var SPARK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>';
   function specTableHtml(specs, doc){
     var sources = rowSources(doc);
-    var cursor = 0;
+    var picks = rowPicks((specs || []).length, sources);
+    var hasAi = !!(doc && doc.id);
     return '<table class="spec-table"><thead><tr><th class="spec-num">#</th><th class="spec-cat-cell">Category</th><th>Requirement</th>'
-      + (sources.length ? '<th class="spec-ref-cell">Reference</th>' : '') + '</tr></thead><tbody>'
+      + (sources.length ? '<th class="spec-ref-cell">DFMEA</th>' : '')
+      + (hasAi ? '<th class="spec-ai-cell" data-nosort>AI summary</th>' : '') + '</tr></thead><tbody>'
       + (specs || []).map(function(spec, index){
           var parts = splitSpec(spec);
-          var refCell = "";
-          if(sources.length){
-            var picks = [];
-            if(index % 4 !== 2){
-              picks.push(sources[cursor++ % sources.length]);
-              if(index % 3 === 1) picks.push(sources[cursor++ % sources.length]);
-            }
-            refCell = '<td class="spec-ref-cell"><div class="np-chiprow-mini">'
-              + (picks.length ? window.DfmeaRefs.chipRowHtml(picks, 2, function(item){ return item.url; }) : "") + '</div></td>';
-          }
+          var refCell = sources.length
+            ? '<td class="spec-ref-cell"><div class="np-chiprow-mini">'
+              + (picks[index].length ? window.DfmeaRefs.chipRowHtml(picks[index], 2, function(item){ return item.url; }) : "") + '</div></td>'
+            : "";
+          var aiCell = hasAi
+            ? '<td class="spec-ai-cell"><a class="ai-link" href="ai-summary.html?type=spec&id=' + encodeURIComponent(doc.id) + '&row=' + (index + 1)
+              + '" target="_blank" data-tip="Open the AI summary for this requirement">' + SPARK + 'AI summary</a></td>'
+            : "";
           return '<tr><td class="spec-num">' + (index + 1) + '</td>'
             + '<td class="spec-cat-cell"><span class="spec-cat" data-cat="' + escapeHtml(parts.category.toLowerCase()) + '">' + escapeHtml(parts.category) + '</span></td>'
-            + '<td>' + escapeHtml(parts.text) + '</td>' + refCell + '</tr>';
+            + '<td>' + escapeHtml(parts.text) + '</td>' + refCell + aiCell + '</tr>';
         }).join("")
       + '</tbody></table>';
   }
 
-  window.DfmeaReqDocs = { readAll: readAll, getById: getById, updateSpecs: updateSpecs, add: add, specTableHtml: specTableHtml, refsFor: refsFor, sourcesFor: rowSources, categoriesOf: categoriesOf };
+  // Adds search, a category filter, sorting and paging to a spec table
+  // rendered inside `container` (a no-op if TableTools isn't on the page).
+  function enhanceSpecTable(container){
+    var table = container && container.querySelector("table.spec-table");
+    if(!table || !window.TableTools) return;
+    window.TableTools.attach(table, { noun: "requirements", placeholder: "Search requirements",
+      filters: [{ col: 1, label: "All categories" }], pageSize: 10 });
+  }
+
+  window.DfmeaReqDocs = { enhanceSpecTable: enhanceSpecTable, readAll: readAll, getById: getById, updateSpecs: updateSpecs, add: add, specTableHtml: specTableHtml, dfmeaRefsFor: dfmeaRefsFor, sourceFileFor: sourceFileFor, sourcesFor: rowSources, rowPicks: rowPicks, splitSpec: splitSpec, spark: SPARK, categoriesOf: categoriesOf };
 })();
