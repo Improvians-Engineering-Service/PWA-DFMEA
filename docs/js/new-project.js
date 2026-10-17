@@ -72,12 +72,7 @@
     { name: "OEM_Connector_Interface_DFMEA.xlsx" },
     { name: "Customer_Battery_Terminal_DFMEA.xlsx" },
     { name: "Tier1_Harness_Routing_DFMEA.xlsx" },
-    { name: "Crimp Contact Resistance" },
-    { name: "Sensor_Bracket_DFMEA.xlsx" },
-    { name: "Busbar_Joint_DFMEA.xlsx" },
-    { name: "Wire_Harness_DFMEA_2023.xlsx" },
-    { name: "Connector_Housing_DFMEA.xlsx" },
-    { name: "Terminal_Retention_DFMEA_Rev3.xlsx" }
+    { name: "Crimp Contact Resistance" }
   ];
   function severityChip(severity){
     var tier = severity >= 9 ? "s-crit" : (severity >= 6 ? "s-high" : "s-low");

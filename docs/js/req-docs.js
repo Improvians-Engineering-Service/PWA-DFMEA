@@ -300,7 +300,7 @@
   var KNOWN_REFS = { "aster-ev-connector": {
     specs: [{ id: "default-0", name: "Titan Connector Housing" }, { id: "default-3", name: "Vantage Sensor Harness" },
       { id: "default-8", name: "Comet Wiring Harness Grommet" }, { id: "default-1", name: "Nova Terminal Block" }],
-    dfmeas: ["Terminal_Retention_DFMEA_Rev3.xlsx", "Connector_Housing_DFMEA.xlsx", "Crimp Contact Resistance", "Door_Latch_Actuator_DFMEA.xlsx"] } };
+    dfmeas: ["OEM_Connector_Interface_DFMEA.xlsx", "Customer_Battery_Terminal_DFMEA.xlsx", "Crimp Contact Resistance", "Tier1_Harness_Routing_DFMEA.xlsx"] } };
   function refsFor(doc){
     return (doc && (doc.builtFrom || (KNOWN_REFS[doc.projectId] || {}).specs)) || [];
   }
