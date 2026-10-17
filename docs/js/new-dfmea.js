@@ -38,6 +38,22 @@
     projectSelect.value = requestedProject;
   }
 
+  // The design requirement specification this DFMEA answers to: the chosen
+  // project's own spec by default, any other one on file if preferred.
+  var specSelect = document.getElementById("ndSpec");
+  var allSpecs = [];
+  try{ allSpecs = window.DfmeaReqDocs.readAll(); }catch(error){ /* no specs to choose from */ }
+  specSelect.innerHTML = '<option value="">No specification</option>' + allSpecs.map(function(d){
+    var label = d.standard === "None" ? d.productName : d.standard + " · " + d.productName;
+    return '<option value="' + escapeHtml(d.id) + '">' + escapeHtml(label) + '</option>';
+  }).join("");
+  function selectProjectSpec(){
+    var own = allSpecs.filter(function(d){ return d.projectId === projectSelect.value; })[0];
+    specSelect.value = own ? own.id : "";
+  }
+  selectProjectSpec();
+  projectSelect.addEventListener("change", selectProjectSpec);
+
   // page-setup.js (loaded here too, purely for a consistent sidebar)
   // overwrites the whole .crumb element's innerHTML for its own
   // breadcrumb -- so this rebuilds it fresh rather than trusting the
@@ -263,6 +279,7 @@
       ["Function", escapeHtml(fn)],
       ["Failure mode", escapeHtml(failure)],
       ["Severity", '<span class="chip ' + severityTier + '">' + severity + "</span>"],
+      ["Specification", specSelect.value ? escapeHtml(window.DfmeaReqDocs.getById(specSelect.value).productName) : "None selected"],
       ["References", fromNames.length ? escapeHtml(fromNames.join(", ")) : "Crimp Contact Resistance (default reference)"],
       ["Structure", "64 causes across 26 paths, up to 11 levels deep"]
     ].map(function(row){ return "<tr><th>" + row[0] + "</th><td>" + row[1] + "</td></tr>"; }).join("") + "</table>";

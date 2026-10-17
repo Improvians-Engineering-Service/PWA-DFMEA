@@ -101,8 +101,8 @@
       var standardLabel = doc.standard === "None" ? "No specific standard" : doc.standard;
       return '<tr class="req-row" data-id="' + doc.id + '" data-tip="Open this specification">'
         + '<td class="req-open-cell"><span class="data-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14L21 3"/></svg></span></td>'
-        + '<td class="req-product">' + escapeHtml(doc.product) + '</td>'
         + '<td><span class="req-standard">' + escapeHtml(standardLabel) + '</span></td>'
+        + '<td class="req-product">' + escapeHtml(doc.product) + '</td>'
         + '<td><div class="np-chiprow-mini">' + categoryChips(doc.specs) + '</div></td>'
         + '<td><span class="data-count">' + (doc.specs || []).length + '</span></td>'
         + '<td><div class="np-chiprow-mini req-built-cell">' + window.DfmeaRefs.chipRowHtml(window.DfmeaReqDocs.sourcesFor(doc.record), 1, function(item){ return item.url; }) + '</div></td>'
