@@ -254,6 +254,7 @@
       var panelBody = document.createElement("div");
       panelBody.className = "req-panel-body";
       panelBody.innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs, reqDoc);
+      window.DfmeaReqDocs.enhanceSpecTable(panelBody);
       panel.appendChild(panelBody);
       contentEl.insertBefore(panel, contentEl.firstChild);
     }
