@@ -56,7 +56,6 @@
     var historyBody = document.getElementById("uploadHistoryBody");
     var historyEmpty = document.getElementById("uploadHistoryEmpty");
     var searchInput = document.getElementById("uhSearch");
-    var sourceFilter = document.getElementById("uhSourceFilter");
     var historyKey = "dfmeaUploadHistory";
 
     // The legacy worksheets shared with the project (external, kept pinned
@@ -106,14 +105,11 @@
     function renderHistory(){
       var rows = allRows();
       var query = searchInput.value.trim().toLowerCase();
-      var source = sourceFilter.value;
       var visible = rows.filter(function(r){
-        if(source !== "all" && r.source !== source) return false;
         if(query && r.name.toLowerCase().indexOf(query) === -1) return false;
         return true;
       });
 
-      var SOURCE_LABELS = { client: "External", mine: "Uploaded by you" };
       historyBody.innerHTML = "";
       historyEmpty.hidden = visible.length > 0;
       visible.forEach(function(item){
@@ -122,20 +118,17 @@
         row.innerHTML = "<td>" + escapeHtml(item.name) + "</td>"
           + "<td>" + escapeHtml(item.size) + "</td>"
           + "<td>" + escapeHtml(item.rows != null ? item.rows + " rows" : "") + "</td>"
-          + "<td>" + escapeHtml(item.when) + "</td>"
-          + "<td><span class=\"uh-source " + item.source + "\">" + SOURCE_LABELS[item.source] + "</span></td>"
-          + "<td><span class=\"uh-status ok\">Trained</span></td>";
+          + "<td>" + escapeHtml(item.when) + "</td>";
         row.addEventListener("click", function(){ openWorksheetPreview(item); });
         historyBody.appendChild(row);
       });
 
       document.getElementById("uhExportBtn").onclick = function(){
-        downloadCsv("uploaded-worksheets.csv", ["File", "Size", "Rows parsed", "Uploaded", "Source", "Status"],
-          visible.map(function(r){ return [r.name, r.size, r.rows != null ? r.rows : "", r.when, r.source === "mine" ? "Uploaded by you" : "External", "Trained"]; }));
+        downloadCsv("uploaded-worksheets.csv", ["File", "Size", "Rows parsed", "Uploaded"],
+          visible.map(function(r){ return [r.name, r.size, r.rows != null ? r.rows : "", r.when]; }));
       };
     }
     searchInput.addEventListener("input", renderHistory);
-    sourceFilter.addEventListener("change", renderHistory);
 
     function showError(message){
       errBox.textContent = message;
