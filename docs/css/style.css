@@ -1030,7 +1030,7 @@ tbody tr:hover .data-icon{color:var(--p700)}
 .req-panel[open]>summary::after{transform:rotate(-135deg)}
 
 /* ---------- THEME PICKER ---------- */
-.top,.sa-head{position:relative}
+.sa-head{position:relative}
 .top{padding-right:108px}
 .sa-head{padding-right:108px}
 .theme-pick{position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:30}
