@@ -354,7 +354,7 @@
             : "";
           var aiCell = hasAi
             ? '<td class="spec-ai-cell"><a class="ai-link" href="ai-summary.html?type=spec&id=' + encodeURIComponent(doc.id) + '&row=' + (index + 1)
-              + '" target="_blank" data-tip="Open the AI summary for this requirement">' + SPARK + 'AI summary</a></td>'
+              + '" target="_blank" aria-label="AI summary" data-tip="Open the AI summary for this requirement">' + SPARK + '</a></td>'
             : "";
           return '<tr><td class="spec-num">' + (index + 1) + '</td>'
             + '<td class="spec-cat-cell"><span class="spec-cat" data-cat="' + escapeHtml(parts.category.toLowerCase()) + '">' + escapeHtml(parts.category) + '</span></td>'

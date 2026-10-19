@@ -1093,9 +1093,9 @@ th.tt-sorted::after{opacity:1;color:var(--p600)}
 th.tt-sorted.tt-desc::after{border-bottom:0;border-top:4.5px solid currentColor}
 
 /* ---------- AI ---------- */
-.spec-table th.spec-ai-cell,.spec-table td.spec-ai-cell{width:130px;white-space:nowrap}
+.spec-table th.spec-ai-cell,.spec-table td.spec-ai-cell{width:96px;white-space:nowrap;text-align:center}
 .ai-link{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--p700);text-decoration:none}
-.ai-link svg{width:16px;height:16px}
+.ai-link svg{width:20px;height:20px}
 .ai-link:hover{text-decoration:underline}
 
 /* assistant: toggle, right-hand panel, chat */
