@@ -49,10 +49,8 @@ body{font-size-adjust:0.5;background:var(--bg);font-family:Cambria, "Cambria Mat
  flex-direction:column;min-height:100vh}
 .brand{padding:16px 18px 14px;display:flex;align-items:center;gap:11px;
  border-bottom:1px solid #EEF2F7}
-.logo{width:34px;height:34px;display:flex;align-items:center;justify-content:center;
- color:var(--p600);flex:none;border-radius:10px;background:linear-gradient(135deg,var(--p50) 0%,var(--p100) 100%);
- box-shadow:inset 0 0 0 1px rgb(var(--p500-rgb) / .14)}
-.logo svg{width:19px;height:19px}
+.logo{width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--p600);flex:none}
+.logo svg{width:24px;height:24px}
 .bn{font-family:Cambria, "Cambria Math", Georgia, "Times New Roman", serif;font-size:14.5px;font-weight:700;color:#0F172A;
  line-height:1.15;letter-spacing:-.1px}
 .bs{font-size:9.4px;color:#94A3B8;letter-spacing:.6px;margin-top:2px}
@@ -154,8 +152,8 @@ body{font-size-adjust:0.5;background:var(--bg);font-family:Cambria, "Cambria Mat
 /* Slim header on the pages that open in their own tab (a requirement
    spec, a legacy worksheet), which have no sidebar to navigate back with. */
 .sa-head{display:flex;align-items:center;gap:10px;padding:10px 22px;border-bottom:1px solid #E4EAF2;background:#fff}
-.sa-head .logo{width:28px;height:28px;border-radius:8px}
-.sa-head .logo svg{width:16px;height:16px}
+.sa-head .logo{width:28px;height:28px}
+.sa-head .logo svg{width:20px;height:20px}
 .sa-brand{font-size:13px;font-weight:700;color:#0F172A;letter-spacing:-.1px}
 .sa-sep{width:1px;height:18px;background:#E2E8F0;margin:0 4px}
 .sa-back{display:inline-flex;align-items:center;padding:6px 11px;border:1px solid #E4EAF2;border-radius:8px;
@@ -975,11 +973,10 @@ dialog[open]::backdrop{animation:backdropIn .18s ease forwards}
 .data-table tbody tr:last-child td{border-bottom:none}
 .data-table tbody tr:hover td{background:var(--p25)}
 .data-name{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:600;color:#0F172A}
-.data-icon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--p50) 0%,var(--p100) 100%);
- color:var(--p600);display:flex;align-items:center;justify-content:center;flex:none;
- box-shadow:inset 0 0 0 1px rgb(var(--p500-rgb) / .12)}
-tbody tr:hover .data-icon{color:var(--p700);box-shadow:inset 0 0 0 1px rgb(var(--p500-rgb) / .3)}
-.data-icon.empty{background:#F1F5F9;color:#94A3B8;box-shadow:inset 0 0 0 1px #E2E8F0}
+.data-icon{width:22px;height:22px;color:var(--p600);display:flex;align-items:center;justify-content:center;flex:none}
+.data-icon svg{width:18px;height:18px}
+tbody tr:hover .data-icon{color:var(--p700)}
+.data-icon.empty{color:#94A3B8}
 .data-table td.data-muted{font-size:12px;color:#64748B}
 .data-table .chip,.np-table .chip{display:inline-flex;align-items:center;justify-content:center;
  width:26px;height:22px;padding:0;border-radius:6px;font:700 11.5px Cambria,"Cambria Math",Georgia,"Times New Roman",serif}
@@ -1034,14 +1031,14 @@ tbody tr:hover .data-icon{color:var(--p700);box-shadow:inset 0 0 0 1px rgb(var(-
 
 /* ---------- THEME PICKER ---------- */
 .top,.sa-head{position:relative}
-.top{padding-right:124px}
-.sa-head{padding-right:124px}
-.theme-pick{position:absolute;right:20px;top:50%;transform:translateY(-50%);z-index:30}
+.top{padding-right:108px}
+.sa-head{padding-right:108px}
+.theme-pick{position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:30}
 .theme-pick.floating{position:fixed;top:18px;right:20px;transform:none}
-.theme-btn{position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
- border:1px solid #E2E8F0;border-radius:10px;background:#fff;color:#475569;cursor:pointer;
- box-shadow:0 1px 2px rgba(15,23,42,.04);transition:background-color .15s ease,border-color .15s ease,color .15s ease}
-.theme-btn:hover{background:var(--p25);border-color:var(--p200);color:var(--p700)}
+.theme-btn{position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+ border:0;background:none;color:#64748B;cursor:pointer;transition:color .15s ease}
+.theme-btn svg{width:21px;height:21px}
+.theme-btn:hover{color:var(--p700)}
 .theme-dot{position:absolute;right:4px;bottom:4px;width:9px;height:9px;border-radius:50%;
  background:linear-gradient(135deg,var(--p600),var(--p-alt));box-shadow:0 0 0 2px #fff}
 .theme-menu{position:absolute;right:0;top:calc(100% + 8px);width:232px;padding:12px;background:#fff;
@@ -1097,16 +1094,15 @@ th.tt-sorted.tt-desc::after{border-bottom:0;border-top:4.5px solid currentColor}
 
 /* ---------- AI ---------- */
 .spec-table th.spec-ai-cell,.spec-table td.spec-ai-cell{width:130px;white-space:nowrap}
-.ai-link{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:600;
- color:var(--p700);background:var(--p50);text-decoration:none;box-shadow:inset 0 0 0 1px var(--p100);
- transition:background-color .15s ease,box-shadow .15s ease}
-.ai-link:hover{background:var(--p100);box-shadow:inset 0 0 0 1px var(--p200)}
+.ai-link{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--p700);text-decoration:none}
+.ai-link svg{width:16px;height:16px}
+.ai-link:hover{text-decoration:underline}
 
 /* assistant: toggle, right-hand panel, chat */
-.ai-toggle{position:absolute;right:64px;top:50%;transform:translateY(-50%);z-index:30;height:36px;padding:0 12px;display:flex;align-items:center;gap:6px;
- border:1px solid var(--p200);border-radius:10px;background:var(--p50);color:var(--p700);font-size:11.5px;font-weight:700;cursor:pointer;
- transition:background-color .15s ease,border-color .15s ease}
-.ai-toggle:hover,.ai-toggle.on{background:var(--p100);border-color:var(--p300)}
+.ai-toggle{position:absolute;right:58px;top:50%;transform:translateY(-50%);z-index:30;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+ border:0;background:none;color:var(--p600);cursor:pointer;transition:color .15s ease}
+.ai-toggle svg{width:22px;height:22px}
+.ai-toggle:hover,.ai-toggle.on{color:var(--p800)}
 .ai-panel{position:fixed;top:0;right:0;bottom:0;width:380px;max-width:100vw;z-index:150;display:flex;flex-direction:column;background:#fff;
  border-left:1px solid #E4EAF2;box-shadow:-14px 0 34px rgba(15,23,42,.1);transform:translateX(100%);visibility:hidden;
  transition:transform .22s ease,visibility 0s linear .22s}
@@ -1126,8 +1122,8 @@ body.ai-instant .ai-panel{transition:none}
 .ac-msgs{flex:1;min-height:0;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
 .ac-msg{display:flex;gap:8px;align-items:flex-start;max-width:92%}
 .ac-msg.user{align-self:flex-end;flex-direction:row-reverse}
-.ac-av{flex:none;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;
- background:linear-gradient(135deg,var(--p600),var(--p-alt))}
+.ac-av{flex:none;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--p600)}
+.ac-av svg{width:20px;height:20px}
 .ac-bubble{padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.55;color:#1E293B;background:#F1F5F9;border-top-left-radius:4px}
 .ac-msg.user .ac-bubble{background:var(--p600);color:#fff;border-top-left-radius:12px;border-top-right-radius:4px}
 .ac-typing{display:flex;gap:4px;align-items:center;padding:12px 14px}
