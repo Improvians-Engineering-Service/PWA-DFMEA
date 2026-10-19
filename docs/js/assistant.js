@@ -271,7 +271,8 @@
     toggle.type = "button";
     toggle.className = "ai-toggle";
     toggle.setAttribute("aria-label", "AI Assistant");
-    toggle.innerHTML = SPARK + '<span>AI</span>';
+    toggle.innerHTML = SPARK;
+    toggle.title = "AI Assistant";
     host.appendChild(toggle);
 
     var panel = document.createElement("aside");
