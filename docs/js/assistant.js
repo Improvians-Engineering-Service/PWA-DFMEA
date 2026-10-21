@@ -27,23 +27,6 @@
   function fileNote(){
     return CRIMP_NOTE;
   }
-  var CATEGORY_EVIDENCE = {
-    mechanical: { shows: "cause chains for crimp geometry, conductor strength and pull-out, such as crimp width and height, strand damage and insufficient crimp",
-      use: "each mechanical cause was mapped to a pull-out, retention or force check on this requirement", control: "force and geometry verification (tensile or pull-out test, CMM inspection)" },
-    electrical: { shows: "the contact resistance chains: wire strand to terminal interface, film resistance and Sn oxide",
-      use: "the resistance limit on this requirement was checked against those chains", control: "4-wire resistance measurement before and after cycling" },
-    environmental: { shows: "causes that grow over time: oxide build-up, plating wear and thermal expansion of the crimp",
-      use: "the environmental exposure in this requirement was linked to those time-dependent causes", control: "thermal cycling, vibration and humidity test sequences" },
-    material: { shows: "plating and base alloy causes, such as insufficient Sn or Ni thickness and inadequate annealing",
-      use: "the material limits in this requirement were set so those plating and alloy causes are prevented", control: "plating thickness and material certificate checks" },
-    manufacturing: { shows: "process causes such as crimp force, lubricant and tooling variation, with their detection ratings",
-      use: "each process cause became a monitored limit on this requirement", control: "crimp force monitoring and process capability tracking" },
-    quality: { shows: "the current design controls, detection and RPN values recorded against each cause",
-      use: "the inspection and traceability in this requirement follow the controls recorded there", control: "inspection records and lot traceability" },
-    general: { shows: "the cause levels and ratings recorded for the crimp joint",
-      use: "this requirement was checked against those cause levels", control: "review of the listed causes" }
-  };
-
   // ---------------------------------------------------------------
   // Detailed summaries (the AI summary pages)
   // ---------------------------------------------------------------
@@ -54,31 +37,24 @@
     return "Starting structure for " + (fn || "this function") + ": its failure mode, effect and cause paths" + (severity ? ", severity " + severity : "") + ".";
   }
 
-  function specDetail(doc, rowIndex, file){
+  // The summary of one requirement, written from what its own row says (every column of the
+  // Excel row is shown as well, so nothing here goes beyond the file).
+  function specDetail(doc, rowIndex){
     var DR = window.DfmeaReqDocs;
-    var parts = DR.splitSpec(doc.specs[rowIndex - 1]);
-    var key = parts.category.toLowerCase();
-    var ev = CATEGORY_EVIDENCE[key] || CATEGORY_EVIDENCE.general;
-    var confidence = !file ? "None cited" : (rowIndex % 3 === 0 ? "Medium" : "High");
-    var rows = file ? [
-      ["Requirement", parts.text],
-      ["Reference used", file],
-      ["What the reference contains", fileNote(file)],
-      ["What it shows for this requirement", ev.shows.charAt(0).toUpperCase() + ev.shows.slice(1)],
-      ["How it was used", ev.use.charAt(0).toUpperCase() + ev.use.slice(1)],
-      ["How it is verified", ev.control.charAt(0).toUpperCase() + ev.control.slice(1)],
-      ["Match confidence", confidence]
-    ] : [
-      ["Requirement", parts.text],
-      ["Reference used", "No customer file is cited for this requirement"],
-      ["Where it comes from", "It comes from the " + (doc.standard && doc.standard !== "None" ? doc.standard + " standard" : "project description") + " rather than from a customer DFMEA file"],
-      ["How it is verified", ev.control.charAt(0).toUpperCase() + ev.control.slice(1)]
-    ];
-    var summary = file
-      ? "This " + parts.category.toLowerCase() + " requirement was matched to " + file + ", which contains " + fileNote(file) + ". "
-        + "The cause chains recorded there show where this requirement can be missed, so " + ev.use + "."
-      : "This " + parts.category.toLowerCase() + " requirement does not rely on a customer DFMEA file. It is carried from the " + (doc.standard && doc.standard !== "None" ? doc.standard + " standard" : "project description") + " and is verified by " + ev.control + ".";
-    return { category: parts.category, text: parts.text, rows: rows, summary: summary };
+    var row = doc.rows[rowIndex - 1];
+    var get = function(re){ return DR.field(doc, row, re); };
+    var d = {
+      category: row[DR.categoryIndex(doc)] || "General",
+      name: get(/^(test|requirement)/i), target: get(/^objective/i), verify: get(/^verification/i),
+      status: get(/status/i), applic: get(/applicab/i), source: get(/^reference \/ source/i), relation: get(/relationship/i)
+    };
+    var summary = d.category + " requirement" + (d.name ? ": " + d.name.replace(/\.$/, "") : "") + ". "
+      + (d.target ? "Objective: " + d.target.replace(/\.$/, "") + ". " : "")
+      + (d.applic ? "Applies to: " + d.applic.replace(/\.$/, "") + ". " : "")
+      + (d.verify ? "It is verified with: " + d.verify.replace(/\.$/, "") + ". " : "")
+      + (d.status ? "Status of the value: " + d.status.replace(/\.$/, "") + "." : "");
+    return { d: d, summary: summary.trim(), rows: doc.columns.map(function(c, i){ return [c, row[i] || ""]; }),
+      file: doc.sourceFile || "" };
   }
 
   function dfmeaDetail(info){
@@ -108,13 +84,12 @@
     { keys: ["why", "reference", "referenc", "source", "where did", "come from", "taken from"], text: function(){ return "Every reference in this workspace is the customer's own file, **Crimp DFMEA.pdf**. A DFMEA or requirement cites it when its cause chains sit behind that item. Open the AI summary on any row to see exactly why."; } },
     { keys: ["legacy", "uploaded", "files", "documents"], text: function(){ return "Legacy DFMEA lists the file the customer shared: **Crimp DFMEA.pdf**, their Crimp DFMEA worksheet. You can upload more there, and they will appear in the same table."; } },
     { keys: ["lv214", "uscar", "iso", "standard"], text: function(){ return "A project's reference standard (for example **LV214** or **USCAR-2**) sets the limits its design requirements are written to. Choose it when you create a project, and the generated specification follows that standard."; } },
-    { keys: ["requirement", "specification", "drs", "spec"], text: function(){ return "A **design requirement specification** (DRS) is the list of requirements a product must meet, grouped by category such as Mechanical, Electrical and Environmental. Each requirement can cite the customer file it came from, and you can search, filter and sort the list on any page that shows one."; } },
+    { keys: ["requirement", "specification", "drs", "spec"], text: function(){ return "A **design requirement specification** (DRS) is the list of requirements a product must meet, grouped by category such as Mechanical, Electrical and Environmental. Your Excel files are loaded exactly as written, and you can search, filter and sort the list on any page that shows one."; } },
     { keys: ["create", "new project", "new dfmea", "how do i", "start"], text: function(){ return "To start a project, open **Projects** and choose **Create project**: give it a name, describe what you are building, pick the standard and a specification, then generate. To add a DFMEA to a project, open it and choose **New DFMEA**."; } },
     { keys: ["filter", "search", "sort", "page"], text: function(){ return "Every table has a search box and filters above it. Click a column heading to sort, and use the page controls underneath to move through long lists. **Clear filters** brings every row back."; } },
     { keys: ["theme", "colour", "color"], text: function(){ return "Use the palette button at the top right of any page to change the colour theme. The whole app changes and your choice is remembered."; } },
     { keys: ["summary", "summar", "what is this", "explain this", "about this"], text: function(ctx){ return pageSummary(ctx); } },
-    { keys: ["confidence", "how sure", "accurate"], text: function(){ return "Confidence reflects how closely a requirement matches the cause chains in the cited file: **High** when the file covers the same failure mechanism, **Medium** when it covers it only in part."; } },
-    { keys: ["next", "what should i do", "recommend"], text: function(){ return "A good next step is to open the AI summary for a requirement, check the reference it cites, and then open that file from the References list to confirm it. After that, review any requirement with no reference."; } }
+    { keys: ["next", "what should i do", "recommend"], text: function(){ return "A good next step is to open the AI summary for a requirement, check its verification method and the status of its value, and then confirm any value marked as proposed or to be verified against the controlled standard."; } }
   ];
   function pageSummary(ctx){
     var p = (ctx && ctx.page) || pageName();
