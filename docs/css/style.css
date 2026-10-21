@@ -1009,7 +1009,6 @@ tbody tr:hover .data-icon{color:var(--p700)}
 .spec-table th.spec-num,.spec-table td.spec-num{width:40px}
 .spec-table td.spec-num{color:#94A3B8;font-weight:600}
 .spec-table th.spec-cat-cell,.spec-table td.spec-cat-cell{width:132px}
-.spec-table th.spec-ref-cell,.spec-table td.spec-ref-cell{width:320px;max-width:320px}
 .spec-ref-cell .np-chiprow-mini{flex-wrap:nowrap}
 .spec-ref-cell .np-chip-mini{flex:0 1 auto;min-width:0}
 .spec-cat{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:10px;
@@ -1149,7 +1148,6 @@ body.ai-instant .ai-panel{transition:none}
 .ac-send:hover{background:var(--p700)}
 @media (prefers-reduced-motion:reduce){.ai-panel{transition:none}.ac-typing i{animation:none}}
 
-.spec-table td:nth-child(3){min-width:240px}
 
 /* search inside the full diagram */
 .tsearch{display:flex;align-items:center;gap:6px;height:30px;margin-left:18px;padding:0 6px 0 10px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#94A3B8}
@@ -1163,3 +1161,14 @@ svg.searching g.hitbox.search-hit{opacity:1}
 g.hitbox.search-hit>rect:nth-of-type(2){fill:#FEF08A;stroke:#CA8A04;stroke-width:2.6}
 g.hitbox.search-hit .ttl2{fill:#713F12}
 g.hitbox.search-current>rect:nth-of-type(2){stroke:#F87171;stroke-width:2.4}
+
+/* a specification with all its Excel columns: scrolls sideways, columns keep a readable width */
+.spec-scroll{overflow-x:auto}
+.spec-wide{width:100%;table-layout:auto}
+.spec-wide th,.spec-wide td{min-width:170px;vertical-align:top}
+.spec-wide th.spec-cat-cell,.spec-wide td.spec-cat-cell{min-width:120px}
+.spec-wide th.spec-ai-cell,.spec-wide td.spec-ai-cell{min-width:84px;width:84px}
+.spec-wide th{white-space:normal}
+.spec-notes{width:100%;table-layout:auto}
+.spec-notes td:first-child{width:220px;font-weight:600;color:#0F172A}
+.spec-notes td a{color:var(--p700);overflow-wrap:anywhere}

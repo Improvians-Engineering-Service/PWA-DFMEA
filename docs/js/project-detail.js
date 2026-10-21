@@ -86,9 +86,8 @@
     });
   });
 
-  // A project created through "Create project with AI" has a generated
-  // design requirement specification attached to it -- shown below its
-  // documents as the same table every other page renders a spec with.
+  // A project's design requirement specification, shown as the same table every other page
+  // renders a spec with.
   document.getElementById("docSecN").textContent = "1";
   var reqDoc = window.DfmeaReqDocs.readAll().find(function(r){ return r.projectId === projectId; });
   if(reqDoc){
@@ -97,13 +96,13 @@
     document.getElementById("reqProduct").textContent = reqDoc.productName;
     document.getElementById("reqStandard").textContent = reqDoc.standard === "None" ? "No specific standard" : reqDoc.standard;
     document.getElementById("reqOpen").href = "requirement-view.html?id=" + encodeURIComponent(reqDoc.id);
-    var specRefs = window.DfmeaReqDocs.dfmeaRefsFor(reqDoc).map(function(n){ return { name: n }; });
-    if(specRefs.length){
+    var fileName = window.DfmeaReqDocs.sourceFileFor(reqDoc);
+    if(fileName){
       var builtEl = document.getElementById("reqBuilt");
       builtEl.hidden = false;
-      builtEl.innerHTML = '<span class="req-built-label">References</span>' + window.DfmeaRefs.chipRowHtml(specRefs, 3, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); });
+      builtEl.innerHTML = '<span class="req-built-label">File name</span><span class="np-chip-mini">' + escapeHtml(fileName) + '</span>';
     }
-    document.getElementById("reqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs, reqDoc);
-    window.DfmeaReqDocs.enhanceSpecTable(document.getElementById("reqSpecs"));
+    document.getElementById("reqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc);
+    window.DfmeaReqDocs.enhanceSpecTable(document.getElementById("reqSpecs"), reqDoc);
   }
 })();
