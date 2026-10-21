@@ -9,7 +9,7 @@
   });
   var breadcrumb = document.querySelector(".crumb");
   if(breadcrumb){
-    breadcrumb.innerHTML = "Aster EV Connector &rsaquo; Crimp DFMEA &rsaquo; Conductor Crimp &rsaquo; Carry electrical current";
+    breadcrumb.innerHTML = "TAK50 &rsaquo; Crimp DFMEA &rsaquo; Conductor Crimp &rsaquo; Carry electrical current";
   }
   var pageTitle = document.querySelector(".ttl");
   if(pageTitle && pageTitle.firstChild){
@@ -314,7 +314,7 @@
       el.classList.add("project-blink");
       setTimeout(function(){ el.classList.remove("project-blink"); }, 3000);
     };
-    [{ id: "aster-ev-connector", name: "Aster EV Connector" }].concat(readCustomProjects()).forEach(function(project){
+    [{ id: "tak50", name: "TAK50" }].concat(readCustomProjects()).forEach(function(project){
       window.addProjectToSidebar(project);
     });
 
