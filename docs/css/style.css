@@ -222,7 +222,7 @@ body{font-size-adjust:0.5;background:var(--bg);font-family:Cambria, "Cambria Mat
 }
 
 /* ---------- CONTENT ---------- */
-.content{padding:10px 20px 16px}
+.content{padding:12px}
 .kpis{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:14px}
 .kp{background:#fff;border:1px solid #E4EAF2;border-radius:10px;padding:9px 12px}
 .kpt{font-size:9px;font-weight:700;color:#7A8AA0;text-transform:uppercase;display:flex;
@@ -1210,7 +1210,7 @@ a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn
 /* tighter vertical rhythm, so a page uses the screen instead of leaving gaps */
 .top{padding-top:8px;padding-bottom:8px}
 .ttl{margin-top:1px}
-.content{padding:8px 20px 14px}
+.content{padding:12px}
 .seclab{margin:10px 0 6px}
 .seclab:first-child{margin-top:0}
 .tt-scroll,.spec-scroll{max-height:max(200px,calc(100vh - 335px))}
@@ -1219,3 +1219,4 @@ a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn
 .tt-foot{padding:6px 14px}
 /* two tables on one page share the screen */
 body.two-tables .tt-scroll,body.two-tables .spec-scroll{max-height:max(150px,calc(50vh - 170px))}
+body.two-tables #reqSpecs .spec-scroll{max-height:60vh}
