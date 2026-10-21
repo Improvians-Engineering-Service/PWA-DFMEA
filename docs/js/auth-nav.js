@@ -61,7 +61,8 @@
   // The Crimp DFMEA belongs to TAK50; a document created through New DFMEA or Create project
   // records its own project. Anything else (a legacy worksheet preview) belongs to no project.
   function projectIdForDoc(docId){
-    if(!docId) return "tak50";
+    if(!docId) return null;
+    if(/^tak50-/.test(docId)) return "tak50";
     var record = readList("dfmeaMyDocuments").find(function(d){ return d.id === docId; });
     return record ? record.projectId : null;
   }
@@ -89,7 +90,10 @@
   // viewer pages carry their own back link, so they're skipped here.
   var backTarget = null;
   if(document.querySelector(".side")){
-    if(isDashboard || pageName === "new-dfmea.html"){
+    if(isDashboard && !activeDocId){
+      // The plain Crimp DFMEA is the client's legacy file, not part of a project.
+      backTarget = { href: "upload.html", label: "Back to Legacy DFMEA" };
+    }else if(isDashboard || pageName === "new-dfmea.html"){
       var parentProjectId = isDashboard ? currentProjectId : urlParams.get("project");
       var parentProjectName = parentProjectId ? projectName(parentProjectId) : "";
       backTarget = parentProjectName
@@ -250,7 +254,7 @@
   // worksheet preview is itself a legacy file, so it has none.
   if(isDashboard && window.DfmeaRefs){
     var legacyNames = null;
-    if(!activeDocId) legacyNames = window.DfmeaRefs.seedDocRefs("");
+    if(seed) legacyNames = window.DfmeaRefs.seedDocRefs(seed.id);
     else if(override && override.mode !== "sample") legacyNames = override.generatedFrom || [];
     var contentHost = document.querySelector(".content");
     if(legacyNames && legacyNames.length && contentHost){
