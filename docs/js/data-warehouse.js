@@ -112,10 +112,10 @@
 
       historyBody.innerHTML = "";
       historyEmpty.hidden = visible.length > 0;
-      visible.forEach(function(item){
+      visible.forEach(function(item, index){
         var row = document.createElement("tr");
         row.dataset.tip = "Open this worksheet";
-        row.innerHTML = "<td>" + escapeHtml(item.name) + "</td>"
+        row.innerHTML = '<td class="uh-num">' + (index + 1) + "</td><td>" + escapeHtml(item.name) + "</td>"
           + "<td>" + escapeHtml(item.size) + "</td>"
           + "<td>" + escapeHtml(item.rows != null ? item.rows + " rows" : "") + "</td>"
           + "<td>" + escapeHtml(item.when) + "</td>";
