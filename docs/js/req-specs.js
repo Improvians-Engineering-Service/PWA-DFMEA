@@ -60,7 +60,7 @@
     var myProjects = readMyProjectsForReq();
     return window.DfmeaReqDocs.readAll().map(function(r){
       var project = myProjects.find(function(p){ return p.id === r.projectId; });
-      return { id: r.id, product: r.productName, standard: r.standard, when: r.createdAt, specs: r.specs, projectId: project ? r.projectId : null, record: r };
+      return { id: r.id, product: r.productName, standard: r.standard, when: r.createdAt, projectId: project ? r.projectId : null, record: r };
     }).slice().reverse();
   }
 
@@ -75,8 +75,8 @@
 
   // One small coloured chip per category the spec covers (same colours as
   // the category column inside a spec), capped with a "+N" for the rest.
-  function categoryChips(specs){
-    return window.DfmeaReqDocs.categoriesOf(specs).map(function(c){
+  function categoryChips(doc){
+    return window.DfmeaReqDocs.categoriesOf(doc).map(function(c){
       return '<span class="spec-cat" data-cat="' + escapeHtml(c.toLowerCase()) + '">' + escapeHtml(c) + '</span>';
     }).join("");
   }
@@ -90,7 +90,7 @@
       if(standard !== "all" && d.standard !== standard) return false;
       if(!query) return true;
       if(d.product.toLowerCase().indexOf(query) !== -1) return true;
-      return (d.specs || []).some(function(s){ return s.toLowerCase().indexOf(query) !== -1; });
+      return window.DfmeaReqDocs.rowsText(d.record).indexOf(query) !== -1;
     });
 
     emptyEl.hidden = visible.length > 0;
@@ -99,8 +99,8 @@
       return '<tr class="req-row" data-id="' + doc.id + '" data-tip="Open this specification">'
         + '<td class="req-open-cell"><span class="data-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14L21 3"/></svg></span></td>'
         + '<td><span class="req-standard">' + escapeHtml(standardLabel) + '</span></td>'
-        + '<td><div class="np-chiprow-mini">' + categoryChips(doc.specs) + '</div></td>'
-        + '<td><span class="data-count">' + (doc.specs || []).length + '</span></td>'
+        + '<td><div class="np-chiprow-mini">' + categoryChips(doc.record) + '</div></td>'
+        + '<td><span class="data-count">' + doc.record.rows.length + '</span></td>'
         + '<td class="req-file">' + escapeHtml(window.DfmeaReqDocs.sourceFileFor(doc.record) || "Generated for this project") + '</td>'
         + '<td class="req-date">' + escapeHtml(doc.when) + '</td>'
         + '</tr>';
@@ -114,7 +114,7 @@
 
     document.getElementById("reqExportBtn").onclick = function(){
       downloadCsv("design-requirement-specifications.csv", ["Product", "Standard", "Specs", "Date"],
-        visible.map(function(d){ return [d.product, d.standard === "None" ? "No specific standard" : d.standard, (d.specs || []).join("; "), d.when]; }));
+        visible.map(function(d){ return [d.product, d.standard === "None" ? "No specific standard" : d.standard, String(d.record.rows.length), d.when]; }));
     };
   }
   searchInput.addEventListener("input", render);
@@ -191,9 +191,10 @@
             productName: productName || file.name,
             standard: "None",
             createdAt: new Date().toLocaleString(),
-            specs: [
-              "Requirements extracted from the uploaded document. Open this specification to review and edit each line",
-              "Re-run extraction or edit the list directly once the document has been reviewed"
+            columns: ["Category", "Requirement"],
+            rows: [
+              ["General", "Requirements extracted from the uploaded document. Open this specification to review and edit each line"],
+              ["General", "Re-run extraction or edit the list directly once the document has been reviewed"]
             ]
           });
           render();

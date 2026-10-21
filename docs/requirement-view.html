@@ -9,7 +9,7 @@
 </script>
 <link rel="stylesheet" href="css/style.css">
 <style>
-.rv-wrap{max-width:920px;margin:28px auto 40px;padding:0 22px}
+.rv-wrap{max-width:1280px;margin:28px auto 40px;padding:0 22px}
 .rv-card{background:#fff;border:1px solid #E4EAF2;border-radius:16px;padding:26px 28px;
  box-shadow:0 1px 2px rgba(15,23,42,.04),0 16px 40px -18px rgba(15,23,42,.14)}
 .rv-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:5px}
@@ -26,13 +26,16 @@
 .rv-btn:hover{background:#F8FAFC;border-color:#C3CEDC}
 .rv-btn.primary{background:var(--p600);border-color:var(--p600);color:#fff;box-shadow:0 1px 2px rgb(var(--p600-rgb) / .2),0 6px 14px -4px rgb(var(--p600-rgb) / .4)}
 .rv-btn.primary:hover{background:var(--p700);border-color:var(--p700)}
-.rv-speceditrow{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
-.rv-speceditrow textarea{flex:1;box-sizing:border-box;padding:8px 11px;border:1px solid #DCE3EC;border-radius:9px;font-size:12px;color:#1E293B;resize:vertical;min-height:40px;line-height:1.5}
-.rv-speceditrow textarea:focus{outline:none;border-color:var(--p400);box-shadow:0 0 0 3px var(--p50)}
 .rv-rm{flex:none;width:30px;height:30px;margin-top:5px;border-radius:8px;border:1px solid #DCE3EC;background:#fff;color:#94A3B8;cursor:pointer;font-size:15px;line-height:1}
 .rv-rm:hover{background:#FEF2F2;color:#B91C1C;border-color:#FCA5A5}
 .rv-addbtn{font-size:11.5px;font-weight:700;color:var(--p700);background:none;border:none;cursor:pointer;padding:6px 0}
 .rv-addbtn:hover{text-decoration:underline}
+.rv-note{margin:0 0 18px;padding:11px 14px;border-left:3px solid var(--p400);border-radius:0 10px 10px 0;background:var(--p25);font-size:12px;line-height:1.6;color:#334155}
+.rv-h{margin:24px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#64748B}
+.rv-edit td{padding:6px}
+.rv-edit textarea{width:100%;min-width:150px;padding:7px 9px;border:1px solid #DCE3EC;border-radius:8px;font-size:12px;line-height:1.45;resize:vertical}
+.rv-edit textarea:focus{outline:none;border-color:#818CF8;box-shadow:0 0 0 3px var(--p50)}
+.rv-rmcell{width:44px}
 .rv-saverow{display:flex;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid #F1F5F9}
 .rv-saverow .rv-btn.primary{margin-left:auto}
 </style>
@@ -49,6 +52,7 @@
 </div>
 </div>
 <script src="js/table-tools.js"></script>
+<script src="js/req-defaults.js"></script>
 <script src="js/req-docs.js"></script>
 <script src="js/references.js"></script>
 <script src="js/assistant.js"></script>
@@ -74,64 +78,69 @@
   document.title = doc.productName + " - DFMEA";
   var editing = false;
 
+  // The spec as a CSV file (opens in Excel), every column and row as shown.
   function downloadSpec(){
-    var lines = [doc.productName, "Standard: " + standardLabel, "Created: " + doc.createdAt, "", "Design requirement specification:"];
-    (doc.specs || []).forEach(function(s, i){ lines.push((i + 1) + ". " + s); });
-    var blob = new Blob([lines.join("\n")], { type: "text/plain" });
+    var blob = new Blob(["﻿" + window.DfmeaReqDocs.csv(doc)], { type: "text/csv;charset=utf-8;" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    a.download = doc.productName.replace(/[^a-z0-9]+/gi, "_") + "_requirement_spec.txt";
+    a.download = doc.productName.replace(/[^a-z0-9]+/gi, "_") + "_requirements.csv";
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
   }
 
+  // Edit mode: one box per cell, same columns as the table.
+  function editRowHtml(row){
+    return '<tr>' + doc.columns.map(function(c, i){
+      return '<td><textarea rows="2" aria-label="' + escapeHtml(c) + '">' + escapeHtml(row[i] || "") + '</textarea></td>';
+    }).join("") + '<td class="rv-rmcell"><button type="button" class="rv-rm" title="Remove this row">&times;</button></td></tr>';
+  }
+
   function render(){
-    var head = '<div class="rv-head"><span class="rv-prod">' + escapeHtml(doc.productName) + '</span><span class="req-standard">' + escapeHtml(standardLabel) + '</span></div>'
-      + '<div class="rv-meta">Design requirement specification &middot; ' + escapeHtml(doc.createdAt) + '</div>';
+    var head = '<div class="rv-head"><span class="rv-prod">' + escapeHtml(doc.title || doc.productName) + '</span><span class="req-standard">' + escapeHtml(standardLabel) + '</span></div>'
+      + '<div class="rv-meta">' + (doc.sourceFile ? escapeHtml(doc.sourceFile) + ' &middot; ' : "") + escapeHtml(doc.createdAt) + '</div>'
+      + (doc.note ? '<div class="rv-note">' + escapeHtml(doc.note) + '</div>' : "");
 
     var body;
     if(!editing){
-      body = '<div class="rv-specs">' + window.DfmeaReqDocs.specTableHtml(doc.specs, doc) + '</div>'
+      body = '<div class="rv-specs">' + window.DfmeaReqDocs.specTableHtml(doc) + '</div>'
+        + (doc.notes && doc.notes.length ? '<div class="rv-h">' + escapeHtml(doc.notesTitle || "Notes") + '</div><div class="rv-specs">' + window.DfmeaReqDocs.notesHtml(doc) + '</div>' : "")
         + '<div class="rv-actions" style="margin-top:20px">'
         + (doc.projectId ? '<a class="rv-link" href="project.html?id=' + encodeURIComponent(doc.projectId) + '">View project &rsaquo;</a>' : "")
         + '<button type="button" class="rv-btn" id="rvDownloadBtn">Download</button>'
         + '<button type="button" class="rv-btn primary" id="rvEditBtn" style="margin-left:auto">Edit specification</button>'
         + '</div>';
     }else{
-      body = '<div id="rvSpecEdit">' + (doc.specs || []).map(function(s, i){
-          return '<div class="rv-speceditrow" data-i="' + i + '"><textarea>' + escapeHtml(s) + '</textarea><button type="button" class="rv-rm" data-rm="' + i + '" title="Remove">&times;</button></div>';
-        }).join("") + '</div>'
-        + '<button type="button" class="rv-addbtn" id="rvAddSpec">+ Add specification line</button>'
+      body = '<div class="spec-scroll"><table class="spec-table rv-edit"><thead><tr>' + doc.columns.map(function(c){ return '<th>' + escapeHtml(c) + '</th>'; }).join("") + '<th></th></tr></thead><tbody id="rvSpecEdit">'
+        + doc.rows.map(editRowHtml).join("") + '</tbody></table></div>'
+        + '<button type="button" class="rv-addbtn" id="rvAddSpec">+ Add a row</button>'
         + '<div class="rv-saverow"><button type="button" class="rv-btn" id="rvCancelBtn">Cancel</button><button type="button" class="rv-btn primary" id="rvSaveBtn">Save changes</button></div>';
     }
     wrap.innerHTML = '<div class="rv-card">' + head + body + '</div>';
-    if(!editing) window.DfmeaReqDocs.enhanceSpecTable(wrap.querySelector(".rv-specs"));
+    if(!editing) window.DfmeaReqDocs.enhanceSpecTable(wrap.querySelector(".rv-specs"), doc);
 
     if(!editing){
       document.getElementById("rvEditBtn").addEventListener("click", function(){ editing = true; render(); });
       document.getElementById("rvDownloadBtn").addEventListener("click", downloadSpec);
     }else{
-      document.getElementById("rvAddSpec").addEventListener("click", function(){
-        var list = document.getElementById("rvSpecEdit");
-        var row = document.createElement("div");
-        row.className = "rv-speceditrow";
-        row.innerHTML = '<textarea></textarea><button type="button" class="rv-rm" title="Remove">&times;</button>';
-        list.appendChild(row);
-        row.querySelector(".rv-rm").addEventListener("click", function(){ row.remove(); });
-        row.querySelector("textarea").focus();
+      var list = document.getElementById("rvSpecEdit");
+      list.addEventListener("click", function(event){
+        var btn = event.target.closest(".rv-rm");
+        if(btn) btn.closest("tr").remove();
       });
-      Array.prototype.slice.call(wrap.querySelectorAll(".rv-rm")).forEach(function(btn){
-        btn.addEventListener("click", function(){ btn.closest(".rv-speceditrow").remove(); });
+      document.getElementById("rvAddSpec").addEventListener("click", function(){
+        list.insertAdjacentHTML("beforeend", editRowHtml([]));
+        list.lastElementChild.querySelector("textarea").focus();
       });
       document.getElementById("rvCancelBtn").addEventListener("click", function(){ editing = false; render(); });
       document.getElementById("rvSaveBtn").addEventListener("click", function(){
-        var specs = Array.prototype.slice.call(wrap.querySelectorAll("#rvSpecEdit textarea"))
-          .map(function(t){ return t.value.trim(); }).filter(Boolean);
-        window.DfmeaReqDocs.updateSpecs(doc.id, specs);
-        doc.specs = specs;
+        var rows = Array.prototype.slice.call(list.querySelectorAll("tr")).map(function(tr){
+          return Array.prototype.slice.call(tr.querySelectorAll("textarea")).map(function(t){ return t.value.trim(); });
+        }).filter(function(r){ return r.some(Boolean); });
+        window.DfmeaReqDocs.update(doc.id, { rows: rows });
+        doc.rows = rows;
         editing = false;
         render();
       });
