@@ -11,7 +11,7 @@
   // with KNOWN_PROJECTS in project-detail.js) and a normal lifecycle
   // status, like a real workspace would show.
   var BUILT_IN_PROJECTS = [
-    { id: "tak50", name: "TAK50", baseDocs: 5, status: "active",
+    { id: "tak50", name: "TAK50", baseDocs: 1, status: "active",
       description: "Sealed high-current crimped terminal and connector interface for an EV battery system" }
   ];
   var STATUS_LABELS = { active: "Active", draft: "Draft", empty: "No DFMEA yet" };

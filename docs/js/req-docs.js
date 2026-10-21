@@ -230,11 +230,11 @@
   // The customer's own files a spec's requirements were drawn from. A spec
   // made by Create project carries its own list; the built-in TAK50 one is
   // fixed.
-  var KNOWN_REFS = { "tak50": [
-    "Crimp DFMEA - Page 1.pdf", "Crimp DFMEA - Page 2.pdf", "Crimp DFMEA - Page 3.pdf", "Crimp DFMEA - Page 4.pdf",
-    "Crimp DFMEA - Page 5.pdf", "Crimp DFMEA - Page 6.pdf", "Crimp DFMEA - Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"] };
+  var KNOWN_REFS = { "tak50": ["Crimp DFMEA.pdf"] };
   function dfmeaRefsFor(doc){
-    return (doc && (doc.builtFromDfmeas || KNOWN_REFS[doc.projectId])) || [];
+    var names = (doc && (doc.builtFromDfmeas || KNOWN_REFS[doc.projectId])) || [];
+    // Only files that are actually on record in Legacy DFMEA can be cited.
+    return names.filter(function(n){ return !window.DfmeaRefs || window.DfmeaRefs.legacyInfo(n); });
   }
   // The file a spec was uploaded as (a generated one has none).
   function sourceFileFor(doc){
@@ -265,7 +265,7 @@
       var picks = [];
       if(sources.length && index % 4 !== 2){
         picks.push(sources[cursor++ % sources.length]);
-        if(index % 3 === 1) picks.push(sources[cursor++ % sources.length]);
+        if(index % 3 === 1 && sources.length > 1) picks.push(sources[cursor++ % sources.length]);
       }
       out.push(picks);
     }
