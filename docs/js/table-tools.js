@@ -57,9 +57,11 @@
     empty.hidden = true;
     empty.innerHTML = 'No ' + escapeHtml(noun) + ' match this search. <button type="button" class="tt-reset-link">Clear filters</button>';
 
-    table.parentNode.insertBefore(bar, table);
-    table.parentNode.insertBefore(empty, table.nextSibling);
-    table.parentNode.insertBefore(foot, empty.nextSibling);
+    // A wide table sits in a scrolling box; the toolbar and footer stay outside it.
+    var host = table.closest(".spec-scroll") || table;
+    host.parentNode.insertBefore(bar, host);
+    host.parentNode.insertBefore(empty, host.nextSibling);
+    host.parentNode.insertBefore(foot, empty.nextSibling);
 
     if(options.search === false && !filters.length) bar.hidden = true;
     var searchInput = bar.querySelector(".tt-search input");

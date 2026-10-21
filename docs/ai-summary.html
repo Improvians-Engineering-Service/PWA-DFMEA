@@ -41,6 +41,7 @@
   </div>
   <div class="as-wrap" id="asWrap"></div>
 </div></div>
+<script src="js/req-defaults.js"></script>
 <script src="js/req-docs.js"></script>
 <script src="js/references.js"></script>
 <script src="js/assistant.js"></script>
@@ -82,32 +83,24 @@
     var doc = window.DfmeaReqDocs.getById(params.get("id") || "");
     var row = Number(params.get("row"));
     if(!doc || !doc.specs || !doc.specs[row - 1]) return notFound();
-    var sources = window.DfmeaReqDocs.sourcesFor(doc);
-    var picks = window.DfmeaReqDocs.rowPicks(doc.specs.length, sources)[row - 1];
-    var files = picks.map(function(p){ return p.name; });
-    var d = AI.specDetail(doc, row, files[0] || "");
+    var d = AI.specDetail(doc, row);
     var std = doc.standard === "None" ? "No specific standard" : doc.standard;
-    var detailRows = d.rows.slice();
-    if(files[1]) detailRows.splice(2, 0, ["Also used", files[1]]);
-    var body = '<div class="as-quote"><span class="spec-cat" data-cat="' + esc(d.category.toLowerCase()) + '">' + esc(d.category) + '</span>&nbsp; ' + esc(d.text) + '</div>'
-      + '<div class="as-summary">' + esc(d.summary + (files[1] ? " " + files[1] + " backs it up with " + AI.fileNote(files[1]) + "." : "")) + '</div>'
-      + '<div class="as-h">Why this reference was used</div>'
-      + '<table class="ai-table">' + detailRows.map(function(r){
-          var isFile = (r[0] === "Reference used" || r[0] === "Also used") && /\.pdf$|\.xlsx?$|\.docx?$/i.test(r[1]);
-          return '<tr><th>' + esc(r[0]) + '</th><td>' + (isFile ? linkFile(r[1]) : esc(r[1])) + '</td></tr>';
-        }).join("") + '</table>';
-    var ev = d.rows.filter(function(r){ return r[0] === "How it is verified"; })[0];
+    var body = '<div class="as-quote"><span class="spec-cat" data-cat="' + esc(d.d.category.toLowerCase()) + '">' + esc(d.d.category) + '</span>&nbsp; ' + esc(d.d.name || d.d.target) + '</div>'
+      + '<div class="as-summary">' + esc(d.summary) + '</div>'
+      + '<div class="as-h">The requirement, as written in ' + esc(d.file || "the specification") + '</div>'
+      + '<table class="ai-table">' + d.rows.map(function(r){ return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>'; }).join("") + '</table>';
     finish({
       title: doc.productName, titleHtml: 'Requirement ' + row + ' <span class="req-standard">' + esc(std) + '</span>',
-      sub: doc.productName + " \u00b7 design requirement specification", bodyHtml: body,
+      sub: (doc.title || doc.productName) + " · design requirement specification", bodyHtml: body,
       backHref: "requirement-view.html?id=" + encodeURIComponent(doc.id), backLabel: "Back to the specification",
-      suggestions: ["Why was this reference used?", "How is it verified?", "How confident is the match?", "Are there other references?"],
-      welcome: "This is the summary for requirement " + row + ". Ask me anything about why it cites its reference.",
+      suggestions: ["Why does this requirement matter?", "How is it verified?", "Is the value official?", "Where does it apply?"],
+      welcome: "This is the summary for requirement " + row + ". Ask me anything about it.",
       ctx: function(){ return { page: "ai-summary.html", answers: [
-        { keys: ["why", "reason", "explain"], text: d.summary },
-        { keys: ["verif", "test", "check", "prove"], text: "It is verified by " + (ev ? ev[1].charAt(0).toLowerCase() + ev[1].slice(1) : "reviewing the listed causes") + "." },
-        { keys: ["confiden", "sure", "match", "accura"], text: files.length ? "The match confidence is **" + (row % 3 === 0 ? "Medium" : "High") + "**: " + (row % 3 === 0 ? "the file covers this failure mechanism only in part." : "the file covers the same failure mechanism as this requirement.") : "No customer file is cited, so there is no match to score. The requirement comes from the standard." },
-        { keys: ["other", "another", "alternative", "more reference", "else"], text: files.length > 1 ? "Yes. It also uses **" + files[1] + "**, which contains " + AI.fileNote(files[1]) + "." : "No. This requirement cites only " + (files[0] ? "**" + files[0] + "**" : "the standard") + "." }
+        { keys: ["why", "reason", "explain", "matter"], text: d.summary },
+        { keys: ["verif", "test", "check", "prove", "evidence"], text: d.d.verify ? "It is verified with: " + d.d.verify : "The specification does not list a verification method for this requirement." },
+        { keys: ["official", "status", "limit", "value", "numeric", "standard"], text: (d.d.status ? "Status of the value: **" + d.d.status + "**. " : "") + (d.d.relation ? d.d.relation : "") || "The specification gives no status for this value." },
+        { keys: ["where", "apply", "applic", "condition"], text: d.d.applic ? "It applies to: " + d.d.applic : "The specification does not limit where this requirement applies." },
+        { keys: ["source", "reference", "file"], text: d.d.source ? "Source: " + d.d.source : "It comes from " + (d.file || "the specification") + "." }
       ] }; }
     });
   }else if(type === "dfmea"){
