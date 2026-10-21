@@ -9,11 +9,11 @@
   });
   var breadcrumb = document.querySelector(".crumb");
   if(breadcrumb){
-    breadcrumb.innerHTML = "TAK50 &rsaquo; Crimp DFMEA &rsaquo; Conductor Crimp &rsaquo; Carry electrical current";
+    breadcrumb.innerHTML = "TAK50 &rsaquo; <b>Crimp DFMEA</b>";
   }
   var pageTitle = document.querySelector(".ttl");
   if(pageTitle && pageTitle.firstChild){
-    pageTitle.firstChild.textContent = "Contact resistance too high ";
+    pageTitle.firstChild.textContent = "Crimp ";
   }
   var treeSvg = document.querySelector("#treeZoom svg");
   if(treeSvg && !treeSvg.querySelector("#treeContent")){
@@ -359,10 +359,22 @@
   var analysisRows = Array.prototype.slice.call(document.querySelectorAll("#wsBody tr"));
   var summaryRow = analysisRows[0];
   if(summaryRow){
-    document.getElementById("summaryFunction").textContent = summaryRow.cells[2].textContent.trim();
-    document.getElementById("summaryCriteria").textContent = summaryRow.cells[3].textContent.trim();
-    document.getElementById("summaryFailure").textContent = summaryRow.cells[4].textContent.trim();
-    document.getElementById("summaryEffect").textContent = summaryRow.cells[5].textContent.trim();
+    // A DFMEA with several functions lists the first one and counts the rest; the full list is
+    // in the tooltip.
+    var setSummary = function(id, column){
+      var values = Array.from(new Set(analysisRows.map(function(row){ return row.cells[column].textContent.trim(); }).filter(Boolean)));
+      // Functions are counted by their failure mode (two of them have no name on the sheet).
+      var total = column === 2
+        ? new Set(analysisRows.map(function(row){ return row.dataset.fm || "1"; })).size
+        : values.length;
+      var el = document.getElementById(id);
+      el.textContent = total > 1 ? values[0] + " +" + (total - 1) + " more" : (values[0] || "");
+      if(total > 1) el.setAttribute("title", values.join("\n"));
+    };
+    setSummary("summaryFunction", 2);
+    setSummary("summaryCriteria", 3);
+    setSummary("summaryFailure", 4);
+    setSummary("summaryEffect", 5);
   }
   var svgCauseNodes = Array.prototype.slice.call(document.querySelectorAll("#treeZoom .hitbox")).filter(function(node){
     var tag = node.querySelector(".ttag");
@@ -406,6 +418,8 @@
 
     var severity = Number(row.cells[6].textContent.trim());
     [[25, 27, 28], [29, 31, 32]].forEach(function(columns){
+      // A path nobody has rated (blank severity, occurrence or detection) has no RPN.
+      if(!row.cells[6].textContent.trim() || !row.cells[columns[0]].textContent.trim() || !row.cells[columns[1]].textContent.trim()) return;
       var occurrence = Number(row.cells[columns[0]].textContent.trim());
       var detection = Number(row.cells[columns[1]].textContent.trim());
       if(!Number.isFinite(severity) || !Number.isFinite(occurrence) || !Number.isFinite(detection)) return;

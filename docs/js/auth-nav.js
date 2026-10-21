@@ -39,23 +39,11 @@
     window.location.href = "projects.html";
   });
 
-  // A DFMEA created through New DFMEA (blank or with AI) doesn't get its
-  // own separate dashboard -- there's only one real, fully-wired
-  // worksheet/tree in this build. Instead it reuses THIS SAME page's
-  // live, editable structure and just relabels the name/function/
-  // breadcrumb. Each created document keeps its own override (keyed by
-  // the ?doc= id in the URL) in dfmeaDocOverrides, so visiting index.html
-  // plainly (no ?doc=) always shows the real Crimp DFMEA, and several
-  // created documents never stomp on each other. TAK50's other documents
-  // are sample data built into the app itself (not something a visitor
-  // created) -- the same kind of override, just seeded here instead of
-  // written to localStorage by New DFMEA.
-  var SEED_OVERRIDES = {
-    "seed-terminal-durability": { name: "Terminal Durability DFMEA", function: "Terminal Contact Resistance After Cycling", failureMode: "Missing or Degraded Function", mode: "sample" },
-    "seed-housing-seal": { name: "Housing Seal Integrity DFMEA", function: "Housing Seal Integrity", failureMode: "Seal Fails to Maintain IP Rating After Repeated Mating", severity: 7, mode: "sample" },
-    "seed-mating-cycle": { name: "Mating Cycle Durability DFMEA", function: "Mating Cycle Durability", failureMode: "Contact Performance Degrades After Repeated Mating Cycles", severity: 7, mode: "sample" },
-    "seed-lock-retention": { name: "Connector Lock Retention DFMEA", function: "Connector Lock Retention", failureMode: "Primary Lock Releases Under Vibration or Pull Load", severity: 8, mode: "sample" }
-  };
+  // A DFMEA created through New DFMEA doesn't get its own separate dashboard -- there's only one
+  // real, fully-wired worksheet/tree in this build. Instead it reuses THIS SAME page's live,
+  // editable structure and just relabels the name/function/breadcrumb. Each created document
+  // keeps its own override (keyed by the ?doc= id in the URL) in dfmeaDocOverrides, so visiting
+  // index.html plainly (no ?doc=) always shows the real Crimp DFMEA.
 
   var urlParams = new URLSearchParams(window.location.search);
   var pageName = window.location.pathname.split("/").pop() || "index.html";
@@ -70,12 +58,10 @@
     var custom = readList("dfmeaMyProjects").find(function(p){ return p.id === projectId; });
     return custom ? custom.name : "";
   }
-  // The Crimp DFMEA and the seeded sample documents all belong to TAK50 EV
-  // Connector; a document created through New DFMEA or Create project with
-  // AI records its own project. Anything else (a legacy worksheet preview)
-  // belongs to no project.
+  // The Crimp DFMEA belongs to TAK50; a document created through New DFMEA or Create project
+  // records its own project. Anything else (a legacy worksheet preview) belongs to no project.
   function projectIdForDoc(docId){
-    if(!docId || SEED_OVERRIDES[docId]) return "tak50";
+    if(!docId) return "tak50";
     var record = readList("dfmeaMyDocuments").find(function(d){ return d.id === docId; });
     return record ? record.projectId : null;
   }
@@ -136,13 +122,9 @@
 
   var override = null;
   if(activeDocId){
-    if(SEED_OVERRIDES[activeDocId]){
-      override = SEED_OVERRIDES[activeDocId];
-    }else{
-      try{
-        override = JSON.parse(localStorage.getItem("dfmeaDocOverrides") || "{}")[activeDocId] || null;
-      }catch(error){ override = null; }
-    }
+    try{
+      override = JSON.parse(localStorage.getItem("dfmeaDocOverrides") || "{}")[activeDocId] || null;
+    }catch(error){ override = null; }
   }
   if(override && override.name){
     var titleEl = document.querySelector(".ttl");
@@ -177,6 +159,8 @@
       var sevTier = sevValue >= 9 ? "s-crit" : (sevValue >= 6 ? "s-high" : "s-low");
       Array.prototype.slice.call(document.querySelectorAll("#wsBody tr")).forEach(function(row){
         if(!row.cells || row.cells.length < 5) return;
+        // The Crimp DFMEA has several functions; a renamed copy relabels the first one only.
+        if(row.dataset.fm && row.dataset.fm !== "1") return;
         var fnEl = row.cells[2].querySelector(".t1") || row.cells[2];
         fnEl.textContent = override.function;
         row.cells[4].textContent = override.failureMode || override.function;
@@ -266,7 +250,7 @@
   // worksheet preview is itself a legacy file, so it has none.
   if(isDashboard && window.DfmeaRefs){
     var legacyNames = null;
-    if(!activeDocId || SEED_OVERRIDES[activeDocId]) legacyNames = window.DfmeaRefs.seedDocRefs(activeDocId);
+    if(!activeDocId) legacyNames = window.DfmeaRefs.seedDocRefs("");
     else if(override && override.mode !== "sample") legacyNames = override.generatedFrom || [];
     var contentHost = document.querySelector(".content");
     if(legacyNames && legacyNames.length && contentHost){
