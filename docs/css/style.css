@@ -1162,4 +1162,4 @@ svg.searching g.hitbox:not(.search-hit){opacity:.18}
 svg.searching g.hitbox.search-hit{opacity:1}
 g.hitbox.search-hit>rect:nth-of-type(2){fill:#FEF08A;stroke:#CA8A04;stroke-width:2.6}
 g.hitbox.search-hit .ttl2{fill:#713F12}
-g.hitbox.search-current>rect:nth-of-type(2){stroke:#DC2626;stroke-width:3.4}
+g.hitbox.search-current>rect:nth-of-type(2){stroke:#F87171;stroke-width:2.4}
