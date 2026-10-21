@@ -6,6 +6,7 @@
   // choice is saved and applied before the page paints, on every page.
   var KEY = "dfmeaTheme";
   var THEMES = {
+    red:     { label: "Red",     p: ["#FFF1F1","#FFE0E0","#FFC2C2","#FF9999","#FF6666","#FF3333","#FF0000","#D90000","#B30000"], alt: "#F97316", bg: "#FBF4F4" },
     indigo:  { label: "Indigo",  p: ["#EEF2FF","#E0E7FF","#C7D2FE","#A5B4FC","#818CF8","#6366F1","#4F46E5","#4338CA","#3730A3"], alt: "#8B5CF6", bg: "#F4F6FB" },
     blue:    { label: "Blue",    p: ["#EFF6FF","#DBEAFE","#BFDBFE","#93C5FD","#60A5FA","#3B82F6","#2563EB","#1D4ED8","#1E40AF"], alt: "#06B6D4", bg: "#F2F6FC" },
     teal:    { label: "Teal",    p: ["#F0FDFA","#CCFBF1","#99F6E4","#5EEAD4","#2DD4BF","#14B8A6","#0D9488","#0F766E","#115E59"], alt: "#0EA5E9", bg: "#F1F7F7" },
@@ -20,10 +21,10 @@
     return parseInt(hex.slice(1, 3), 16) + " " + parseInt(hex.slice(3, 5), 16) + " " + parseInt(hex.slice(5, 7), 16);
   }
   function read(){
-    try{ var t = localStorage.getItem(KEY); return THEMES[t] ? t : "indigo"; }catch(error){ return "indigo"; }
+    try{ var t = localStorage.getItem(KEY); return THEMES[t] ? t : "red"; }catch(error){ return "indigo"; }
   }
   function apply(name){
-    var theme = THEMES[name] || THEMES.indigo;
+    var theme = THEMES[name] || THEMES.red;
     var root = document.documentElement.style;
     STEPS.forEach(function(step, i){ root.setProperty("--p" + step, theme.p[i]); });
     root.setProperty("--p500-rgb", rgbOf(theme.p[5]));

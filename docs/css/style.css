@@ -1,6 +1,6 @@
 
-:root{--p25:color-mix(in srgb,var(--p50) 45%,#fff);--p50:#EEF2FF;--p100:#E0E7FF;--p200:#C7D2FE;--p300:#A5B4FC;--p400:#818CF8;--p500:#6366F1;--p600:#4F46E5;--p700:#4338CA;--p800:#3730A3;
- --p500-rgb:99 102 241;--p600-rgb:79 70 229;--p700-rgb:67 56 202;--p-alt:#8B5CF6;--bg:#F4F6FB}
+:root{--p25:color-mix(in srgb,var(--p50) 45%,#fff);--p50:#FFF1F1;--p100:#FFE0E0;--p200:#FFC2C2;--p300:#FF9999;--p400:#FF6666;--p500:#FF3333;--p600:#FF0000;--p700:#D90000;--p800:#B30000;
+ --p500-rgb:255 51 51;--p600-rgb:255 0 0;--p700-rgb:217 0 0;--p-alt:#F97316;--bg:#FBF4F4}
 *{box-sizing:border-box;margin:0;padding:0}
 /* Form controls don't inherit the page font on their own -- without this
    every <button> falls back to the OS system font instead of the page font. */
