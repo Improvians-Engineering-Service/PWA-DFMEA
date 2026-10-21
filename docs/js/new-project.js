@@ -91,13 +91,10 @@
   // page, nothing else. Shown as References on the results screen.
   var REFERENCE_DOCS = window.DfmeaRefs.LEGACY;
   function severityChip(severity){
+    if(!severity) return "";
     var tier = severity >= 9 ? "s-crit" : (severity >= 6 ? "s-high" : "s-low");
     return '<span class="chip ' + tier + '">' + severity + '</span>';
   }
-
-  // The one DFMEA a project starts with: the client's Crimp DFMEA, all of its functions in one
-  // document. It opens as the real worksheet and risk tree, not a renamed copy.
-  var CRIMP_DFMEA = { name: "Crimp DFMEA", severity: 9 };
 
   function validateStep1(){
     var ok = true;
@@ -134,6 +131,13 @@
       list.push(record);
       localStorage.setItem("dfmeaMyDocuments", JSON.stringify(list));
     }catch(error){ /* storage unavailable -- the flow still works, just won't be listed anywhere */ }
+  }
+  function saveOverride(id, override){
+    try{
+      var map = JSON.parse(localStorage.getItem("dfmeaDocOverrides") || "{}");
+      map[id] = override;
+      localStorage.setItem("dfmeaDocOverrides", JSON.stringify(map));
+    }catch(error){ /* override just won't persist -- navigation still works */ }
   }
   function saveRequirementDoc(doc){
     try{
@@ -212,11 +216,18 @@
     // --- requirement doc ---
     saveRequirementDoc(reqDocRecord);
 
-    // --- the DFMEA ---
-    var docId = makeDocId();
-    saveDocRecord({ id: docId, name: CRIMP_DFMEA.name, function: window.DfmeaRefs.CRIMP.functionLabel, severity: CRIMP_DFMEA.severity,
-      projectId: projectId, mode: "ai", generatedFrom: matched.map(function(m){ return m.name; }), createdAt: new Date().toLocaleString() });
-    var generatedRows = [{ docId: docId, name: CRIMP_DFMEA.name, fn: window.DfmeaRefs.CRIMP.functionLabel, severity: CRIMP_DFMEA.severity }];
+    // --- the project's DFMEAs: one per area of the requirements, each built from the legacy
+    // Crimp DFMEA and opening as a real, editable document ---
+    var generatedRows = window.DfmeaRefs.TAK50_DFMEAS.map(function(d){
+      var docId = makeDocId();
+      var docName = name + " " + d.suffix + " DFMEA";
+      var from = matched.map(function(m){ return m.name; });
+      saveDocRecord({ id: docId, name: docName, function: d.fn, severity: "", projectId: projectId, mode: "ai",
+        generatedFrom: from, createdAt: new Date().toLocaleString() });
+      saveOverride(docId, { name: docName, function: d.fn, failureMode: "Missing or Degraded Function", mode: "ai",
+        projectId: projectId, generatedFrom: from, generatedAt: new Date().toISOString() });
+      return { docId: docId, name: docName, fn: d.fn, severity: "" };
+    });
 
     // --- render results ---
     document.getElementById("npDoneTitle").textContent = "“" + name + "” created";
