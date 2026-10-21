@@ -34,6 +34,7 @@
     var noun = options.noun || "rows";
     var filters = options.filters || [];
     var busy = false;
+    var observer = null;
 
     var bar = document.createElement("div");
     bar.className = "tt-bar";
@@ -108,6 +109,8 @@
       });
       busy = true;
       all.forEach(function(r){ tbody.appendChild(r); });
+      // Our own re-ordering must not look like a page re-render.
+      if(observer) observer.takeRecords();
       busy = false;
     }
 
@@ -205,7 +208,8 @@
     }
     // The page re-renders the body (a search elsewhere, another tab saving
     // data, ...): pick the new rows up without losing the current view.
-    new MutationObserver(function(){ if(!busy) refresh(); }).observe(tbody, { childList: true });
+    observer = new MutationObserver(function(){ if(!busy) refresh(); });
+    observer.observe(tbody, { childList: true });
 
     var api = { refresh: refresh, reset: reset };
     table.__tableTools = api;

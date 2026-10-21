@@ -51,7 +51,7 @@
     return LEGACY.filter(function(f){ return f.name === name; })[0] || null;
   }
 
-  // Which legacy DFMEAs each built-in Aster document was built from
+  // Which legacy DFMEAs each built-in TAK50 document was built from
   // ("" is the Crimp DFMEA, which has no ?doc= id).
   var SEED_DOC_REFS = {
     "": ["Crimp DFMEA - Page 1.pdf", "Crimp DFMEA - Page 2.pdf", "Crimp DFMEA - Page 3.pdf", "Crimp DFMEA - Page 4.pdf", "Crimp DFMEA - Page 5.pdf", "Crimp DFMEA - Page 6.pdf", "Crimp DFMEA - Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"],
