@@ -118,14 +118,15 @@
         row.innerHTML = '<td class="uh-num">' + (index + 1) + "</td><td>" + escapeHtml(item.name) + "</td>"
           + "<td>" + escapeHtml(item.size) + "</td>"
           + "<td>" + escapeHtml(item.rows != null ? item.rows + " rows" : "") + "</td>"
+          + '<td class="uh-muted">' + escapeHtml(item.structure || "") + "</td>"
           + "<td>" + escapeHtml(item.when) + "</td>";
         row.addEventListener("click", function(){ openWorksheetPreview(item); });
         historyBody.appendChild(row);
       });
 
       document.getElementById("uhExportBtn").onclick = function(){
-        downloadCsv("uploaded-worksheets.csv", ["File", "Size", "Rows parsed", "Uploaded"],
-          visible.map(function(r){ return [r.name, r.size, r.rows != null ? r.rows : "", r.when]; }));
+        downloadCsv("uploaded-worksheets.csv", ["File", "Size", "Rows parsed", "Structure", "Uploaded"],
+          visible.map(function(r){ return [r.name, r.size, r.rows != null ? r.rows : "", r.structure || "", r.when]; }));
       };
     }
     searchInput.addEventListener("input", renderHistory);
