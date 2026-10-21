@@ -46,7 +46,7 @@
   // breadcrumb. Each created document keeps its own override (keyed by
   // the ?doc= id in the URL) in dfmeaDocOverrides, so visiting index.html
   // plainly (no ?doc=) always shows the real Crimp DFMEA, and several
-  // created documents never stomp on each other. Aster's other documents
+  // created documents never stomp on each other. TAK50's other documents
   // are sample data built into the app itself (not something a visitor
   // created) -- the same kind of override, just seeded here instead of
   // written to localStorage by New DFMEA.
@@ -64,18 +64,18 @@
   function readList(key){
     try{ return JSON.parse(localStorage.getItem(key) || "[]"); }catch(error){ return []; }
   }
-  var BUILT_IN_PROJECT_NAMES = { "aster-ev-connector": "Aster EV Connector" };
+  var BUILT_IN_PROJECT_NAMES = { "tak50": "TAK50" };
   function projectName(projectId){
     if(BUILT_IN_PROJECT_NAMES[projectId]) return BUILT_IN_PROJECT_NAMES[projectId];
     var custom = readList("dfmeaMyProjects").find(function(p){ return p.id === projectId; });
     return custom ? custom.name : "";
   }
-  // The Crimp DFMEA and the seeded sample documents all belong to Aster EV
+  // The Crimp DFMEA and the seeded sample documents all belong to TAK50 EV
   // Connector; a document created through New DFMEA or Create project with
   // AI records its own project. Anything else (a legacy worksheet preview)
   // belongs to no project.
   function projectIdForDoc(docId){
-    if(!docId || SEED_OVERRIDES[docId]) return "aster-ev-connector";
+    if(!docId || SEED_OVERRIDES[docId]) return "tak50";
     var record = readList("dfmeaMyDocuments").find(function(d){ return d.id === docId; });
     return record ? record.projectId : null;
   }
