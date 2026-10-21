@@ -95,7 +95,7 @@
           // badge next to the title, so a name ending in it would read
           // like "Busbar Joint DFMEA DFMEA" once both are on screen.
           var title = item.name.replace(/\.(xlsx|xls|pdf)$/i, "").replace(/[_-]+/g, " ").replace(/\s+dfmea\s*$/i, "").trim();
-          map[docId] = { name: title, function: title, failureMode: "Missing or Degraded Function", severity: 9, mode: "sample" };
+          map[docId] = { name: title, mode: "sample" };
           localStorage.setItem("dfmeaDocOverrides", JSON.stringify(map));
         }
       }catch(error){ /* override just won't persist -- it still opens, unlabeled */ }

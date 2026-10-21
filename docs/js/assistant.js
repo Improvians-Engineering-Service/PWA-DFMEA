@@ -23,20 +23,14 @@
   // ---------------------------------------------------------------
   // What each customer file contains (used to explain a reference).
   // ---------------------------------------------------------------
-  var FILE_NOTES = {
-    "Crimp DFMEA - Page 1.pdf": "the function, the acceptance criterion (below 0.55 mOhm), the failure mode, its effect and severity 9, plus the first cause levels (wire strand to terminal interface, film and Sn oxide resistance)",
-    "Crimp DFMEA - Page 2.pdf": "cause chains for conductor crimp strength, plating thickness and wire oxide resistance, across cause levels 7 to 14",
-    "Interface Contact Ressitance Cause & Effect Diagram.pdf": "the contact resistance model: total terminal resistance built from constriction and film resistance, contact force and material factors"
-  };
-  function fileNote(file){
-    if(FILE_NOTES[file]) return FILE_NOTES[file];
-    var m = /Page (\d+)/.exec(file);
-    return m ? "page " + m[1] + " of 7 of the customer's Crimp DFMEA worksheet: further cause levels, ratings and design controls" : "the customer's own worksheet content";
+  var CRIMP_NOTE = "the customer's Crimp DFMEA: six functions (crimp contact resistance, conductor crimp pull-out force, terminal bend resistance and three cable seal functions), each with its failure mode and effect, and " + window.DfmeaRefs.CRIMP.paths + " cause paths down to Level " + window.DfmeaRefs.CRIMP.depth;
+  function fileNote(){
+    return CRIMP_NOTE;
   }
   var CATEGORY_EVIDENCE = {
     mechanical: { shows: "cause chains for crimp geometry, conductor strength and pull-out, such as crimp width and height, strand damage and insufficient crimp",
       use: "each mechanical cause was mapped to a pull-out, retention or force check on this requirement", control: "force and geometry verification (tensile or pull-out test, CMM inspection)" },
-    electrical: { shows: "the contact resistance chains: wire strand to terminal interface, film resistance and Sn oxide, plus the interface resistance model",
+    electrical: { shows: "the contact resistance chains: wire strand to terminal interface, film resistance and Sn oxide",
       use: "the resistance limit on this requirement was checked against those chains", control: "4-wire resistance measurement before and after cycling" },
     environmental: { shows: "causes that grow over time: oxide build-up, plating wear and thermal expansion of the crimp",
       use: "the environmental exposure in this requirement was linked to those time-dependent causes", control: "thermal cycling, vibration and humidity test sequences" },
@@ -54,16 +48,10 @@
   // Detailed summaries (the AI summary pages)
   // ---------------------------------------------------------------
   // Short, one-sentence summary of a DFMEA, for its table row.
-  var DFMEA_SHORT = {
-    "Crimp Contact Resistance": "Contact resistance rising above 0.55 mOhm after crimping, with wire strand, film and plating causes traced across 26 paths.",
-    "Terminal Contact Resistance After Cycling": "Contact resistance drifting after repeated mating, with wear, fretting and plating loss causes across 26 paths.",
-    "Housing Seal Integrity": "The seal losing its IP rating after repeated mating, with compression, lip damage and fit causes across 26 paths.",
-    "Mating Cycle Durability": "Contact performance degrading over mating cycles, with insertion force growth, plating wear and alignment causes.",
-    "Connector Lock Retention": "The primary lock releasing under vibration or pull load, with latch geometry, wear and assembly causes."
-  };
+  var CRIMP_SHORT = "The crimped joint in six functions (contact resistance, pull-out force, terminal bend and the cable seal), with " + window.DfmeaRefs.CRIMP.causes + " causes across " + window.DfmeaRefs.CRIMP.paths + " paths.";
   function dfmeaShort(fn, severity){
-    if(DFMEA_SHORT[fn]) return DFMEA_SHORT[fn];
-    return "Starting structure for " + (fn || "this function") + ": its failure mode, effect and 26 cause paths" + (severity ? ", severity " + severity : "") + ".";
+    if(fn === window.DfmeaRefs.CRIMP.functionLabel) return CRIMP_SHORT;
+    return "Starting structure for " + (fn || "this function") + ": its failure mode, effect and cause paths" + (severity ? ", severity " + severity : "") + ".";
   }
 
   function specDetail(doc, rowIndex, file){
@@ -99,12 +87,12 @@
     var rows = [
       ["Function", fn],
       ["Severity", info.severity ? String(info.severity) : "Not rated"],
-      ["Structure", "64 causes across 26 paths, up to 11 levels deep"],
+      ["Structure", window.DfmeaRefs.CRIMP_STRUCTURE.charAt(0).toUpperCase() + window.DfmeaRefs.CRIMP_STRUCTURE.slice(1)],
       ["References", refs.length ? refs.length + " customer file" + (refs.length === 1 ? "" : "s") : "None selected"]
     ];
     var why = refs.map(function(f){ return [f, "Used because it contains " + fileNote(f) + "."]; });
     var summary = dfmeaShort(info.fn, info.severity) + (refs.length
-      ? " It was built from " + refs.length + " of the customer's own file" + (refs.length === 1 ? "" : "s") + ", so every cause traces back to a document they provided."
+      ? " It was built from " + (refs.length === 1 ? "the customer's own file" : refs.length + " of the customer's own files") + ", so every cause traces back to a document they provided."
       : " No customer file is attached to it yet.");
     return { summary: summary, rows: rows, why: why };
   }
@@ -112,14 +100,13 @@
   // ---------------------------------------------------------------
   // Answers
   // ---------------------------------------------------------------
-  var LEGACY_NAMES = ["Crimp DFMEA - Page 1.pdf to Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"];
   var TOPICS = [
     { keys: ["hello", "hi ", "hey", "good morning", "good evening"], text: function(){ return "Hello! I can explain the DFMEAs, design requirements and references in this workspace, or help you create a project. What would you like to know?"; } },
     { keys: ["thank"], text: function(){ return "You are welcome. Ask me anything else about the DFMEAs or requirements."; } },
     { keys: ["severity", "occurrence", "detection", "rpn", "rating"], text: function(){ return "**Severity** rates how serious the effect is (1 to 10). **Occurrence** rates how likely the cause is, and **Detection** rates how likely the current controls are to catch it. The **RPN** is Severity x Occurrence x Detection, and the worksheet colours the left bar of each final cause by it: red for 100 and above, amber for 40 to 99, green below 40."; } },
-    { keys: ["contact resistance", "crimp", "0.55", "mohm", "resistance"], text: function(){ return "The Crimp DFMEA looks at contact resistance rising above **0.55 mOhm** after crimping. Its causes run from the wire strand to terminal interface, through film resistance and Sn oxide, down to crimp geometry and plating. The customer's contact resistance diagram shows how those parts add up to the total terminal resistance."; } },
-    { keys: ["why", "reference", "referenc", "source", "where did", "come from", "taken from"], text: function(){ return "Every reference in this workspace is one of the customer's own files: **" + LEGACY_NAMES.join("** and **") + "**. A DFMEA or requirement cites a file when that file contains the cause chains behind it. Open the AI summary on any row to see exactly why a file was used."; } },
-    { keys: ["legacy", "uploaded", "files", "documents"], text: function(){ return "Legacy DFMEA lists the files the customer shared: the seven pages of the Crimp DFMEA worksheet and the Interface Contact Resistance cause and effect diagram. You can upload more there, and they will appear in the same table."; } },
+    { keys: ["contact resistance", "crimp", "0.55", "mohm", "resistance"], text: function(){ return "The Crimp DFMEA looks at contact resistance rising above **0.55 mOhm** after crimping. Its causes run from the wire strand to terminal interface, through film resistance and Sn oxide, down to crimp geometry and plating."; } },
+    { keys: ["why", "reference", "referenc", "source", "where did", "come from", "taken from"], text: function(){ return "Every reference in this workspace is the customer's own file, **Crimp DFMEA.pdf**. A DFMEA or requirement cites it when its cause chains sit behind that item. Open the AI summary on any row to see exactly why."; } },
+    { keys: ["legacy", "uploaded", "files", "documents"], text: function(){ return "Legacy DFMEA lists the file the customer shared: **Crimp DFMEA.pdf**, their Crimp DFMEA worksheet. You can upload more there, and they will appear in the same table."; } },
     { keys: ["lv214", "uscar", "iso", "standard"], text: function(){ return "A project's reference standard (for example **LV214** or **USCAR-2**) sets the limits its design requirements are written to. Choose it when you create a project, and the generated specification follows that standard."; } },
     { keys: ["requirement", "specification", "drs", "spec"], text: function(){ return "A **design requirement specification** (DRS) is the list of requirements a product must meet, grouped by category such as Mechanical, Electrical and Environmental. Each requirement can cite the customer file it came from, and you can search, filter and sort the list on any page that shows one."; } },
     { keys: ["create", "new project", "new dfmea", "how do i", "start"], text: function(){ return "To start a project, open **Projects** and choose **Create project**: give it a name, describe what you are building, pick the standard and a specification, then generate. To add a DFMEA to a project, open it and choose **New DFMEA**."; } },
