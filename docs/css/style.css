@@ -266,6 +266,11 @@ tr.row-flash td{animation:rowFlash 1.6s ease}
 @keyframes rowIn{from{opacity:0;background:var(--p50)}to{opacity:1;background:transparent}}
 tr.row-enter{animation:rowIn .6s ease}
 
+/* a cause the client sheet marks "Duplicate": it repeats one analysed elsewhere */
+.hitbox.is-dup>rect:nth-of-type(2){fill:#F8FAFC;stroke:#94A3B8;stroke-dasharray:5 4}
+.hitbox.is-dup>rect:nth-of-type(3){fill:#94A3B8}
+.hitbox.is-dup .ttag,.hitbox.is-dup .ttl2{fill:#64748B}
+
 /* risk-tinted accent bar, independent of the level-based card colour */
 .hitbox.risk-high>rect:nth-of-type(3){fill:#DC2626}
 .hitbox.risk-med>rect:nth-of-type(3){fill:#D97706}
@@ -739,6 +744,7 @@ tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--p600)}
 .lvlchip b{font-family:Cambria,"Cambria Math",Georgia,"Times New Roman",serif;margin-left:3px}
 .lvlchip:hover{background:#F8FAFC}
 .lvlchip.on{background:var(--p50);border-color:var(--p200);color:var(--p700)}
+.dupflag{background:#EEF2FF;color:var(--p700);font-weight:700;font-size:9.5px;letter-spacing:.3px;padding:2px 6px;border-radius:5px}
 .tbdflag{background:#FEE2E2;color:#DC2626;font-weight:700;font-size:9.5px;letter-spacing:.3px;
  padding:2px 6px;border-radius:5px}
 tr.hide,tr.pg-hide{display:none}

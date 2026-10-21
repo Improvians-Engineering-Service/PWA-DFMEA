@@ -12,10 +12,13 @@
   // up in all of them. The plain Crimp DFMEA keeps its original key.
   var docParam = new URLSearchParams(window.location.search).get("doc");
   var storageKey = "dfmea-it1-local-edits-347352010pdp000_01" + (docParam ? "--" + docParam : "");
-  var failureNode = Array.prototype.slice.call(svg.querySelectorAll("g.hitbox")).find(function(node){
+  // One failure mode per function, in the order they appear in the diagram. The first keeps the
+  // id "failure-main"; every cause hangs off the failure mode named in its data-fm attribute.
+  var failureNodes = Array.prototype.slice.call(svg.querySelectorAll("g.hitbox")).filter(function(node){
     var tag = node.querySelector(".ttag");
     return tag && tag.textContent.trim().indexOf("FAILURE MODE") === 0;
   });
+  function failureId(index){ return index === 1 ? "failure-main" : "failure-" + index; }
   var nodes = new Map();
   var localNodes = [];
   var localLinks = [];
@@ -153,14 +156,17 @@
     var sourceCauses = Array.prototype.slice.call(svg.querySelectorAll("g.hitbox")).filter(function(node){
       return node.querySelector(".ttag") && node.querySelector(".ttag").textContent.trim().indexOf("CAUSE") === 0;
     });
-    if(failureNode){
-      record("failure-main", failureNode, 0, null, svgTitle(failureNode), false);
-    }
+    failureNodes.forEach(function(node, index){
+      var label = node.getAttribute("data-fn");
+      var item = record(failureId(index + 1), node, 0, null, svgTitle(node) + (label ? " · " + label : ""), false);
+      item.fm = index + 1;
+    });
     sourceCauses.forEach(function(element, index){
       var level = causeLevel(element);
-      var parent = level === 1 ? nodes.get("failure-main") : stack[level - 2];
+      var fm = Number(element.getAttribute("data-fm")) || 1;
+      var parent = level === 1 ? nodes.get(failureId(fm)) : stack[level - 2];
       var id = "source-cause-" + String(index + 1).padStart(3, "0");
-      record(id, element, level, parent ? parent.id : "failure-main", svgTitle(element), false);
+      record(id, element, level, parent ? parent.id : failureId(fm), svgTitle(element), false);
       stack.length = Math.max(0, level - 1);
       stack[level - 1] = nodes.get(id);
     });
@@ -487,6 +493,12 @@
   function mapRowsToNodes(){
     Array.prototype.slice.call(tableBody.querySelectorAll("tr")).forEach(function(row){
       if(row.dataset.nodeId) return;
+      // Rows in the page already say which cause node they end on (the same cause text can
+      // repeat under different functions, so matching by text alone is not enough).
+      if(row.dataset.cause){
+        row.dataset.nodeId = "source-cause-" + String(row.dataset.cause).padStart(3, "0");
+        return;
+      }
       var chain = [];
       for(var col = 7; col <= 20; col++){
         var text = row.cells[col] ? row.cells[col].textContent.trim() : "";
@@ -533,7 +545,8 @@
       return Math.max(max, rpnCellValue(row.cells[variant.rpnCol]));
     }, 0);
     item.el.classList.remove("risk-high", "risk-med", "risk-low");
-    item.el.classList.add(riskTier(maxRpn));
+    // A path nobody has rated has no RPN, so it gets no risk colour.
+    if(maxRpn > 0) item.el.classList.add(riskTier(maxRpn));
   }
   function applyAllRiskColors(){
     Array.prototype.slice.call(tableBody.querySelectorAll("tr")).forEach(applyRiskColorForRow);
@@ -624,7 +637,7 @@
   }
   function chainPathsTo(nodeId){
     var chain = causePath(nodeId);
-    var full = [nodes.get("failure-main")].concat(chain).filter(Boolean);
+    var full = [chain.length ? nodes.get(chain[0].parentId) : null].concat(chain).filter(Boolean);
     var glowPaths = [];
     for(var i = 1; i < full.length; i++){
       var p = connectorPathTo(full[i]);
@@ -1036,16 +1049,29 @@
     return chain;
   }
 
+  function failureIndexFor(nodeId){
+    var current = nodes.get(nodeId);
+    while(current){
+      if(current.level === 0) return current.fm || 1;
+      current = nodes.get(current.parentId);
+    }
+    return 1;
+  }
+
   function addWorksheetPath(nodeId, ratings){
     var chain = causePath(nodeId);
     if(!chain.length || chain.length > 14) return;
     var staticPrefix = chain.filter(function(item){ return !item.isLocal; }).map(function(item){ return item.title; });
     var currentRows = Array.prototype.slice.call(tableBody.querySelectorAll("tr"));
-    var base = currentRows.find(function(row){
+    // The new row belongs to the same function as the failure mode its cause hangs off.
+    var fmIndex = failureIndexFor(nodeId);
+    var sameFunction = currentRows.filter(function(row){ return Number(row.dataset.fm) === fmIndex; });
+    var base = sameFunction.find(function(row){
       return staticPrefix.every(function(title, index){ return row.cells[7 + index] && row.cells[7 + index].textContent.trim() === title; });
-    }) || currentRows[0];
+    }) || sameFunction[0] || currentRows[0];
     if(!base) return;
     var row = base.cloneNode(true);
+    delete row.dataset.cause;
     row.classList.remove("sel", "hide", "pg-hide", "row-flash", "row-enter");
     row.classList.add("row-enter");
     row.dataset.nodeId = nodeId;
