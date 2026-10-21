@@ -178,7 +178,7 @@
         var accentRect = g.querySelectorAll("rect")[2];
         var titleY = Number(titleEl.getAttribute("y"));
         if(sub && outerRect && Number.isFinite(titleY)){
-          var SUB_GAP = 14, SUB_CLEARANCE = 6, UP_SHARE = 0.25;
+          var SUB_GAP = 18, SUB_CLEARANCE = 9, UP_SHARE = 0.25;
           var lastLineY = titleY + (lines.length - 1) * LINE_HEIGHT;
           var desiredSubY = lastLineY + SUB_GAP;
           var innerBottom = Number(innerRect.getAttribute("y")) + Number(innerRect.getAttribute("height"));
