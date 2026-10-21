@@ -7,13 +7,13 @@
   var KEY = "dfmeaTheme";
   var THEMES = {
     red:     { label: "Red",     p: ["#FFF1F1","#FFE0E0","#FFC2C2","#FF9999","#FF6666","#FF3333","#FF0000","#D90000","#B30000"], alt: "#F97316", bg: "#FBF4F4" },
-    indigo:  { label: "Indigo",  p: ["#EEF2FF","#E0E7FF","#C7D2FE","#A5B4FC","#818CF8","#6366F1","#4F46E5","#4338CA","#3730A3"], alt: "#8B5CF6", bg: "#F4F6FB" },
-    blue:    { label: "Blue",    p: ["#EFF6FF","#DBEAFE","#BFDBFE","#93C5FD","#60A5FA","#3B82F6","#2563EB","#1D4ED8","#1E40AF"], alt: "#06B6D4", bg: "#F2F6FC" },
-    teal:    { label: "Teal",    p: ["#F0FDFA","#CCFBF1","#99F6E4","#5EEAD4","#2DD4BF","#14B8A6","#0D9488","#0F766E","#115E59"], alt: "#0EA5E9", bg: "#F1F7F7" },
-    emerald: { label: "Emerald", p: ["#ECFDF5","#D1FAE5","#A7F3D0","#6EE7B7","#34D399","#10B981","#059669","#047857","#065F46"], alt: "#14B8A6", bg: "#F1F7F4" },
-    violet:  { label: "Violet",  p: ["#F5F3FF","#EDE9FE","#DDD6FE","#C4B5FD","#A78BFA","#8B5CF6","#7C3AED","#6D28D9","#5B21B6"], alt: "#EC4899", bg: "#F6F4FC" },
-    rose:    { label: "Rose",    p: ["#FFF1F2","#FFE4E6","#FECDD3","#FDA4AF","#FB7185","#F43F5E","#E11D48","#BE123C","#9F1239"], alt: "#F97316", bg: "#FBF4F6" },
-    orange:  { label: "Orange",  p: ["#FFF7ED","#FFEDD5","#FED7AA","#FDBA74","#FB923C","#F97316","#EA580C","#C2410C","#9A3412"], alt: "#F43F5E", bg: "#FBF6F1" }
+    indigo:  { label: "Indigo",  p: ["#EEF0FA","#DDE1F5","#C0C7EA","#9AA3DB","#7681C9","#5A66B5","#4A54A1","#3E4786","#323A6B"], alt: "#7C6BB0", bg: "#F3F4F9" },
+    blue:    { label: "Blue",    p: ["#EDF3FA","#D9E6F5","#B6CEE8","#8DB0D6","#6690C0","#4A76A8","#3B6290","#305176","#27425F"], alt: "#5B8FA8", bg: "#F2F5F9" },
+    teal:    { label: "Teal",    p: ["#ECF6F5","#D5ECE9","#AEDAD4","#82C2BA","#5AA79E","#3F8D84","#2F766E","#275F59","#1F4B47"], alt: "#4E7DA0", bg: "#F1F6F6" },
+    green:   { label: "Green",   p: ["#EDF5EF","#D8EBDD","#B4D7BE","#89BE99","#62A276","#478A5D","#38724A","#2D5C3D","#244A32"], alt: "#6B9A7C", bg: "#F2F6F3" },
+    violet:  { label: "Violet",  p: ["#F3F0F8","#E6DFF1","#CFC3E3","#B3A1D1","#9680BC","#7C66A4","#66528C","#524272","#403459"], alt: "#A0679A", bg: "#F6F4F9" },
+    rose:    { label: "Rose",    p: ["#FAF0F2","#F4DEE3","#E8BDC7","#D993A3","#C76C82","#B04F68","#963F56","#7B3346","#602837"], alt: "#C08457", bg: "#FAF5F6" },
+    copper:  { label: "Copper",  p: ["#FAF3EC","#F3E3D2","#E6C7A6","#D5A573","#C28349","#A96A33","#8C5628","#70441F","#583519"], alt: "#B05A4A", bg: "#FAF6F2" }
   };
   var STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800];
 
@@ -21,7 +21,7 @@
     return parseInt(hex.slice(1, 3), 16) + " " + parseInt(hex.slice(3, 5), 16) + " " + parseInt(hex.slice(5, 7), 16);
   }
   function read(){
-    try{ var t = localStorage.getItem(KEY); return THEMES[t] ? t : "red"; }catch(error){ return "indigo"; }
+    try{ var t = localStorage.getItem(KEY); return THEMES[t] ? t : "red"; }catch(error){ return "red"; }
   }
   function apply(name){
     var theme = THEMES[name] || THEMES.red;

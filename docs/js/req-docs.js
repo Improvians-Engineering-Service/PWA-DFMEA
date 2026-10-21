@@ -108,14 +108,17 @@
   // exactly as written, plus a small AI-summary icon at the end of each row.
   function specTableHtml(doc){
     var cat = categoryIndex(doc);
+    // The legacy DFMEA this specification was generated with.
+    var refName = window.DfmeaRefs && window.DfmeaRefs.LEGACY[0] ? window.DfmeaRefs.LEGACY[0].name : "";
+    var refCell = refName ? '<td class="spec-ref-cell">' + window.DfmeaRefs.chipRowHtml([{ name: refName }], 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</td>' : "";
     var head = doc.columns.map(function(c, i){
       return '<th' + (i === cat ? ' class="spec-cat-cell"' : "") + '>' + escapeHtml(c) + '</th>';
-    }).join("") + '<th class="spec-ai-cell" data-nosort>AI summary</th>';
+    }).join("") + (refName ? '<th class="spec-ref-cell">Reference file</th>' : "") + '<th class="spec-ai-cell" data-nosort>AI summary</th>';
     var body = doc.rows.map(function(r, index){
       return '<tr>' + r.map(function(v, i){
         if(i === cat) return '<td class="spec-cat-cell"><span class="spec-cat" data-cat="' + escapeHtml(String(v).toLowerCase()) + '">' + escapeHtml(v) + '</span></td>';
         return '<td>' + escapeHtml(v) + '</td>';
-      }).join("")
+      }).join("") + refCell
         + '<td class="spec-ai-cell"><a class="ai-link" href="ai-summary.html?type=spec&id=' + encodeURIComponent(doc.id) + '&row=' + (index + 1)
         + '" target="_blank" aria-label="AI summary" data-tip="Open the AI summary for this requirement">' + SPARK + '</a></td></tr>';
     }).join("");
