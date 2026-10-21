@@ -222,11 +222,11 @@
       var docId = makeDocId();
       var docName = name + " " + d.suffix + " DFMEA";
       var from = matched.map(function(m){ return m.name; });
-      saveDocRecord({ id: docId, name: docName, function: d.fn, severity: "", projectId: projectId, mode: "ai",
+      saveDocRecord({ id: docId, name: docName, function: d.fn, severity: 9, projectId: projectId, mode: "ai",
         generatedFrom: from, createdAt: new Date().toLocaleString() });
-      saveOverride(docId, { name: docName, function: d.fn, failureMode: "Missing or Degraded Function", mode: "ai",
+      saveOverride(docId, { name: docName, function: d.fn, failureMode: "Missing or Degraded Function", severity: 9, mode: "ai",
         projectId: projectId, generatedFrom: from, generatedAt: new Date().toISOString() });
-      return { docId: docId, name: docName, fn: d.fn, severity: "" };
+      return { docId: docId, name: docName, fn: d.fn, severity: 9 };
     });
 
     // --- render results ---
