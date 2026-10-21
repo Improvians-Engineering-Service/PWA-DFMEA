@@ -9,8 +9,8 @@
   // New DFMEA does). Function and severity are kept in sync with
   // SEED_OVERRIDES in auth-nav.js, which is what relabels the opened page.
   var KNOWN_PROJECTS = {
-    "aster-ev-connector": {
-      name: "Aster EV Connector",
+    "tak50": {
+      name: "TAK50",
       docs: [
         { name: "Crimp DFMEA", fn: "Crimp Contact Resistance", severity: 9, updated: "Today" },
         { name: "Terminal Durability DFMEA", docId: "seed-terminal-durability", fn: "Terminal Contact Resistance After Cycling", severity: 9, updated: "3 days ago" },
