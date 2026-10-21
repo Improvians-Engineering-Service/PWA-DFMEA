@@ -1159,6 +1159,7 @@ body.ai-instant .ai-panel{transition:none}
 .tsearch button{width:22px;height:22px;border:0;border-radius:6px;background:none;color:#475569;font-size:16px;line-height:1;cursor:pointer}
 .tsearch button:hover{background:var(--p50);color:var(--p700)}
 svg.searching g.hitbox:not(.search-hit){opacity:.18}
+svg.searching g.hitbox.search-hit{opacity:1}
 g.hitbox.search-hit>rect:nth-of-type(2){fill:#FEF08A;stroke:#CA8A04;stroke-width:2.6}
 g.hitbox.search-hit .ttl2{fill:#713F12}
 g.hitbox.search-current>rect:nth-of-type(2){stroke:#DC2626;stroke-width:3.4}

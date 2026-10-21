@@ -1754,11 +1754,10 @@
       var g = hits[hitIndex];
       g.classList.add("search-current");
       var wrap = document.getElementById("treeWrap");
-      var rect = g.querySelector("rect:nth-of-type(2)");
-      if(wrap && rect){
-        var z = Number(wrap.style.getPropertyValue("--z")) || 1;
-        wrap.scrollLeft = Math.max(0, (Number(rect.getAttribute("x")) + Number(rect.getAttribute("width")) / 2) * z - wrap.clientWidth / 2);
-        wrap.scrollTop = Math.max(0, (Number(rect.getAttribute("y")) + Number(rect.getAttribute("height")) / 2) * z - wrap.clientHeight / 2);
+      if(wrap){
+        var box = g.getBoundingClientRect(), view = wrap.getBoundingClientRect();
+        wrap.scrollLeft += box.left + box.width / 2 - (view.left + view.width / 2);
+        wrap.scrollTop += box.top + box.height / 2 - (view.top + view.height / 2);
       }
       countEl.textContent = (hitIndex + 1) + " of " + hits.length;
     };
