@@ -7,10 +7,10 @@
   // page all agree.
   //
   // A spec is a table: { id, projectId, productName, standard, createdAt, sourceFile,
-  //   title, note, columns: [header, ...], rows: [[cell, ...], ...], notes: [[a, b], ...] }.
+  //   title, columns: [header, ...], rows: [[cell, ...], ...], notes: [[a, b], ...] }.
   var KEY = "dfmeaRequirementDocs";
   var DEFAULTS_VERSION_KEY = "dfmeaRequirementDocsDefaultsVersion";
-  var DEFAULTS_VERSION = "9";
+  var DEFAULTS_VERSION = "10";
 
   function clone(value){ return JSON.parse(JSON.stringify(value)); }
   function defaults(){ return clone(window.DfmeaReqDefaults || []); }
@@ -106,23 +106,30 @@
 
   // The one way a specification is rendered everywhere it appears: every column of the table,
   // exactly as written, plus a small AI-summary icon at the end of each row.
+  // Where the Reference DFMEA column goes: the position just after "Reference / source".
+  function refColumn(doc){
+    var i = doc.columns.findIndex(function(c){ return /reference\s*\/\s*source/i.test(c); });
+    return i < 0 ? 1 : i + 1;
+  }
   function specTableHtml(doc){
     var cat = categoryIndex(doc);
     // The legacy DFMEA this specification was generated with.
     var refName = window.DfmeaRefs && window.DfmeaRefs.LEGACY[0] ? window.DfmeaRefs.LEGACY[0].name : "";
     var refCell = refName ? '<td class="spec-ref-cell">' + window.DfmeaRefs.chipRowHtml([{ name: refName }], 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</td>' : "";
-    // The reference file sits right beside the first column (the requirement ID).
+    // The reference DFMEA sits beside the "Reference / source" column when the sheet has one,
+    // otherwise beside the first column.
+    var refPos = refColumn(doc);
     var head = doc.columns.map(function(c, i){
-      return (i === 1 && refName ? '<th class="spec-ref-cell">Reference file</th>' : "")
+      return (i === refPos && refName ? '<th class="spec-ref-cell">Reference DFMEA</th>' : "")
         + '<th' + (i === cat ? ' class="spec-cat-cell"' : "") + '>' + escapeHtml(c) + '</th>';
     }).join("") + '<th class="spec-ai-cell" data-nosort>AI summary</th>';
-    if(refName && doc.columns.length === 1) head = head.replace('<th class="spec-ai-cell"', '<th class="spec-ref-cell">Reference file</th><th class="spec-ai-cell"');
+    if(refName && doc.columns.length === 1) head = head.replace('<th class="spec-ai-cell"', '<th class="spec-ref-cell">Reference DFMEA</th><th class="spec-ai-cell"');
     var body = doc.rows.map(function(r, index){
       return '<tr>' + r.map(function(v, i){
         var cell = i === cat
           ? '<td class="spec-cat-cell"><span class="spec-cat" data-cat="' + escapeHtml(String(v).toLowerCase()) + '">' + escapeHtml(v) + '</span></td>'
           : '<td>' + escapeHtml(v) + '</td>';
-        return (i === 1 ? refCell : "") + cell;
+        return (i === refPos ? refCell : "") + cell;
       }).join("") + (doc.columns.length === 1 ? refCell : "")
         + '<td class="spec-ai-cell"><a class="ai-link" href="ai-summary.html?type=spec&id=' + encodeURIComponent(doc.id) + '&row=' + (index + 1)
         + '" target="_blank" aria-label="AI summary" data-tip="Open the AI summary for this requirement">' + SPARK + '</a></td></tr>';
@@ -146,7 +153,7 @@
     var table = container && container.querySelector("table.spec-wide");
     if(!table || !window.TableTools) return;
     window.TableTools.attach(table, { noun: "requirements", placeholder: "Search requirements",
-      filters: [{ col: categoryIndex(doc) + (categoryIndex(doc) >= 1 && window.DfmeaRefs ? 1 : 0), label: "All categories" }], pageSize: 10 });
+      filters: [{ col: categoryIndex(doc) + (categoryIndex(doc) >= refColumn(doc) && window.DfmeaRefs ? 1 : 0), label: "All categories" }], pageSize: 10 });
   }
 
   // ---------------------------------------------------------------- download
