@@ -9,12 +9,12 @@
 </script>
 <link rel="stylesheet" href="css/style.css">
 <style>
-.rv-wrap{max-width:1280px;margin:28px auto 40px;padding:0 22px}
-.rv-card{background:#fff;border:1px solid #E4EAF2;border-radius:16px;padding:26px 28px;
+.rv-wrap{max-width:none;margin:10px 0 14px;padding:0 20px}
+.rv-card{background:#fff;border:1px solid #E4EAF2;border-radius:16px;padding:16px 20px 18px;
  box-shadow:0 1px 2px rgba(15,23,42,.04),0 16px 40px -18px rgba(15,23,42,.14)}
 .rv-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:5px}
-.rv-prod{font-size:20px;font-weight:800;color:#0F172A;letter-spacing:-.4px}
-.rv-meta{font-size:11.5px;color:#94A3B8;margin-bottom:20px}
+.rv-prod{font-size:18px;font-weight:800;color:#0F172A;letter-spacing:-.4px}
+.rv-meta{font-size:11.5px;color:#94A3B8;margin-bottom:10px}
 .rv-specs{border:1px solid #E4EAF2;border-radius:12px;overflow:hidden}
 .rv-link{font-size:11.5px;font-weight:700;color:var(--p700);text-decoration:none;display:inline-flex;align-items:center;margin-right:8px}
 .rv-link:hover{text-decoration:underline}
@@ -30,7 +30,7 @@
 .rv-rm:hover{background:#FEF2F2;color:#B91C1C;border-color:#FCA5A5}
 .rv-addbtn{font-size:11.5px;font-weight:700;color:var(--p700);background:none;border:none;cursor:pointer;padding:6px 0}
 .rv-addbtn:hover{text-decoration:underline}
-.rv-h{margin:24px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#64748B}
+.rv-h{margin:16px 0 8px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#64748B}
 .rv-edit td{padding:6px}
 .rv-edit textarea{width:100%;min-width:150px;padding:7px 9px;border:1px solid #DCE3EC;border-radius:8px;font-size:12px;line-height:1.45;resize:vertical}
 .rv-edit textarea:focus{outline:none;border-color:var(--p400);box-shadow:0 0 0 3px var(--p50)}
@@ -106,7 +106,7 @@
     if(!editing){
       body = '<div class="rv-specs">' + window.DfmeaReqDocs.specTableHtml(doc) + '</div>'
         + (doc.notes && doc.notes.length ? '<div class="rv-h">' + escapeHtml(doc.notesTitle || "Notes") + '</div><div class="rv-specs">' + window.DfmeaReqDocs.notesHtml(doc) + '</div>' : "")
-        + '<div class="rv-actions" style="margin-top:20px">'
+        + '<div class="rv-actions" style="margin-top:12px">'
         + (doc.projectId ? '<a class="rv-link" href="project.html?id=' + encodeURIComponent(doc.projectId) + '">View project &rsaquo;</a>' : "")
         + '<button type="button" class="rv-btn" id="rvDownloadBtn">Download</button>'
         + '<button type="button" class="rv-btn primary" id="rvEditBtn" style="margin-left:auto">Edit specification</button>'
