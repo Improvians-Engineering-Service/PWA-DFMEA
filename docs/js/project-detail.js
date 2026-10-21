@@ -60,6 +60,17 @@
     return "ai-summary.html?type=dfmea&project=" + encodeURIComponent(projectId) + "&doc=" + encodeURIComponent(doc.docId || "")
       + "&name=" + encodeURIComponent(doc.name) + "&fn=" + encodeURIComponent(doc.fn || "") + "&sev=" + encodeURIComponent(doc.severity || "");
   }
+  // How big the generated starting structure is (a created DFMEA carries its slice number).
+  function structureText(doc){
+    var slice = (window.DfmeaSlices || []).filter(function(x){ return x.id === doc.docId; })[0];
+    if(!slice && doc.docId){
+      try{
+        var o = JSON.parse(localStorage.getItem("dfmeaDocOverrides") || "{}")[doc.docId];
+        if(o && typeof o.slice === "number") slice = window.DfmeaSlices[o.slice];
+      }catch(error){ /* no override */ }
+    }
+    return slice ? slice.causes + " causes &middot; " + slice.paths + " paths" : "";
+  }
   var tableBody = document.getElementById("docTableBody");
   document.getElementById("docTable").hidden = !docs.length;
   document.getElementById("docEmpty").hidden = docs.length > 0;
@@ -69,7 +80,7 @@
       + '<td><div class="data-name"><span class="data-icon">' + DOC_ICON + '</span>' + escapeHtml(doc.name) + '</div></td>'
       + '<td>' + escapeHtml(doc.fn || "") + '</td>'
       + '<td>' + severityChip(doc.severity) + '</td>'
-      + '<td class="data-muted">Starting structure</td>'
+      + '<td class="data-muted">' + structureText(doc) + '</td>'
       + '<td><div class="ref-cell">' + window.DfmeaRefs.chipRowHtml((doc.refs || window.DfmeaRefs.seedDocRefs(doc.docId) || []).map(function(n){ return { name: n }; }), 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</div></td>'
       + '<td><a class="ai-sum" href="' + aiSummaryUrl(doc) + '" target="_blank" onclick="event.stopPropagation()" data-tip="' + escapeHtml(aiSummary(doc)) + '">'
       + window.DfmeaAI.spark + '<span>' + escapeHtml(aiSummary(doc)) + '</span></a></td>'
