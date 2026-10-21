@@ -1733,4 +1733,60 @@
   activateControl(notifButton,function(){ showToast("No new notifications."); });
   var expandAllButton=document.querySelector('.xps .xp[data-tip^="Expand every collapsed branch"]');
   if(expandAllButton) expandAllButton.remove();
+
+  // ---------------------------------------------------------------
+  // Search inside the full diagram: every card whose text matches is
+  // highlighted (the rest fade back), Enter / the arrows step through
+  // the matches and scroll each one into view.
+  // ---------------------------------------------------------------
+  var treeSearch = document.getElementById("treeSearch");
+  if(treeSearch){
+    var hits = [], hitIndex = -1;
+    var countEl = document.getElementById("treeSearchCount");
+    var allCards = function(){ return Array.prototype.slice.call(svg.querySelectorAll("g.hitbox")); };
+    var cardText = function(g){
+      var t = g.querySelector(".ttl2");
+      return t ? t.textContent.replace(/\s+/g, " ").trim().toLowerCase() : "";
+    };
+    var showHit = function(){
+      allCards().forEach(function(g){ g.classList.remove("search-current"); });
+      if(hitIndex < 0 || !hits[hitIndex]) return;
+      var g = hits[hitIndex];
+      g.classList.add("search-current");
+      var wrap = document.getElementById("treeWrap");
+      var rect = g.querySelector("rect:nth-of-type(2)");
+      if(wrap && rect){
+        var z = Number(wrap.style.getPropertyValue("--z")) || 1;
+        wrap.scrollLeft = Math.max(0, (Number(rect.getAttribute("x")) + Number(rect.getAttribute("width")) / 2) * z - wrap.clientWidth / 2);
+        wrap.scrollTop = Math.max(0, (Number(rect.getAttribute("y")) + Number(rect.getAttribute("height")) / 2) * z - wrap.clientHeight / 2);
+      }
+      countEl.textContent = (hitIndex + 1) + " of " + hits.length;
+    };
+    var runSearch = function(){
+      var q = treeSearch.value.trim().toLowerCase();
+      hits = [];
+      hitIndex = -1;
+      svg.classList.toggle("searching", !!q);
+      allCards().forEach(function(g){
+        var hit = !!q && cardText(g).indexOf(q) !== -1;
+        g.classList.toggle("search-hit", hit);
+        g.classList.remove("search-current");
+        if(hit) hits.push(g);
+      });
+      countEl.textContent = q ? (hits.length ? hits.length + " found" : "No match") : "";
+      if(hits.length){ hitIndex = 0; showHit(); }
+    };
+    var step = function(d){
+      if(!hits.length) return;
+      hitIndex = (hitIndex + d + hits.length) % hits.length;
+      showHit();
+    };
+    treeSearch.addEventListener("input", runSearch);
+    treeSearch.addEventListener("keydown", function(event){
+      if(event.key === "Enter"){ event.preventDefault(); step(event.shiftKey ? -1 : 1); }
+      if(event.key === "Escape" && treeSearch.value){ event.stopPropagation(); treeSearch.value = ""; runSearch(); }
+    });
+    document.getElementById("treeSearchNext").addEventListener("click", function(){ step(1); });
+    document.getElementById("treeSearchPrev").addEventListener("click", function(){ step(-1); });
+  }
 })();
