@@ -201,6 +201,14 @@
     // measuring nothing.
     Array.prototype.slice.call(treeContent.querySelectorAll(".ttl2")).forEach(function(titleEl){
       window.fitSvgCardTitle(titleEl);
+      // The function, failure-mode and document cards are shorter than the cause cards; when a
+      // title wraps to a second line, the card grows so the line underneath it never overlaps.
+      var card = titleEl.closest("g.hitbox");
+      var cardTag = card && card.querySelector(".ttag");
+      if(cardTag && cardTag.textContent.trim().indexOf("CAUSE") !== 0 && titleEl.querySelectorAll("tspan").length > 1){
+        var text = Array.prototype.slice.call(titleEl.querySelectorAll("tspan")).map(function(t){ return t.textContent; }).join(" ");
+        window.fitSvgCardTitle(titleEl, text);
+      }
     });
     var originalViewBox = treeSvg.viewBox.baseVal;
     var originalTreeHeight = originalViewBox.height;

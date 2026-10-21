@@ -1780,6 +1780,11 @@
       hitIndex = (hitIndex + d + hits.length) % hits.length;
       showHit();
     };
+    // Closing the full view clears the search and its highlights.
+    var treeWrapEl = document.getElementById("treeWrap");
+    if(treeWrapEl) new MutationObserver(function(){
+      if(!treeWrapEl.classList.contains("open") && treeSearch.value){ treeSearch.value = ""; runSearch(); }
+    }).observe(treeWrapEl, { attributes: true, attributeFilter: ["class"] });
     treeSearch.addEventListener("input", runSearch);
     treeSearch.addEventListener("keydown", function(event){
       if(event.key === "Enter"){ event.preventDefault(); step(event.shiftKey ? -1 : 1); }
