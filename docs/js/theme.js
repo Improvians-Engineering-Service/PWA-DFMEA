@@ -13,7 +13,14 @@
     green:   { label: "Green",   p: ["#EDF5EF","#D8EBDD","#B4D7BE","#89BE99","#62A276","#478A5D","#38724A","#2D5C3D","#244A32"], alt: "#6B9A7C", bg: "#F2F6F3" },
     violet:  { label: "Violet",  p: ["#F3F0F8","#E6DFF1","#CFC3E3","#B3A1D1","#9680BC","#7C66A4","#66528C","#524272","#403459"], alt: "#A0679A", bg: "#F6F4F9" },
     rose:    { label: "Rose",    p: ["#FAF0F2","#F4DEE3","#E8BDC7","#D993A3","#C76C82","#B04F68","#963F56","#7B3346","#602837"], alt: "#C08457", bg: "#FAF5F6" },
-    copper:  { label: "Copper",  p: ["#FAF3EC","#F3E3D2","#E6C7A6","#D5A573","#C28349","#A96A33","#8C5628","#70441F","#583519"], alt: "#B05A4A", bg: "#FAF6F2" }
+    copper:  { label: "Copper",  p: ["#FAF3EC","#F3E3D2","#E6C7A6","#D5A573","#C28349","#A96A33","#8C5628","#70441F","#583519"], alt: "#B05A4A", bg: "#FAF6F2" },
+    orange:  { label: "Orange",  p: ["#FFF4EA","#FFE6D0","#FFCDA1","#FFAE6B","#FA9040","#EC7415","#CF5F0A","#A94C0A","#833B0A"], alt: "#D97706", bg: "#FBF6F1" },
+    amber:   { label: "Amber",   p: ["#FFF9E8","#FFF0C7","#FFE08F","#F8CB57","#EBB42A","#D49A12","#B07F0C","#8A640C","#6B4E0C"], alt: "#C2410C", bg: "#FAF8F1" },
+    pink:    { label: "Pink",    p: ["#FFF0F7","#FFDFEE","#FFBEDD","#FB93C4","#F068A8","#DE478E","#C03075","#9C265F","#7A1E4A"], alt: "#8B5CF6", bg: "#FBF4F8" },
+    cyan:    { label: "Cyan",    p: ["#ECFAFC","#D2F2F7","#A5E4EE","#6FD0E0","#3FB8CC","#1F9DB3","#16808F","#126773","#0F505A"], alt: "#4F7FD1", bg: "#F1F8F9" },
+    slate:   { label: "Slate",   p: ["#F1F4F8","#E2E8F0","#CBD5E1","#A3B1C4","#7C8CA3","#5D6D86","#475569","#364253","#283241"], alt: "#64748B", bg: "#F4F6F9" },
+    silver:  { label: "Silver",  p: ["#F6F6F7","#EBEBED","#D6D6DA","#B9B9BF","#9C9CA4","#82828B","#6B6B74","#55555D","#414147"], alt: "#8E8E96", bg: "#F7F7F8" },
+    black:   { label: "Black",   p: ["#F3F3F3","#E4E4E4","#C8C8C8","#9E9E9E","#6E6E6E","#3F3F3F","#111111","#000000","#000000"], alt: "#525252", bg: "#F5F5F5" }
   };
   var STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800];
 
