@@ -1172,3 +1172,6 @@ g.hitbox.search-current>rect:nth-of-type(2){stroke:#F87171;stroke-width:2.4}
 .spec-notes{width:100%;table-layout:auto}
 .spec-notes td:first-child{width:220px;font-weight:600;color:#0F172A}
 .spec-notes td a{color:var(--p700);overflow-wrap:anywhere}
+
+/* anything you can click shows the pointer hand, even when it also has a hover tip */
+a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn,.nav,.subnav,.tab,.project-link{cursor:pointer}

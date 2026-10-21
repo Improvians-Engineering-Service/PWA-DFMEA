@@ -46,12 +46,23 @@
       name: get(/^(test|requirement)/i), target: get(/^objective/i), verify: get(/^verification/i),
       status: get(/status/i), applic: get(/applicab/i), source: get(/^reference \/ source/i), relation: get(/relationship/i)
     };
-    var summary = d.category + " requirement" + (d.name ? ": " + d.name.replace(/\.$/, "") : "") + ". "
-      + (d.target ? "Objective: " + d.target.replace(/\.$/, "") + ". " : "")
-      + (d.applic ? "Applies to: " + d.applic.replace(/\.$/, "") + ". " : "")
-      + (d.verify ? "It is verified with: " + d.verify.replace(/\.$/, "") + ". " : "")
-      + (d.status ? "Status of the value: " + d.status.replace(/\.$/, "") + "." : "");
-    return { d: d, summary: summary.trim(), rows: doc.columns.map(function(c, i){ return [c, row[i] || ""]; }),
+    var clean = function(t){ return String(t || "").replace(/\s+/g, " ").replace(/\.$/, ""); };
+    var std = doc.standard && doc.standard !== "None" ? doc.standard : "";
+    var paras = [];
+    paras.push("This is a " + d.category.toLowerCase() + " requirement" + (std ? " in the " + std + " specification" : "") + ". "
+      + (d.name ? "It covers: " + clean(d.name) + ". " : "")
+      + (d.target ? "What has to be achieved: " + clean(d.target) + "." : ""));
+    var how = [];
+    if(d.applic) how.push("It applies under these conditions: " + clean(d.applic) + ".");
+    if(d.verify) how.push("To prove it is met, the specification calls for: " + clean(d.verify) + ".");
+    if(how.length) paras.push(how.join(" "));
+    var care = [];
+    if(d.status) care.push("The value is marked as: " + clean(d.status) + ", so " + (/official|verify|licensed|controlled|confirm|must/i.test(d.status) ? "check it against the controlled document before relying on it." : "it can be used as written."));
+    if(d.relation) care.push("How it relates to LV 214: " + clean(d.relation) + ".");
+    if(d.source) care.push("Where it comes from: " + clean(d.source) + ".");
+    care.push("It is row " + rowIndex + " of " + doc.rows.length + " in " + (doc.sourceFile || "the specification") + ".");
+    paras.push(care.join(" "));
+    return { d: d, paras: paras, summary: paras[0], rows: doc.columns.map(function(c, i){ return [c, row[i] || ""]; }),
       file: doc.sourceFile || "" };
   }
 
@@ -65,10 +76,16 @@
       ["References", refs.length ? refs.length + " customer file" + (refs.length === 1 ? "" : "s") : "None selected"]
     ];
     var why = refs.map(function(f){ return [f, "Used because it contains " + fileNote(f) + "."]; });
-    var summary = dfmeaShort(info.fn, info.severity) + (refs.length
-      ? " It was built from " + (refs.length === 1 ? "the customer's own file" : refs.length + " of the customer's own files") + ", so every cause traces back to a document they provided."
-      : " No customer file is attached to it yet.");
-    return { summary: summary, rows: rows, why: why };
+    var paras = [
+      "This DFMEA looks at " + (fn || "this function") + ". It is a starting structure: it sets out the failure mode, its effect and the chain of causes behind it, level by level, so each cause can be rated and followed up."
+        + (info.severity ? " The effect is rated severity " + info.severity + "." : ""),
+      refs.length
+        ? "It was built from " + (refs.length === 1 ? "the customer's own file, " + refs[0] : refs.length + " of the customer's own files") + ". The causes in it are taken from that reference, so each one can be traced back to a document the customer provided, and the reference file opens from the table below."
+        : "No customer file is attached to it yet, so its causes have not been traced back to a reference.",
+      "Open the DFMEA to see the full risk tree and worksheet. Occurrence, detection and controls are left blank where the reference does not rate them, so they still need to be filled in by the team."
+    ];
+    var summary = paras[0];
+    return { summary: summary, paras: paras, rows: rows, why: why };
   }
 
   // ---------------------------------------------------------------

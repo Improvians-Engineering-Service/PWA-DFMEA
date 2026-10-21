@@ -18,6 +18,7 @@
 .as-title{font-size:20px;font-weight:800;color:#0F172A;letter-spacing:-.4px;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .as-sub{font-size:12px;color:#64748B;margin-top:5px}
 .as-quote{margin:18px 0 0;padding:13px 16px;border-left:3px solid var(--p400);border-radius:0 10px 10px 0;background:var(--p25);font-size:13px;line-height:1.55;color:#1E293B}
+.as-summary p+p{margin-top:12px}
 .as-summary{margin-top:16px;padding:14px 16px;border:1px solid #E4EAF2;border-radius:12px;background:#FBFCFE;font-size:12.5px;line-height:1.65;color:#334155}
 .as-h{margin:24px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#64748B}
 .ai-table{width:100%;border-collapse:collapse;table-layout:auto;border:1px solid #E4EAF2;border-radius:12px;overflow:hidden}
@@ -82,11 +83,11 @@
   if(type === "spec"){
     var doc = window.DfmeaReqDocs.getById(params.get("id") || "");
     var row = Number(params.get("row"));
-    if(!doc || !doc.specs || !doc.specs[row - 1]) return notFound();
+    if(!doc || !doc.rows || !doc.rows[row - 1]) return notFound();
     var d = AI.specDetail(doc, row);
     var std = doc.standard === "None" ? "No specific standard" : doc.standard;
     var body = '<div class="as-quote"><span class="spec-cat" data-cat="' + esc(d.d.category.toLowerCase()) + '">' + esc(d.d.category) + '</span>&nbsp; ' + esc(d.d.name || d.d.target) + '</div>'
-      + '<div class="as-summary">' + esc(d.summary) + '</div>'
+      + '<div class="as-summary">' + d.paras.map(function(t){ return '<p>' + esc(t) + '</p>'; }).join("") + '</div>'
       + '<div class="as-h">The requirement, as written in ' + esc(d.file || "the specification") + '</div>'
       + '<table class="ai-table">' + d.rows.map(function(r){ return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>'; }).join("") + '</table>';
     finish({
@@ -115,7 +116,7 @@
     }
     var info = { name: params.get("name") || "DFMEA", fn: params.get("fn") || "", severity: Number(params.get("sev")) || 0, refs: refs };
     var dd = AI.dfmeaDetail(info);
-    var body2 = '<div class="as-summary">' + esc(dd.summary) + '</div>'
+    var body2 = '<div class="as-summary">' + dd.paras.map(function(t){ return '<p>' + esc(t) + '</p>'; }).join("") + '</div>'
       + '<div class="as-h">Key facts</div>' + table(dd.rows)
       + (dd.why.length ? '<div class="as-h">Why these references were used</div><table class="ai-table">' + dd.why.map(function(r){
           return '<tr><th>' + linkFile(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>';
