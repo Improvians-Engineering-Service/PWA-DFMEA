@@ -122,16 +122,9 @@
   ];
   var DEFAULT_SPECS = [0, 1, 2, 3, 4, 5, 6, 10, 12, 15].map(function(i){ return SPEC_POOL[i].spec; });
 
-  // One DFMEA per major function a connector-style product needs covered
-  // -- fixed, not derived from the description, so generation is always
-  // predictable and every one opens as a real, editable document exactly
-  // like New DFMEA (with AI) already produces for a single function.
-  var FUNCTION_SET = [
-    { suffix: "Crimp Contact Resistance", failure: "Contact resistance exceeds limit after crimping", severity: 9 },
-    { suffix: "Terminal Retention Force", failure: "Terminal backs out of housing cavity under load", severity: 8 },
-    { suffix: "Housing Seal Integrity", failure: "Seal fails to maintain IP rating after repeated mating", severity: 7 },
-    { suffix: "Mating Cycle Durability", failure: "Contact performance degrades after repeated mating cycles", severity: 7 }
-  ];
+  // The one DFMEA a project starts with: the client's Crimp DFMEA, all of its functions in one
+  // document. It opens as the real worksheet and risk tree, not a renamed copy.
+  var CRIMP_DFMEA = { name: "Crimp DFMEA", severity: 9 };
 
   function validateStep1(){
     var ok = true;
@@ -168,13 +161,6 @@
       list.push(record);
       localStorage.setItem("dfmeaMyDocuments", JSON.stringify(list));
     }catch(error){ /* storage unavailable -- the flow still works, just won't be listed anywhere */ }
-  }
-  function saveOverride(id, override){
-    try{
-      var map = JSON.parse(localStorage.getItem("dfmeaDocOverrides") || "{}");
-      map[id] = override;
-      localStorage.setItem("dfmeaDocOverrides", JSON.stringify(map));
-    }catch(error){ /* override just won't persist -- navigation still works */ }
   }
   function saveRequirementDoc(doc){
     try{
@@ -240,6 +226,8 @@
     // --- the customer's files that match the description -- shown as the
     // result's References, so it's explainable, not a black box.
     var matched = REFERENCE_DOCS.filter(function(doc){ return sharesWord(description, doc.name); });
+    // The client's own file is the only source there is, so a project always cites it.
+    if(!matched.length) matched = REFERENCE_DOCS.slice();
 
     // --- project ---
     var projectRecord = { id: projectId, name: name, description: description, createdAt: new Date().toLocaleString() };
@@ -254,16 +242,11 @@
       standard: standard, specs: specs, createdAt: new Date().toLocaleString(),
       builtFromDfmeas: matched.map(function(m){ return m.name; }) });
 
-    // --- generated DFMEAs, each a real, editable document like New DFMEA (with AI) produces ---
-    var generatedRows = FUNCTION_SET.map(function(f){
-      var docId = makeDocId();
-      var docName = name + " " + f.suffix + " DFMEA";
-      saveDocRecord({ id: docId, name: docName, function: f.suffix, severity: f.severity, projectId: projectId,
-        mode: "ai", generatedFrom: matched.map(function(m){ return m.name; }), createdAt: new Date().toLocaleString() });
-      saveOverride(docId, { name: docName, function: f.suffix, failureMode: f.failure, severity: f.severity,
-        mode: "ai", projectId: projectId, generatedFrom: matched.map(function(m){ return m.name; }), generatedAt: new Date().toISOString() });
-      return { docId: docId, name: docName, fn: f.suffix, severity: f.severity };
-    });
+    // --- the DFMEA ---
+    var docId = makeDocId();
+    saveDocRecord({ id: docId, name: CRIMP_DFMEA.name, function: window.DfmeaRefs.CRIMP.functionLabel, severity: CRIMP_DFMEA.severity,
+      projectId: projectId, mode: "ai", generatedFrom: matched.map(function(m){ return m.name; }), createdAt: new Date().toLocaleString() });
+    var generatedRows = [{ docId: docId, name: CRIMP_DFMEA.name, fn: window.DfmeaRefs.CRIMP.functionLabel, severity: CRIMP_DFMEA.severity }];
 
     // --- render results ---
     document.getElementById("npDoneTitle").textContent = "“" + name + "” created";
@@ -276,7 +259,7 @@
     var refCount = matched.length;
     document.getElementById("npStats").innerHTML = [
       [specs.length, specs.length === 1 ? "requirement" : "requirements"],
-      [FUNCTION_SET.length, "DFMEAs"],
+      [generatedRows.length, generatedRows.length === 1 ? "DFMEA" : "DFMEAs"],
       [refCount, refCount === 1 ? "reference used" : "references used"]
     ].map(function(s){ return '<span class="np-stat"><b>' + s[0] + '</b>' + s[1] + '</span>'; }).join("");
 
