@@ -7,9 +7,9 @@
   // extended with whatever custom projects were created on the Projects
   // page. Arriving here from a project's own "+ New DFMEA" button
   // (project.html passes ?project=<id>) pre-selects that project instead
-  // of defaulting to Aster EV Connector every time.
+  // of defaulting to TAK50 every time.
   var KNOWN_PROJECTS = [
-    { id: "aster-ev-connector", name: "Aster EV Connector" }
+    { id: "tak50", name: "TAK50" }
   ];
   function readCustomProjects(){
     try{ return JSON.parse(localStorage.getItem("dfmeaMyProjects") || "[]"); }catch(error){ return []; }
@@ -17,7 +17,7 @@
   // Same document names project.html already shows for each built-in
   // project -- kept in sync with KNOWN_PROJECTS in project-detail.js.
   var KNOWN_PROJECT_DOCS = {
-    "aster-ev-connector": ["Crimp DFMEA", "Terminal Durability DFMEA", "Housing Seal Integrity DFMEA", "Mating Cycle Durability DFMEA", "Connector Lock Retention DFMEA"]
+    "tak50": ["Crimp DFMEA", "Terminal Durability DFMEA", "Housing Seal Integrity DFMEA", "Mating Cycle Durability DFMEA", "Connector Lock Retention DFMEA"]
   };
   function existingDocNames(projectId){
     var names = (KNOWN_PROJECT_DOCS[projectId] || []).slice();
