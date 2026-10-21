@@ -514,7 +514,8 @@
     var tag = node.querySelector(".ttag");
     return tag && tag.textContent.trim().indexOf("FAILURE MODE") === 0;
   });
-  if(failureNode && analysisRows.length){
+  // Only a rated first path (Occurrence and Detection filled in) gets the rating in its tooltip.
+  if(failureNode && analysisRows.length && analysisRows[0].cells[29].textContent.trim() && analysisRows[0].cells[31].textContent.trim()){
     var selectedRow = analysisRows[0];
     var selectedSeverity = Number(selectedRow.cells[6].textContent.trim());
     var selectedOccurrence = Number(selectedRow.cells[29].textContent.trim());
