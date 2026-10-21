@@ -8,7 +8,6 @@ window.DfmeaReqDefaults = [
   "createdAt": "Oct 19, 2026",
   "sourceFile": "LV214_USCAR2_Objective_Detailed_Checklist.xlsx",
   "title": "LV 214",
-  "note": "OBJECTIVE CHECKLIST, NOT A CLAIM OF LV 214 COMPLIANCE. Reference design assumption: sealed 2-way passenger-car low-voltage connector, 2.8 mm terminals, 0.5–2.5 mm² wires. Proposed numeric screens are labelled as such; official class-specific test profiles and limits must be checked in the controlled standard and OEM requirements.",
   "columns": [
    "Category",
    "Test / requirement",
@@ -228,7 +227,6 @@ window.DfmeaReqDefaults = [
   "createdAt": "Oct 19, 2026",
   "sourceFile": "LV214_USCAR2_Objective_Detailed_Checklist.xlsx",
   "title": "USCAR-2",
-  "note": "OBJECTIVE CHECKLIST, NOT A CLAIM OF USCAR-2 COMPLIANCE. Reference design assumption: sealed 2-way passenger-car connector, 2.8 mm terminals, 0.5–2.5 mm² wires, ≤60 V DC. USCAR-2-9 (revised 2024-12-06) covers applicable 0–60 V DC or coaxial systems with exclusions. Proposed screens are not official acceptance limits.",
   "columns": [
    "Category",
    "Test / requirement",
@@ -416,7 +414,6 @@ window.DfmeaReqDefaults = [
   "createdAt": "Oct 19, 2026",
   "sourceFile": "TAK50_LV214_Requirements.xlsx",
   "title": "",
-  "note": "",
   "columns": [
    "Req ID",
    "Category",
