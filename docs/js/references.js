@@ -12,74 +12,53 @@
     return String(text).toLowerCase().replace(/\.(xlsx|xls|pdf)$/i, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
   }
 
-  // The real Crimp DFMEA opens directly -- every other reference name
-  // matches a file in Legacy DFMEA's uploaded-worksheets table, which
-  // opens the same way clicking that row there does: seeded once with the
-  // same "upload-<slug>" override id data-warehouse.js uses, so the title
-  // shown in the opened worksheet matches the reference's name.
+  // A legacy file opens in the worksheet viewer the same way clicking its row in Legacy DFMEA
+  // does: seeded once with the same "upload-<slug>" override id data-warehouse.js uses, so the
+  // title shown in the opened worksheet matches the file's name.
   function dfmeaUrl(refName){
-    if(refName === "Crimp Contact Resistance") return "index.html";
     var docId = "upload-" + slugify(refName);
     try{
       var map = JSON.parse(localStorage.getItem("dfmeaDocOverrides") || "{}");
       if(!map[docId]){
-        // Same trailing-"DFMEA" trim data-warehouse.js uses, so the title
-        // doesn't repeat the page's own DFMEA badge right next to it.
+        // Same trailing-"DFMEA" trim data-warehouse.js uses, so the title doesn't repeat the
+        // page's own DFMEA badge right next to it.
         var title = refName.replace(/\.(xlsx|xls|pdf)$/i, "").replace(/[_-]+/g, " ").replace(/\s+dfmea\s*$/i, "").trim();
-        map[docId] = { name: title, function: title, failureMode: "Missing or Degraded Function", severity: 9, mode: "sample" };
+        map[docId] = { name: title, mode: "sample" };
         localStorage.setItem("dfmeaDocOverrides", JSON.stringify(map));
       }
     }catch(error){ /* override just won't persist -- the reference still opens, unlabeled */ }
     return "worksheet-view.html?doc=" + encodeURIComponent(docId);
   }
 
-  // The legacy DFMEA worksheets shared with the project: the only legacy
-  // files kept on file, so nothing else can be mistaken for them. Legacy
-  // DFMEA lists them (plus anything uploaded); a DFMEA lists the ones it
-  // was built from.
+  // The legacy DFMEA the client shared: the six scanned pages of their Crimp DFMEA, merged into
+  // one file. It is the only legacy file on record, so every reference in the app points at it.
   var LEGACY = [
-    { name: "Crimp DFMEA - Page 1.pdf", size: "121 KB", when: "Sep 22, 2026, 5:55 PM", rows: 12, source: "client" },
-    { name: "Crimp DFMEA - Page 2.pdf", size: "96 KB", when: "Sep 22, 2026, 5:55 PM", rows: 9, source: "client" },
-    { name: "Crimp DFMEA - Page 3.pdf", size: "132 KB", when: "Sep 22, 2026, 5:55 PM", rows: 14, source: "client" },
-    { name: "Crimp DFMEA - Page 4.pdf", size: "71 KB", when: "Sep 22, 2026, 5:55 PM", rows: 7, source: "client" },
-    { name: "Crimp DFMEA - Page 5.pdf", size: "73 KB", when: "Sep 22, 2026, 5:55 PM", rows: 8, source: "client" },
-    { name: "Crimp DFMEA - Page 6.pdf", size: "71 KB", when: "Sep 22, 2026, 5:55 PM", rows: 7, source: "client" },
-    { name: "Crimp DFMEA - Page 7.pdf", size: "132 KB", when: "Sep 22, 2026, 5:55 PM", rows: 14, source: "client" },
-    { name: "Interface Contact Ressitance Cause & Effect Diagram.pdf", size: "147 KB", when: "Sep 22, 2026, 5:56 PM", rows: 11, source: "client" }
+    { name: "Crimp DFMEA.pdf", size: "563 KB", when: "Sep 22, 2026, 5:55 PM", rows: 177, source: "client" }
   ];
   function legacyInfo(name){
     return LEGACY.filter(function(f){ return f.name === name; })[0] || null;
   }
 
-  // Which legacy DFMEAs each built-in TAK50 document was built from
-  // ("" is the Crimp DFMEA, which has no ?doc= id).
-  var SEED_DOC_REFS = {
-    "": ["Crimp DFMEA - Page 1.pdf", "Crimp DFMEA - Page 2.pdf", "Crimp DFMEA - Page 3.pdf", "Crimp DFMEA - Page 4.pdf", "Crimp DFMEA - Page 5.pdf", "Crimp DFMEA - Page 6.pdf", "Crimp DFMEA - Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"],
-    "seed-terminal-durability": ["Crimp DFMEA - Page 2.pdf", "Crimp DFMEA - Page 3.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"],
-    "seed-housing-seal": ["Crimp DFMEA - Page 4.pdf", "Crimp DFMEA - Page 5.pdf"],
-    "seed-mating-cycle": ["Crimp DFMEA - Page 6.pdf", "Crimp DFMEA - Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"],
-    "seed-lock-retention": ["Crimp DFMEA - Page 5.pdf", "Crimp DFMEA - Page 6.pdf"]
+  // What the merged Crimp DFMEA contains (the numbers the diagram and worksheet show).
+  var CRIMP = {
+    causes: 390,
+    paths: 177,
+    depth: 12,
+    functionLabel: "Crimp Contact Resistance +5 more"
   };
-  function seedDocRefs(docId){ return SEED_DOC_REFS[docId || ""] || null; }
+  var CRIMP_STRUCTURE = CRIMP.causes + " causes across " + CRIMP.paths + " paths, up to " + CRIMP.depth + " levels deep";
 
-  // Table of the legacy DFMEAs a document was built from, external ones
-  // first. Names with no uploaded file behind them (the workspace's own
-  // reference DFMEA) are listed as that.
+  // The built-in Crimp DFMEA (the one with no ?doc= id) was built from the client's file.
+  function seedDocRefs(docId){ return docId ? null : [LEGACY[0].name]; }
+
+  // The legacy files a document was built from.
   function legacyTableHtml(names){
-    var rows = names.map(function(n){
-      return { name: n, info: legacyInfo(n) };
-    }).sort(function(a, b){
-      return (b.info && b.info.source === "client" ? 1 : 0) - (a.info && a.info.source === "client" ? 1 : 0);
-    });
-    return '<table class="data-table ref-legacy"><thead><tr><th>Legacy DFMEA</th><th>Source</th><th>Rows parsed</th><th>Uploaded</th></tr></thead><tbody>'
-      + rows.map(function(r){
-          var info = r.info;
-          var label = !info ? "Workspace" : (info.source === "client" ? "External" : "Library");
-          var cls = !info ? "" : (info.source === "client" ? " client" : "");
-          return '<tr><td><a class="ref-legacy-name" href="' + dfmeaUrl(r.name) + '" target="_blank">' + escapeHtml(r.name) + '</a></td>'
-            + '<td><span class="uh-source' + cls + '">' + label + '</span></td>'
-            + '<td>' + (info ? info.rows + " rows" : "64 rows") + '</td>'
-            + '<td class="data-muted">' + (info ? escapeHtml(info.when) : "Reference DFMEA") + '</td></tr>';
+    return '<table class="data-table ref-legacy"><thead><tr><th>Legacy DFMEA</th><th>Rows parsed</th><th>Uploaded</th></tr></thead><tbody>'
+      + names.map(function(n){
+          var info = legacyInfo(n);
+          return '<tr><td><a class="ref-legacy-name" href="' + dfmeaUrl(n) + '" target="_blank">' + escapeHtml(n) + '</a></td>'
+            + '<td>' + (info ? info.rows + " rows" : "") + '</td>'
+            + '<td class="data-muted">' + (info ? escapeHtml(info.when) : "") + '</td></tr>';
         }).join("")
       + '</tbody></table>';
   }
@@ -99,5 +78,6 @@
     return shown;
   }
 
-  window.DfmeaRefs = { dfmeaUrl: dfmeaUrl, chipRowHtml: chipRowHtml, LEGACY: LEGACY, legacyInfo: legacyInfo, seedDocRefs: seedDocRefs, legacyTableHtml: legacyTableHtml };
+  window.DfmeaRefs = { dfmeaUrl: dfmeaUrl, chipRowHtml: chipRowHtml, LEGACY: LEGACY, legacyInfo: legacyInfo, seedDocRefs: seedDocRefs,
+    legacyTableHtml: legacyTableHtml, CRIMP: CRIMP, CRIMP_STRUCTURE: CRIMP_STRUCTURE };
 })();
