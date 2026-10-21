@@ -222,7 +222,7 @@ body{font-size-adjust:0.5;background:var(--bg);font-family:Cambria, "Cambria Mat
 }
 
 /* ---------- CONTENT ---------- */
-.content{padding:14px 22px 28px}
+.content{padding:10px 20px 16px}
 .kpis{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:14px}
 .kp{background:#fff;border:1px solid #E4EAF2;border-radius:10px;padding:9px 12px}
 .kpt{font-size:9px;font-weight:700;color:#7A8AA0;text-transform:uppercase;display:flex;
@@ -907,9 +907,9 @@ dialog[open]::backdrop{animation:backdropIn .18s ease forwards}
 .nd-step.on{display:block}
 .nd-step.nd-step-mid{max-width:860px}
 .nd-step.nd-step-wide{max-width:none}
-.nd-card{background:#fff;border:1px solid #E4EAF2;border-radius:14px;padding:28px 30px 24px;
+.nd-card{background:#fff;border:1px solid #E4EAF2;border-radius:14px;padding:18px 24px 16px;
  box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 32px -16px rgba(15,23,42,.14)}
-.nd-field{margin-bottom:18px}
+.nd-field{margin-bottom:12px}
 .nd-field[hidden]{display:none}
 .nd-field label{display:block;font-size:11.5px;font-weight:600;color:#334155;margin-bottom:7px}
 /* background-color, never the background shorthand: the shorthand would
@@ -925,7 +925,7 @@ dialog[open]::backdrop{animation:backdropIn .18s ease forwards}
 .nd-field input.err,.nd-field textarea.err{border-color:#FCA5A5;background-color:#FEF2F2}
 .nd-err-msg{display:none;color:#B91C1C;font-size:10.5px;margin-top:6px;font-weight:600}
 .nd-field.has-err .nd-err-msg{display:block}
-.nd-actions{display:flex;align-items:center;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid #F1F5F9}
+.nd-actions{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #F1F5F9}
 .nd-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:38px;padding:0 18px;
  border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid #DCE3EC;background:#fff;
  color:#334155;white-space:nowrap;box-shadow:0 1px 2px rgba(15,23,42,.04);
@@ -1165,7 +1165,7 @@ g.hitbox.search-current>rect:nth-of-type(2){stroke:#F87171;stroke-width:2.4}
 /* a specification with all its Excel columns: scrolls sideways, columns keep a readable width */
 .spec-scroll{overflow-x:auto}
 .spec-wide{width:100%;table-layout:auto}
-.spec-wide th,.spec-wide td{min-width:170px;vertical-align:top}
+.spec-wide th,.spec-wide td{min-width:140px;vertical-align:top}
 .spec-wide th.spec-cat-cell,.spec-wide td.spec-cat-cell{min-width:120px}
 .spec-wide th.spec-ai-cell,.spec-wide td.spec-ai-cell{min-width:84px;width:84px}
 .spec-wide th{white-space:normal}
@@ -1203,6 +1203,19 @@ a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn
 .spec-wide th.spec-ai-cell,.spec-wide td.spec-ai-cell{position:sticky;right:0;z-index:2;background:#fff;box-shadow:-1px 0 0 #EEF2F7}
 .spec-wide thead th.spec-ai-cell{background:#F8FAFC;z-index:4}
 .spec-wide tbody tr:hover td.spec-ai-cell{background:#FAFBFF}
-.spec-wide th.spec-ref-cell,.spec-wide td.spec-ref-cell{min-width:190px}
+.spec-wide th.spec-ref-cell,.spec-wide td.spec-ref-cell{min-width:150px}
 .tt-size{white-space:nowrap}
 .spec-none{color:#94A3B8}
+
+/* tighter vertical rhythm, so a page uses the screen instead of leaving gaps */
+.top{padding-top:8px;padding-bottom:8px}
+.ttl{margin-top:1px}
+.content{padding:8px 20px 14px}
+.seclab{margin:10px 0 6px}
+.seclab:first-child{margin-top:0}
+.tt-scroll,.spec-scroll{max-height:max(200px,calc(100vh - 335px))}
+.twrap{max-height:max(240px,calc(100vh - 330px))}
+.tt-bar{padding:8px 14px}
+.tt-foot{padding:6px 14px}
+/* two tables on one page share the screen */
+body.two-tables .tt-scroll,body.two-tables .spec-scroll{max-height:max(150px,calc(50vh - 170px))}
