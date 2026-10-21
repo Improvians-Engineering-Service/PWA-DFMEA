@@ -218,13 +218,13 @@
 
     // --- the project's DFMEAs: one per area of the requirements, each built from the legacy
     // Crimp DFMEA and opening as a real, editable document ---
-    var generatedRows = window.DfmeaRefs.TAK50_DFMEAS.map(function(d){
+    var generatedRows = window.DfmeaRefs.TAK50_DFMEAS.map(function(d, sliceIndex){
       var docId = makeDocId();
       var docName = name + " " + d.suffix + " DFMEA";
       var from = matched.map(function(m){ return m.name; });
       saveDocRecord({ id: docId, name: docName, function: d.fn, severity: 9, projectId: projectId, mode: "ai",
         generatedFrom: from, createdAt: new Date().toLocaleString() });
-      saveOverride(docId, { name: docName, function: d.fn, failureMode: "Missing or Degraded Function", severity: 9, mode: "ai",
+      saveOverride(docId, { name: docName, function: d.fn, failureMode: "Missing or Degraded Function", severity: 9, slice: sliceIndex, mode: "ai",
         projectId: projectId, generatedFrom: from, generatedAt: new Date().toISOString() });
       return { docId: docId, name: docName, fn: d.fn, severity: 9 };
     });
