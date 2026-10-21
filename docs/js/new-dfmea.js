@@ -17,7 +17,7 @@
   // Same document names project.html already shows for each built-in
   // project -- kept in sync with KNOWN_PROJECTS in project-detail.js.
   var KNOWN_PROJECT_DOCS = {
-    "tak50": ["Crimp DFMEA"]
+    "tak50": ["TAK50 Crimp DFMEA", "TAK50 Contact Resistance DFMEA", "TAK50 Mating and Insertion DFMEA", "TAK50 Operating Temperature DFMEA"]
   };
   function existingDocNames(projectId){
     var names = (KNOWN_PROJECT_DOCS[projectId] || []).slice();
@@ -277,7 +277,7 @@
       ["Severity", '<span class="chip ' + severityTier + '">' + severity + "</span>"],
       ["Specification", specSelect.value ? escapeHtml(window.DfmeaReqDocs.getById(specSelect.value).productName) : "None selected"],
       ["References", fromNames.length ? escapeHtml(fromNames.join(", ")) : "None selected"],
-      ["Structure", window.DfmeaRefs.CRIMP_STRUCTURE.charAt(0).toUpperCase() + window.DfmeaRefs.CRIMP_STRUCTURE.slice(1)]
+      ["Structure", "Starting structure built from the reference DFMEA"]
     ].map(function(row){ return "<tr><th>" + row[0] + "</th><td>" + row[1] + "</td></tr>"; }).join("") + "</table>";
 
     var actions = document.getElementById("ndDoneActions");

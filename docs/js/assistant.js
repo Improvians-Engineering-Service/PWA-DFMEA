@@ -31,9 +31,7 @@
   // Detailed summaries (the AI summary pages)
   // ---------------------------------------------------------------
   // Short, one-sentence summary of a DFMEA, for its table row.
-  var CRIMP_SHORT = "The crimped joint in six functions (contact resistance, pull-out force, terminal bend and the cable seal), with " + window.DfmeaRefs.CRIMP.causes + " causes across " + window.DfmeaRefs.CRIMP.paths + " paths.";
   function dfmeaShort(fn, severity){
-    if(fn === window.DfmeaRefs.CRIMP.functionLabel) return CRIMP_SHORT;
     return "Starting structure for " + (fn || "this function") + ": its failure mode, effect and cause paths" + (severity ? ", severity " + severity : "") + ".";
   }
 
@@ -63,7 +61,7 @@
     var rows = [
       ["Function", fn],
       ["Severity", info.severity ? String(info.severity) : "Not rated"],
-      ["Structure", window.DfmeaRefs.CRIMP_STRUCTURE.charAt(0).toUpperCase() + window.DfmeaRefs.CRIMP_STRUCTURE.slice(1)],
+      ["Structure", "Starting structure built from the reference DFMEA"],
       ["References", refs.length ? refs.length + " customer file" + (refs.length === 1 ? "" : "s") : "None selected"]
     ];
     var why = refs.map(function(f){ return [f, "Used because it contains " + fileNote(f) + "."]; });
