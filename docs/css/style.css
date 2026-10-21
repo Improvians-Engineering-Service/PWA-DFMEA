@@ -1150,3 +1150,15 @@ body.ai-instant .ai-panel{transition:none}
 @media (prefers-reduced-motion:reduce){.ai-panel{transition:none}.ac-typing i{animation:none}}
 
 .spec-table td:nth-child(3){min-width:240px}
+
+/* search inside the full diagram */
+.tsearch{display:flex;align-items:center;gap:6px;height:30px;margin-left:18px;padding:0 6px 0 10px;border:1px solid #E2E8F0;border-radius:8px;background:#F8FAFC;color:#94A3B8}
+.tsearch:focus-within{border-color:var(--p300);background:#fff;box-shadow:0 0 0 3px var(--p50)}
+.tsearch input{width:190px;border:0;outline:0;background:transparent;font-size:12px;color:#334155}
+#treeSearchCount{font-size:10.5px;color:#64748B;white-space:nowrap;min-width:50px;text-align:right}
+.tsearch button{width:22px;height:22px;border:0;border-radius:6px;background:none;color:#475569;font-size:16px;line-height:1;cursor:pointer}
+.tsearch button:hover{background:var(--p50);color:var(--p700)}
+svg.searching g.hitbox:not(.search-hit){opacity:.18}
+g.hitbox.search-hit>rect:nth-of-type(2){fill:#FEF08A;stroke:#CA8A04;stroke-width:2.6}
+g.hitbox.search-hit .ttl2{fill:#713F12}
+g.hitbox.search-current>rect:nth-of-type(2){stroke:#DC2626;stroke-width:3.4}

@@ -3,20 +3,12 @@
   var params = new URLSearchParams(window.location.search);
   var projectId = params.get("id") || "";
 
-  // Every document here opens and works -- "Crimp DFMEA" is the one with
-  // its own populated data, the rest reuse that same editable structure
-  // under their own name/function (exactly like a DFMEA created through
-  // New DFMEA does). Function and severity are kept in sync with
-  // SEED_OVERRIDES in auth-nav.js, which is what relabels the opened page.
+  // TAK50 starts with the client's Crimp DFMEA: all six of its functions in one document.
   var KNOWN_PROJECTS = {
     "tak50": {
       name: "TAK50",
       docs: [
-        { name: "Crimp DFMEA", fn: "Crimp Contact Resistance", severity: 9, updated: "Today" },
-        { name: "Terminal Durability DFMEA", docId: "seed-terminal-durability", fn: "Terminal Contact Resistance After Cycling", severity: 9, updated: "3 days ago" },
-        { name: "Housing Seal Integrity DFMEA", docId: "seed-housing-seal", fn: "Housing Seal Integrity", severity: 7, updated: "6 days ago" },
-        { name: "Mating Cycle Durability DFMEA", docId: "seed-mating-cycle", fn: "Mating Cycle Durability", severity: 7, updated: "9 days ago" },
-        { name: "Connector Lock Retention DFMEA", docId: "seed-lock-retention", fn: "Connector Lock Retention", severity: 8, updated: "2 weeks ago" }
+        { name: "Crimp DFMEA", fn: window.DfmeaRefs.CRIMP.functionLabel, severity: 9, updated: "Today" }
       ]
     }
   };
@@ -38,13 +30,12 @@
     var custom = readMyProjects().find(function(p){ return p.id === projectId; });
     project = { name: custom ? custom.name : "Unknown project", docs: [] };
   }
-  // Documents created through New DFMEA (blank or AI) for this project
-  // belong on this list too, not just the built-in ones -- each one
-  // really does open (it reuses the one live worksheet, renamed).
+  // Documents created through New DFMEA or Create project for this project belong on this list
+  // too, not just the built-in one -- each one really does open (it reuses the one live worksheet).
   var docs = project.docs.concat(readMyDocuments().filter(function(d){ return d.projectId === projectId; }).map(function(d){
     return {
       name: d.name, docId: d.id, fn: d.function, severity: d.severity,
-      refs: d.generatedFrom || [],
+      refs: (d.generatedFrom || []).filter(function(n){ return window.DfmeaRefs.legacyInfo(n); }),
       updated: d.mode === "ai" ? "Generated · " + d.createdAt : "Created " + d.createdAt
     };
   }));
@@ -77,7 +68,7 @@
       + '<td><div class="data-name"><span class="data-icon">' + DOC_ICON + '</span>' + escapeHtml(doc.name) + '</div></td>'
       + '<td>' + escapeHtml(doc.fn || "") + '</td>'
       + '<td>' + severityChip(doc.severity) + '</td>'
-      + '<td class="data-muted">64 causes &middot; 26 paths</td>'
+      + '<td class="data-muted">' + window.DfmeaRefs.CRIMP.causes + ' causes &middot; ' + window.DfmeaRefs.CRIMP.paths + ' paths</td>'
       + '<td><div class="ref-cell">' + window.DfmeaRefs.chipRowHtml((doc.refs || window.DfmeaRefs.seedDocRefs(doc.docId) || []).map(function(n){ return { name: n }; }), 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</div></td>'
       + '<td><a class="ai-sum" href="' + aiSummaryUrl(doc) + '" target="_blank" onclick="event.stopPropagation()" data-tip="' + escapeHtml(aiSummary(doc)) + '">'
       + window.DfmeaAI.spark + '<span>' + escapeHtml(aiSummary(doc)) + '</span></a></td>'
