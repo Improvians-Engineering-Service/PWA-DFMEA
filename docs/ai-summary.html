@@ -107,13 +107,13 @@
         { keys: ["why", "reason", "explain"], text: d.summary },
         { keys: ["verif", "test", "check", "prove"], text: "It is verified by " + (ev ? ev[1].charAt(0).toLowerCase() + ev[1].slice(1) : "reviewing the listed causes") + "." },
         { keys: ["confiden", "sure", "match", "accura"], text: files.length ? "The match confidence is **" + (row % 3 === 0 ? "Medium" : "High") + "**: " + (row % 3 === 0 ? "the file covers this failure mechanism only in part." : "the file covers the same failure mechanism as this requirement.") : "No customer file is cited, so there is no match to score. The requirement comes from the standard." },
-        { keys: ["other", "another", "alternative", "more reference", "else"], text: files.length > 1 ? "Yes. It also uses **" + files[1] + "**, which contains " + AI.fileNote(files[1]) + "." : "No. This requirement cites only " + (files[0] ? "**" + files[0] + "**" : "the standard") + ". The customer's other files cover different failure mechanisms." }
+        { keys: ["other", "another", "alternative", "more reference", "else"], text: files.length > 1 ? "Yes. It also uses **" + files[1] + "**, which contains " + AI.fileNote(files[1]) + "." : "No. This requirement cites only " + (files[0] ? "**" + files[0] + "**" : "the standard") + "." }
       ] }; }
     });
   }else if(type === "dfmea"){
     var docId = params.get("doc") || "";
     var refs = null;
-    if(!docId || docId.indexOf("seed-") === 0) refs = window.DfmeaRefs.seedDocRefs(docId);
+    if(!docId) refs = window.DfmeaRefs.seedDocRefs("");
     if(!refs){
       try{
         var rec = JSON.parse(localStorage.getItem("dfmeaMyDocuments") || "[]").filter(function(x){ return x.id === docId; })[0];
