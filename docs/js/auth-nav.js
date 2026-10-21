@@ -127,7 +127,7 @@
   var override = null;
   // TAK50's built-in DFMEAs are renamed starting structures, like any DFMEA created for a project.
   var seed = window.DfmeaRefs && window.DfmeaRefs.TAK50_DFMEAS.filter(function(d){ return d.id === activeDocId; })[0];
-  if(seed) override = { name: "TAK50 " + seed.suffix + " DFMEA", function: seed.fn, failureMode: "Missing or Degraded Function", mode: "sample" };
+  if(seed) override = { name: "TAK50 " + seed.suffix + " DFMEA", function: seed.fn, failureMode: "Missing or Degraded Function", severity: 9, mode: "sample" };
   else if(activeDocId){
     try{
       override = JSON.parse(localStorage.getItem("dfmeaDocOverrides") || "{}")[activeDocId] || null;

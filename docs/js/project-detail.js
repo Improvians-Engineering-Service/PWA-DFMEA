@@ -8,7 +8,7 @@
     "tak50": {
       name: "TAK50",
       docs: window.DfmeaRefs.TAK50_DFMEAS.map(function(d){
-        return { name: "TAK50 " + d.suffix + " DFMEA", docId: d.id, fn: d.fn, severity: "", updated: "Today" };
+        return { name: "TAK50 " + d.suffix + " DFMEA", docId: d.id, fn: d.fn, severity: 9, updated: "Today" };
       })
     }
   };
@@ -63,8 +63,9 @@
   var tableBody = document.getElementById("docTableBody");
   document.getElementById("docTable").hidden = !docs.length;
   document.getElementById("docEmpty").hidden = docs.length > 0;
-  tableBody.innerHTML = docs.map(function(doc){
+  tableBody.innerHTML = docs.map(function(doc, index){
     return '<tr data-doc-id="' + escapeHtml(doc.docId || "") + '" data-tip="Open this DFMEA">'
+      + '<td>' + (index + 1) + '</td>'
       + '<td><div class="data-name"><span class="data-icon">' + DOC_ICON + '</span>' + escapeHtml(doc.name) + '</div></td>'
       + '<td>' + escapeHtml(doc.fn || "") + '</td>'
       + '<td>' + severityChip(doc.severity) + '</td>'
@@ -77,7 +78,7 @@
   }).join("");
   if(docs.length && window.TableTools){
     window.TableTools.attach(document.getElementById("docTable"), { noun: "DFMEAs", placeholder: "Search DFMEAs",
-      filters: [{ col: 2, label: "All severities" }], pageSize: 10 });
+      filters: [{ col: 3, label: "All severities" }], pageSize: 10 });
   }
   Array.prototype.slice.call(tableBody.querySelectorAll("tr")).forEach(function(row){
     row.addEventListener("click", function(){
