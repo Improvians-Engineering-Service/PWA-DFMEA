@@ -26,7 +26,7 @@
     var standards = Array.from(new Set(fromLibrary.concat(["LV214", "USCAR-2"]))).sort();
     standardInput.innerHTML = standards.map(function(s){
       return '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>';
-    }).join("") + '<option value="None">No specific standard</option>';
+    }).join("");
     standardInput.value = "LV214";
   })();
 

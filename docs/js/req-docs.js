@@ -7,7 +7,7 @@
   // Design Requirements page, and showing it on a project's page all agree.
   var KEY = "dfmeaRequirementDocs";
   var DEFAULTS_VERSION_KEY = "dfmeaRequirementDocsDefaultsVersion";
-  var DEFAULTS_VERSION = "7";
+  var DEFAULTS_VERSION = "8";
   var DEFAULTS = [
     { id: "default-0", projectId: null, productName: "Titan Connector Housing", standard: "USCAR-2", createdAt: "Feb 11, 2024", specs: [
       "Mechanical — Housing dimensional tolerance ±0.15mm on all mating interface features, verified by CMM inspection",
@@ -91,57 +91,6 @@
       "Manufacturing — Process capability Cpk ≥ 1.33 on critical wire length and connector seating dimensions",
       "Quality — Lot traceability required for wire, terminal, and connector housing batches used per harness"
     ]},
-    { id: "default-4", projectId: null, productName: "Helios DC Fast-Charge Inlet", standard: "IEC 62196-3", createdAt: "Feb 18, 2025", specs: [
-      "Mechanical — Inlet shutter mechanism prevents contact access when vehicle not connected, verified per IEC 62196-3",
-      "Mechanical — Connector latch retention force ≥ 100 N before release, withstands 10,000 charge cycles",
-      "Mechanical — Inlet housing withstands 50 N side-load without cracking or seal displacement",
-      "Mechanical — Pin alignment tolerance ±0.1mm to guarantee correct mating with handle across the cycle life",
-      "Electrical — Contact resistance ≤ 0.3 mΩ per power pin, measured at rated current after mating",
-      "Electrical — Dielectric withstand voltage 3000V AC for 60 seconds between power pins and chassis ground",
-      "Electrical — Pilot/CP signal timing accuracy within ±5% of SAE J1772 / IEC 61851 state transition windows",
-      "Electrical — Temperature sensing in-pin accuracy ±3°C across -40°C to +85°C, used for charge current derating",
-      "Environmental — Sealing rated to IP55 minimum with inlet cap closed, IP44 minimum while mated and charging",
-      "Environmental — Operating temperature range -40°C to +85°C under full rated charge current",
-      "Environmental — Thermal shutdown must trigger before pin temperature exceeds 90°C, verified by thermal test",
-      "Environmental — Vibration resistance per ISO 16750-3, no loss of continuity on power or signal pins",
-      "Material — Pin contact plating minimum 5μm thickness, rated for 10,000 mating cycles without resistance drift",
-      "Material — Housing material flammability rating UL94 V-0 and resistant to automotive cleaning agents",
-      "Manufacturing — 100% electrical test (continuity, hipot, pilot signal) on every finished inlet assembly",
-      "Quality — Lot traceability required for pin contact plating batch and housing resin batch"
-    ]},
-    { id: "default-5", projectId: null, productName: "Zenith HV Interlock Connector", standard: "ISO 6469-3", createdAt: "Apr 2, 2025", specs: [
-      "Mechanical — Interlock loop opens within 2mm of connector disengagement, before high-voltage pins separate",
-      "Mechanical — Connector must require a tool or two-stage release to disconnect under load, per ISO 6469-3",
-      "Mechanical — Housing withstands 100 N crush load without interlock loop false-closing",
-      "Electrical — Interlock loop resistance ≤ 100 mΩ when closed, open-circuit when disengaged, verified every mating cycle",
-      "Electrical — High-voltage pin isolation resistance ≥ 100 MΩ at 1000V DC between any two pins",
-      "Electrical — Dielectric withstand voltage 2500V AC for 60 seconds between HV pins and chassis ground",
-      "Electrical — Response time from interlock-open to high-voltage bus disable ≤ 50ms, verified at system level",
-      "Environmental — Operating temperature range -40°C to +125°C with no interlock signal degradation",
-      "Environmental — Sealing rated to IP67 at the connector mating face, verified by submersion test",
-      "Environmental — Vibration resistance per ISO 16750-3, no interlock loop discontinuity >1μs",
-      "Environmental — Humidity resistance: 10 cycles minimum, no corrosion of interlock loop contacts",
-      "Material — Interlock contact plating minimum 2μm thickness, no exposed base metal after cycling",
-      "Manufacturing — 100% interlock continuity and HV isolation test on every finished connector assembly",
-      "Quality — Functional safety review required per ISO 26262 for the interlock disable response path",
-      "Quality — Lot traceability required for interlock contact and HV pin plating batches"
-    ]},
-    { id: "default-6", projectId: null, productName: "Apex Battery Disconnect Unit", standard: "ISO 20653", createdAt: "May 27, 2025", specs: [
-      "Mechanical — Manual service disconnect requires ≥ 40 N deliberate pull force, cannot release under vibration alone",
-      "Mechanical — Fuse cartridge retention force ≥ 60 N in the housing, verified after 50 insertion/removal cycles",
-      "Mechanical — Housing withstands 30g mechanical shock without cover separation or fuse dislodgement",
-      "Electrical — Contact resistance ≤ 0.2 mΩ across the main current path, measured after torque-down",
-      "Electrical — Continuous current rating meets design load with ≤ 25K temperature rise at rated current",
-      "Electrical — Fuse interrupt rating verified to clear worst-case fault current within datasheet time curve",
-      "Electrical — Isolation resistance ≥ 10 MΩ between disconnected terminals and housing/chassis",
-      "Environmental — Sealing rated to IP6K9K per ISO 20653, withstands high-pressure/steam-jet washdown",
-      "Environmental — Operating temperature range -40°C to +85°C with no contact resistance drift",
-      "Environmental — Salt spray resistance per ISO 9227, 240h minimum, no red rust on main current path contacts",
-      "Material — Main contact plating minimum 3μm thickness over copper alloy base",
-      "Material — Housing material flammability rating UL94 V-0, resistant to battery electrolyte exposure",
-      "Manufacturing — Torque and contact resistance verified on 100% of production units before release",
-      "Quality — Lot traceability required for fuse cartridge batch and main contact plating batch"
-    ]},
     { id: "default-7", projectId: null, productName: "Polaris Low-Voltage Distribution Box", standard: "LV214", createdAt: "Jun 14, 2025", specs: [
       "Mechanical — Busbar and fuse terminal retention force ≥ 50 N, no loosening after 50 thermal cycles",
       "Mechanical — Cover latch retention ≥ 30 N, withstands 20 open/close cycles without cracking",
@@ -175,27 +124,6 @@
       "Manufacturing — 100% visual inspection for seal gaps or flash at the parting line on finished grommets",
       "Quality — Lot traceability required for elastomer compound batch used in each production run"
     ]},
-    { id: "default-9", projectId: null, productName: "Nimbus Charge Port Door Actuator", standard: "ISO 16750", createdAt: "Aug 30, 2025", specs: [
-      "Mechanical — Actuator withstands 50,000 open/close cycles without loss of position accuracy",
-      "Mechanical — Door latch retention ≥ 60 N against forced opening while in the closed/locked state",
-      "Mechanical — Actuator stall torque sufficient to overcome 5mm ice buildup at the door seam",
-      "Mechanical — Gear train withstands 10 N·cm reverse-drive torque without damage when manually opened",
-      "Electrical — Actuator motor draws ≤ 2.5A at 12V under rated load, verified at temperature extremes",
-      "Electrical — Position sensor accuracy ±2° across the full travel range, over the operating temperature range",
-      "Electrical — EMC emissions and immunity per ISO 16750-2 for motor drive and position sensor circuits",
-      "Environmental — Sealing rated to IP67 at the actuator housing, verified by submersion test",
-      "Environmental — Operating temperature range -40°C to +85°C per ISO 16750-4 thermal requirements",
-      "Environmental — Salt spray resistance per ISO 9227, 240h minimum, no red rust on exposed metal parts",
-      "Environmental — Vibration resistance per ISO 16750-3, no false actuation or position drift",
-      "Material — Housing material flammability rating UL94 V-0, UV-stabilized for exterior exposure",
-      "Manufacturing — 100% functional cycle test (open/close/latch) on every finished actuator assembly",
-      "Quality — Lot traceability required for motor, gear train, and position sensor batches"
-    ]},
-    // The one built-in project (not generated through "Create project") --
-    // its own requirement spec, covering the same ground its five DFMEAs
-    // do: crimp, terminal retention, housing seal, mating durability and
-    // lock retention. projectId ties it to that project directly, the
-    // same way a generated project's spec is tied to its own.
     { id: "default-10", projectId: "tak50", productName: "TAK50", standard: "USCAR-2", createdAt: "Jan 15, 2024", specs: [
       "Mechanical — Crimp pull-out force ≥ 70 N per terminal, verified per USCAR-2 Section 4.2 tensile test",
       "Mechanical — Terminal retention force ≥ 55 N in the housing cavity, verified after 50 insertion cycles",
@@ -243,6 +171,11 @@
       var storedVersion = null;
       try{ storedVersion = localStorage.getItem(DEFAULTS_VERSION_KEY); }catch(error){ storedVersion = null; }
       if(storedVersion !== DEFAULTS_VERSION){
+        // Sample specs that are no longer part of the set (only LV214 and
+        // USCAR-2 specifications are kept) are dropped; real project docs stay.
+        list = list.filter(function(d){
+          return !/^default-\d+$/.test(d.id) || DEFAULTS.some(function(f){ return f.id === d.id; });
+        });
         list = list.map(function(d){
           var fresh = DEFAULTS.find(function(f){ return f.id === d.id; });
           return fresh ? fresh : d;
