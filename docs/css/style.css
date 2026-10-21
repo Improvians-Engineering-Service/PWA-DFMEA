@@ -1175,3 +1175,22 @@ g.hitbox.search-current>rect:nth-of-type(2){stroke:#F87171;stroke-width:2.4}
 
 /* anything you can click shows the pointer hand, even when it also has a hover tip */
 a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn,.nav,.subnav,.tab,.project-link{cursor:pointer}
+
+/* ---------- custom dropdowns (js/custom-select.js) ---------- */
+.csel{vertical-align:middle;max-width:100%}
+.csel.csel-block{display:block;width:100%}
+.csel-btn{min-height:34px;font-size:12px;line-height:1.3;gap:8px}
+.csel-btn:focus-visible{outline:2px solid var(--p300);outline-offset:1px}
+.csel-btn.is-placeholder .csel-label{color:#64748B}
+.csel-arrow{margin-left:auto}
+.csel-list{max-width:calc(100vw - 24px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.csel-opt{white-space:normal;overflow-wrap:anywhere;line-height:1.35;font-size:12px}
+.csel-opt.active{background:var(--p50)}
+.csel-opt.sel.active{background:var(--p100)}
+.nd-field .csel-btn,.login-field .csel-btn{min-height:42px;padding:10px 12px;font-size:13px;border-radius:9px;border-color:#DCE3EC}
+.nd-field .csel-btn:hover{border-color:#C3CEDC}
+.tt-bar .csel,.dw-tbar .csel{max-width:240px}
+.tt-bar .csel-btn,.dw-tbar .csel-btn{height:34px;min-height:0;padding:0 11px;font-size:11.5px;border-radius:8px;border-color:#E2E8F0}
+.tt-foot .csel-btn{height:28px;min-height:0;padding:0 9px;font-size:11px;border-radius:7px;border-color:#E2E8F0}
+.tt-foot .csel-list .csel-opt{font-size:11px}
+@media (max-width:640px){.tt-bar .csel,.dw-tbar .csel{max-width:none;flex:1 1 140px}}
