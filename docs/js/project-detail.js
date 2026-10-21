@@ -82,9 +82,9 @@
       + '<td>' + severityChip(doc.severity) + '</td>'
       + '<td class="data-muted">' + structureText(doc) + '</td>'
       + '<td><div class="ref-cell">' + window.DfmeaRefs.chipRowHtml((doc.refs || window.DfmeaRefs.seedDocRefs(doc.docId) || []).map(function(n){ return { name: n }; }), 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</div></td>'
+      + '<td class="data-muted">' + escapeHtml(doc.updated) + '</td>'
       + '<td><a class="ai-sum" href="' + aiSummaryUrl(doc) + '" target="_blank" onclick="event.stopPropagation()" data-tip="' + escapeHtml(aiSummary(doc)) + '">'
       + window.DfmeaAI.spark + '<span>' + escapeHtml(aiSummary(doc)) + '</span></a></td>'
-      + '<td class="data-muted">' + escapeHtml(doc.updated) + '</td>'
       + '</tr>';
   }).join("");
   if(docs.length && window.TableTools){
