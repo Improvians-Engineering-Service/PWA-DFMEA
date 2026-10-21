@@ -47,6 +47,7 @@
  transition:background-color .12s ease}
 /* File name, with a spreadsheet tile in front of it (drawn here so the
    row markup stays plain text). */
+.uh-table td.uh-muted{color:#64748B}
 .uh-table td.uh-num,.uh-table th.uh-num{width:52px;color:#94A3B8;font-weight:600}
 .uh-table td:nth-child(2){position:relative;padding-left:52px;overflow-wrap:anywhere;color:#0F172A;font-weight:600}
 .uh-table td:nth-child(2)::before{content:"";position:absolute;left:16px;top:50%;width:26px;height:26px;margin-top:-13px;
@@ -100,7 +101,7 @@
       </div>
       <div class="up-msg" id="uploadSuccess"></div>
       <table class="uh-table" id="uploadHistoryTable">
-        <thead><tr><th class="uh-num">#</th><th>File</th><th>Size</th><th>Rows parsed</th><th>Uploaded</th></tr></thead>
+        <thead><tr><th class="uh-num">#</th><th>File</th><th>Size</th><th>Rows parsed</th><th>Structure</th><th>Uploaded</th></tr></thead>
         <tbody id="uploadHistoryBody"></tbody>
       </table>
       <div class="uh-empty" id="uploadHistoryEmpty">No files match this search/filter.</div>
