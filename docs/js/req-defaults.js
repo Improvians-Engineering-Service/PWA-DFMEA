@@ -413,6 +413,7 @@ window.DfmeaReqDefaults = [
   "standard": "LV214",
   "createdAt": "Oct 19, 2026",
   "sourceFile": "TAK50_LV214_Requirements.xlsx",
+  "projectOnly": true,
   "title": "",
   "columns": [
    "Req ID",

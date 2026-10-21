@@ -58,7 +58,8 @@
 
   function allDocs(){
     var myProjects = readMyProjectsForReq();
-    return window.DfmeaReqDocs.readAll().map(function(r){
+    // The library lists the standards (LV 214, USCAR-2); TAK50's own spec lives on its project.
+    return window.DfmeaReqDocs.readAll().filter(function(r){ return !r.projectOnly; }).map(function(r){
       var project = myProjects.find(function(p){ return p.id === r.projectId; });
       return { id: r.id, product: r.productName, standard: r.standard, when: r.createdAt, projectId: project ? r.projectId : null, record: r };
     });

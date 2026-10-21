@@ -10,7 +10,7 @@
   //   title, columns: [header, ...], rows: [[cell, ...], ...], notes: [[a, b], ...] }.
   var KEY = "dfmeaRequirementDocs";
   var DEFAULTS_VERSION_KEY = "dfmeaRequirementDocsDefaultsVersion";
-  var DEFAULTS_VERSION = "10";
+  var DEFAULTS_VERSION = "11";
 
   function clone(value){ return JSON.parse(JSON.stringify(value)); }
   function defaults(){ return clone(window.DfmeaReqDefaults || []); }
