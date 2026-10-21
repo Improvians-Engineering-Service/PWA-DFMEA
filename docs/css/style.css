@@ -1205,3 +1205,4 @@ a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn
 .spec-wide tbody tr:hover td.spec-ai-cell{background:#FAFBFF}
 .spec-wide th.spec-ref-cell,.spec-wide td.spec-ref-cell{min-width:190px}
 .tt-size{white-space:nowrap}
+.spec-none{color:#94A3B8}

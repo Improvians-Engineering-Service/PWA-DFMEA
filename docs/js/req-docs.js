@@ -106,6 +106,14 @@
 
   // The one way a specification is rendered everywhere it appears: every column of the table,
   // exactly as written, plus a small AI-summary icon at the end of each row.
+  // The Crimp DFMEA covers the crimped joint: crimping, wire pull-out and strain relief, terminal
+  // retention and contact resistance. A requirement about any of these cites it.
+  var CRIMP_TOPICS = /crimp|contact resistance|resistance after conditioning|terminal retention|wire pull|strain relief|seal.?wire|pull.?force/i;
+  function usesCrimp(doc, row){
+    var name = field(doc, row, /^(test|requirement)/i);
+    var category = row[categoryIndex(doc)] || "";
+    return CRIMP_TOPICS.test(name + " " + category);
+  }
   // Where the Reference DFMEA column goes: the position just after "Reference / source".
   function refColumn(doc){
     var i = doc.columns.findIndex(function(c){ return /reference\s*\/\s*source/i.test(c); });
@@ -115,7 +123,7 @@
     var cat = categoryIndex(doc);
     // The legacy DFMEA this specification was generated with.
     var refName = window.DfmeaRefs && window.DfmeaRefs.LEGACY[0] ? window.DfmeaRefs.LEGACY[0].name : "";
-    var refCell = refName ? '<td class="spec-ref-cell">' + window.DfmeaRefs.chipRowHtml([{ name: refName }], 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</td>' : "";
+    var chip = refName ? window.DfmeaRefs.chipRowHtml([{ name: refName }], 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) : "";
     // The reference DFMEA sits beside the "Reference / source" column when the sheet has one,
     // otherwise beside the first column.
     var refPos = refColumn(doc);
@@ -125,6 +133,8 @@
     }).join("") + '<th class="spec-ai-cell" data-nosort>AI summary</th>';
     if(refName && doc.columns.length === 1) head = head.replace('<th class="spec-ai-cell"', '<th class="spec-ref-cell">Reference DFMEA</th><th class="spec-ai-cell"');
     var body = doc.rows.map(function(r, index){
+      // Only a requirement the Crimp DFMEA actually speaks to cites it; the rest show a dash.
+      var refCell = refName ? '<td class="spec-ref-cell">' + (usesCrimp(doc, r) ? chip : '<span class="spec-none">-</span>') + '</td>' : "";
       return '<tr>' + r.map(function(v, i){
         var cell = i === cat
           ? '<td class="spec-cat-cell"><span class="spec-cat" data-cat="' + escapeHtml(String(v).toLowerCase()) + '">' + escapeHtml(v) + '</span></td>'
