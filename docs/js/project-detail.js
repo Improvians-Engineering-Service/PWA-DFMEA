@@ -3,13 +3,13 @@
   var params = new URLSearchParams(window.location.search);
   var projectId = params.get("id") || "";
 
-  // TAK50 starts with the client's Crimp DFMEA: all six of its functions in one document.
+  // TAK50's own DFMEAs, each starting from the Crimp DFMEA reference.
   var KNOWN_PROJECTS = {
     "tak50": {
       name: "TAK50",
-      docs: [
-        { name: "Crimp DFMEA", fn: window.DfmeaRefs.CRIMP.functionLabel, severity: 9, updated: "Today" }
-      ]
+      docs: window.DfmeaRefs.TAK50_DFMEAS.map(function(d){
+        return { name: "TAK50 " + d.suffix + " DFMEA", docId: d.id, fn: d.fn, severity: "", updated: "Today" };
+      })
     }
   };
 
@@ -68,7 +68,7 @@
       + '<td><div class="data-name"><span class="data-icon">' + DOC_ICON + '</span>' + escapeHtml(doc.name) + '</div></td>'
       + '<td>' + escapeHtml(doc.fn || "") + '</td>'
       + '<td>' + severityChip(doc.severity) + '</td>'
-      + '<td class="data-muted">' + window.DfmeaRefs.CRIMP.causes + ' causes &middot; ' + window.DfmeaRefs.CRIMP.paths + ' paths</td>'
+      + '<td class="data-muted">Starting structure</td>'
       + '<td><div class="ref-cell">' + window.DfmeaRefs.chipRowHtml((doc.refs || window.DfmeaRefs.seedDocRefs(doc.docId) || []).map(function(n){ return { name: n }; }), 1, function(item){ return window.DfmeaRefs.dfmeaUrl(item.name); }) + '</div></td>'
       + '<td><a class="ai-sum" href="' + aiSummaryUrl(doc) + '" target="_blank" onclick="event.stopPropagation()" data-tip="' + escapeHtml(aiSummary(doc)) + '">'
       + window.DfmeaAI.spark + '<span>' + escapeHtml(aiSummary(doc)) + '</span></a></td>'

@@ -48,8 +48,18 @@
   };
   var CRIMP_STRUCTURE = CRIMP.causes + " causes across " + CRIMP.paths + " paths, up to " + CRIMP.depth + " levels deep";
 
-  // The built-in Crimp DFMEA (the one with no ?doc= id) was built from the client's file.
-  function seedDocRefs(docId){ return docId ? null : [LEGACY[0].name]; }
+  // TAK50's own DFMEAs, one per area of its requirements. Each starts from the Crimp DFMEA
+  // (the legacy file) as its reference. The id is what ?doc= carries.
+  var TAK50_DFMEAS = [
+    { id: "tak50-crimp", suffix: "Crimp", fn: "Crimp Dimensions and Pull Force" },
+    { id: "tak50-contact-resistance", suffix: "Contact Resistance", fn: "Contact Resistance" },
+    { id: "tak50-mating", suffix: "Mating and Insertion", fn: "Mating Durability and Insertion Force" },
+    { id: "tak50-temperature", suffix: "Operating Temperature", fn: "Operating Temperature Range" }
+  ];
+  // The legacy files a built-in TAK50 DFMEA was built from.
+  function seedDocRefs(docId){
+    return TAK50_DFMEAS.some(function(d){ return d.id === docId; }) ? [LEGACY[0].name] : null;
+  }
 
   // The legacy files a document was built from.
   function legacyTableHtml(names){
@@ -79,5 +89,5 @@
   }
 
   window.DfmeaRefs = { dfmeaUrl: dfmeaUrl, chipRowHtml: chipRowHtml, LEGACY: LEGACY, legacyInfo: legacyInfo, seedDocRefs: seedDocRefs,
-    legacyTableHtml: legacyTableHtml, CRIMP: CRIMP, CRIMP_STRUCTURE: CRIMP_STRUCTURE };
+    legacyTableHtml: legacyTableHtml, TAK50_DFMEAS: TAK50_DFMEAS, CRIMP: CRIMP, CRIMP_STRUCTURE: CRIMP_STRUCTURE };
 })();
