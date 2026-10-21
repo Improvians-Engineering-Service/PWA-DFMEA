@@ -7,7 +7,7 @@
   // Design Requirements page, and showing it on a project's page all agree.
   var KEY = "dfmeaRequirementDocs";
   var DEFAULTS_VERSION_KEY = "dfmeaRequirementDocsDefaultsVersion";
-  var DEFAULTS_VERSION = "6";
+  var DEFAULTS_VERSION = "7";
   var DEFAULTS = [
     { id: "default-0", projectId: null, productName: "Titan Connector Housing", standard: "USCAR-2", createdAt: "Feb 11, 2024", specs: [
       "Mechanical — Housing dimensional tolerance ±0.15mm on all mating interface features, verified by CMM inspection",
@@ -196,7 +196,7 @@
     // do: crimp, terminal retention, housing seal, mating durability and
     // lock retention. projectId ties it to that project directly, the
     // same way a generated project's spec is tied to its own.
-    { id: "default-10", projectId: "aster-ev-connector", productName: "Aster EV Connector", standard: "USCAR-2", createdAt: "Jan 15, 2024", specs: [
+    { id: "default-10", projectId: "tak50", productName: "TAK50", standard: "USCAR-2", createdAt: "Jan 15, 2024", specs: [
       "Mechanical — Crimp pull-out force ≥ 70 N per terminal, verified per USCAR-2 Section 4.2 tensile test",
       "Mechanical — Terminal retention force ≥ 55 N in the housing cavity, verified after 50 insertion cycles",
       "Mechanical — Locking mechanism retention force ≥ 80 N before primary lock release",
@@ -295,9 +295,9 @@
     return out;
   }
   // The customer's own files a spec's requirements were drawn from. A spec
-  // made by Create project carries its own list; the built-in Aster one is
+  // made by Create project carries its own list; the built-in TAK50 one is
   // fixed.
-  var KNOWN_REFS = { "aster-ev-connector": [
+  var KNOWN_REFS = { "tak50": [
     "Crimp DFMEA - Page 1.pdf", "Crimp DFMEA - Page 2.pdf", "Crimp DFMEA - Page 3.pdf", "Crimp DFMEA - Page 4.pdf",
     "Crimp DFMEA - Page 5.pdf", "Crimp DFMEA - Page 6.pdf", "Crimp DFMEA - Page 7.pdf", "Interface Contact Ressitance Cause & Effect Diagram.pdf"] };
   function dfmeaRefsFor(doc){
