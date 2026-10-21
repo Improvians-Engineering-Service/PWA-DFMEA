@@ -195,7 +195,7 @@
     // --- requirement specification: a copy of the chosen one, column for column ---
     var chosen = window.DfmeaReqDocs.getById(specInput.value);
     var reqDocRecord = { id: "req-" + Date.now().toString(36), projectId: projectId, productName: name, standard: standard,
-      createdAt: new Date().toLocaleString(), sourceFile: chosen.sourceFile, title: chosen.title, note: chosen.note,
+      createdAt: new Date().toLocaleString(), sourceFile: chosen.sourceFile, title: chosen.title,
       columns: chosen.columns.slice(), rows: chosen.rows.map(function(r){ return r.slice(); }) };
     if(chosen.notes){ reqDocRecord.notesTitle = chosen.notesTitle; reqDocRecord.notes = chosen.notes.map(function(r){ return r.slice(); }); }
 

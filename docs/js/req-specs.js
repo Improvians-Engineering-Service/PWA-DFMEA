@@ -61,7 +61,7 @@
     return window.DfmeaReqDocs.readAll().map(function(r){
       var project = myProjects.find(function(p){ return p.id === r.projectId; });
       return { id: r.id, product: r.productName, standard: r.standard, when: r.createdAt, projectId: project ? r.projectId : null, record: r };
-    }).slice().reverse();
+    });
   }
 
   function populateStandardFilter(docs){
@@ -98,6 +98,7 @@
       var standardLabel = doc.standard === "None" ? "No specific standard" : doc.standard;
       return '<tr class="req-row" data-id="' + doc.id + '" data-tip="Open this specification">'
         + '<td class="req-open-cell"><span class="data-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14L21 3"/></svg></span></td>'
+        + '<td class="req-product">' + escapeHtml(doc.product) + '</td>'
         + '<td><span class="req-standard">' + escapeHtml(standardLabel) + '</span></td>'
         + '<td><div class="np-chiprow-mini">' + categoryChips(doc.record) + '</div></td>'
         + '<td><span class="data-count">' + doc.record.rows.length + '</span></td>'
@@ -113,7 +114,7 @@
     });
 
     document.getElementById("reqExportBtn").onclick = function(){
-      downloadCsv("design-requirement-specifications.csv", ["Product", "Standard", "Specs", "Date"],
+      downloadCsv("design-requirement-specifications.csv", ["Specification", "Standard", "Requirements", "Date"],
         visible.map(function(d){ return [d.product, d.standard === "None" ? "No specific standard" : d.standard, String(d.record.rows.length), d.when]; }));
     };
   }
