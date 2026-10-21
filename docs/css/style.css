@@ -744,7 +744,7 @@ tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--p600)}
 .lvlchip b{font-family:Cambria,"Cambria Math",Georgia,"Times New Roman",serif;margin-left:3px}
 .lvlchip:hover{background:#F8FAFC}
 .lvlchip.on{background:var(--p50);border-color:var(--p200);color:var(--p700)}
-.dupflag{background:#EEF2FF;color:var(--p700);font-weight:700;font-size:9.5px;letter-spacing:.3px;padding:2px 6px;border-radius:5px}
+.dupflag{background:var(--p50);color:var(--p700);font-weight:700;font-size:9.5px;letter-spacing:.3px;padding:2px 6px;border-radius:5px}
 .tbdflag{background:#FEE2E2;color:#DC2626;font-weight:700;font-size:9.5px;letter-spacing:.3px;
  padding:2px 6px;border-radius:5px}
 tr.hide,tr.pg-hide{display:none}
@@ -1194,3 +1194,14 @@ a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn
 .tt-foot .csel-btn{height:28px;min-height:0;padding:0 9px;font-size:11px;border-radius:7px;border-color:#E2E8F0}
 .tt-foot .csel-list .csel-opt{font-size:11px}
 @media (max-width:640px){.tt-bar .csel,.dw-tbar .csel{max-width:none;flex:1 1 140px}}
+
+/* tables scroll inside their own box, so paging and filters stay in view on any screen */
+.tt-scroll,.spec-scroll{max-height:max(220px,calc(100vh - 340px));overflow:auto}
+.tt-scroll thead th,.spec-scroll thead th{position:sticky;top:0;z-index:3}
+.twrap{max-height:max(240px,calc(100vh - 380px))}
+/* the AI summary column stays put at the right edge while the rest scrolls sideways */
+.spec-wide th.spec-ai-cell,.spec-wide td.spec-ai-cell{position:sticky;right:0;z-index:2;background:#fff;box-shadow:-1px 0 0 #EEF2F7}
+.spec-wide thead th.spec-ai-cell{background:#F8FAFC;z-index:4}
+.spec-wide tbody tr:hover td.spec-ai-cell{background:#FAFBFF}
+.spec-wide th.spec-ref-cell,.spec-wide td.spec-ref-cell{min-width:190px}
+.tt-size{white-space:nowrap}

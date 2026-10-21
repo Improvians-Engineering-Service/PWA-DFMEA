@@ -58,7 +58,15 @@
     empty.innerHTML = 'No ' + escapeHtml(noun) + ' match this search. <button type="button" class="tt-reset-link">Clear filters</button>';
 
     // A wide table sits in a scrolling box; the toolbar and footer stay outside it.
-    var host = table.closest(".spec-scroll") || table;
+    var host = table.closest(".spec-scroll");
+    if(!host){
+      // Any other table scrolls inside its own box, so the search bar and the paging controls
+      // stay on screen and the page itself doesn't have to scroll to reach them.
+      host = document.createElement("div");
+      host.className = "tt-scroll";
+      table.parentNode.insertBefore(host, table);
+      host.appendChild(table);
+    }
     host.parentNode.insertBefore(bar, host);
     host.parentNode.insertBefore(empty, host.nextSibling);
     host.parentNode.insertBefore(foot, empty.nextSibling);
