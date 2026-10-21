@@ -229,7 +229,7 @@
       panel.id = "reqSpecPanel";
       panel.className = "req-panel";
       var summary = document.createElement("summary");
-      summary.appendChild(document.createTextNode("Design requirement specification: " + (reqDoc.specs || []).length + " requirements"));
+      summary.appendChild(document.createTextNode("Design requirement specification: " + reqDoc.rows.length + " requirements"));
       var standardChip = document.createElement("span");
       standardChip.className = "req-standard";
       standardChip.textContent = reqDoc.standard === "None" ? "No specific standard" : reqDoc.standard;
@@ -237,8 +237,8 @@
       panel.appendChild(summary);
       var panelBody = document.createElement("div");
       panelBody.className = "req-panel-body";
-      panelBody.innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc.specs, reqDoc);
-      window.DfmeaReqDocs.enhanceSpecTable(panelBody);
+      panelBody.innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc);
+      window.DfmeaReqDocs.enhanceSpecTable(panelBody, reqDoc);
       panel.appendChild(panelBody);
       contentEl.insertBefore(panel, contentEl.firstChild);
     }
