@@ -47,14 +47,13 @@
     var rects = g.querySelectorAll("rect");
     var r = rects[1];
     if(!r) return null;
-    return { x: parseFloat(r.getAttribute("x")), y: parseFloat(r.getAttribute("y")), w: parseFloat(r.getAttribute("width")), h: parseFloat(r.getAttribute("height")),
-      accent: rects[2] ? rects[2].getAttribute("fill") : "#64748B" };
+    return { x: parseFloat(r.getAttribute("x")), y: parseFloat(r.getAttribute("y")), w: parseFloat(r.getAttribute("width")), h: parseFloat(r.getAttribute("height")) };
   }
   function addItem(g){
     if(byEl.has(g)) return null;
     var b = boxOf(g);
     if(!b) return null;
-    var it = { el: g, x: b.x, y: b.y, w: b.w, h: b.h, accent: b.accent, col: Math.round(b.x), plus: null, toggle: null,
+    var it = { el: g, x: b.x, y: b.y, w: b.w, h: b.h, col: Math.round(b.x), plus: null, toggle: null,
       parent: null, kids: [], collapsed: false, ny: b.y, shown: true };
     items.push(it);
     byEl.set(g, it);
@@ -186,11 +185,13 @@
     rect.setAttribute("width", width);
     rect.setAttribute("x", cx - width / 2);
     rect.setAttribute("y", cy - 9);
-    rect.style.fill = closed ? it.accent : "#fff";
-    rect.style.stroke = closed ? "none" : it.accent;
+    // The card's own accent colour as painted now (one colour, or the manufacturing colour).
+    var accent = window.getComputedStyle(it.el.querySelectorAll("rect")[2]).fill;
+    rect.style.fill = closed ? accent : "#fff";
+    rect.style.stroke = closed ? "none" : accent;
     text.setAttribute("x", cx);
     text.setAttribute("y", cy + 3.6);
-    text.style.fill = closed ? "#fff" : it.accent;
+    text.style.fill = closed ? "#fff" : accent;
     text.style.fontSize = closed ? "10px" : "13px";
     text.textContent = label;
     g.setAttribute("aria-label", closed ? "Show the causes below" : "Hide the causes below");
