@@ -28,7 +28,7 @@
         <span class="stat">DFMEA</span></div>
     </div>
     <div class="srch"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><span>Search failure modes, causes, controls</span></div>
-    <div class="btn acc" data-tip="Export this document as PDF, Excel or a PPAP submission pack."><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Export <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+    <div class="btn acc" data-tip="Download this document as PDF, Excel or a PPAP submission pack."><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Download <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
     <div class="btn" data-tip="Share this document with someone else on the team."><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg> Share</div>
   </div>
   <div class="tabs"><div class="tab " data-tip="A summary view of this DFMEA document.">Overview</div><div class="tab on" data-tip="The current view: the failure chain, the cause tree and the full worksheet for this function.">Risk Analysis</div><div class="tab " data-tip="How this failure mode connects to others in the product.">Failure Network</div><div class="tab " data-tip="Prevention and detection controls, and the tests that verify them.">Controls &amp; Verification</div><div class="tab " data-tip="Recommended actions raised against this document, with owners and dates.">Actions</div><div class="tab " data-tip="Every past revision of this document and what changed.">Revision History</div></div>
@@ -48,7 +48,7 @@
           <button type="button" class="xp ghost" id="treeUndoBtn" disabled data-tip="Undo the last cause you added or linked."><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6M3 13a9 9 0 1 0 3-6.7L3 9"/></svg> Undo</button>
           <button type="button" class="xp ghost" id="treeSnapshotBtn" data-tip="Save the current diagram as a reference point, so you can compare later changes against it."><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><path d="M9 3h6l1.5 3h-9z"/><circle cx="12" cy="13" r="2.5"/></svg> Snapshot</button>
           <button type="button" class="xp ghost" id="treeCompareBtn" disabled data-tip="Highlight every cause added since your last snapshot."><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v18M15 3v18M4 8h5M15 8h5M4 16h5M15 16h5"/></svg> Compare</button>
-          <div class="xp ghost" data-tip="Download this diagram as a standalone SVG file."><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Export SVG</div><div class="xp acc2" id="treeOpenBtn" data-tip="Open the full diagram, large and zoomable."><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Open full view</div></div>
+          <div class="xp ghost" data-tip="Download this diagram as a standalone SVG file."><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Download SVG</div><div class="xp acc2" id="treeOpenBtn" data-tip="Open the full diagram, large and zoomable."><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> Open full view</div></div>
       </div>
       <div class="risk-context" role="group" aria-label="Function and failure summary">
         <div class="risk-field"><span>Function</span><strong id="summaryFunction">Crimp Contact Resistance</strong></div>
@@ -187,13 +187,13 @@ path[data-local-parent-link],path[data-local-cause-link]{stroke-linecap:round}
           </select>
         </label>
         <div class="expdd" id="wsExportDD">
-          <button type="button" class="fl" id="wsExportBtn" data-tip="Export this worksheet.">
+          <button type="button" class="fl" id="wsExportBtn" data-tip="Download this worksheet.">
             <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
-            Export
+            Download
           </button>
           <div class="expmenu" id="wsExportMenu" hidden>
-            <button type="button" id="wsExportCsv">Export as CSV (filtered rows)</button>
-            <button type="button" id="wsExportXlsx">Export as Excel workbook</button>
+            <button type="button" id="wsExportCsv">Download as CSV (filtered rows)</button>
+            <button type="button" id="wsExportXlsx">Download as Excel workbook</button>
           </div>
         </div>
       </div>
