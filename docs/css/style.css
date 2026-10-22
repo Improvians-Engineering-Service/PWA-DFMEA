@@ -1220,3 +1220,19 @@ a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn
 /* two tables on one page share the screen */
 body.two-tables .tt-scroll,body.two-tables .spec-scroll{max-height:max(150px,calc(50vh - 170px))}
 body.two-tables #reqSpecs .spec-scroll{max-height:70vh}
+/* one tighter spacing scale used everywhere: 8px between blocks, 6-10px inside bars and cells */
+.top{padding-top:6px;padding-bottom:6px;padding-left:16px}
+.sa-head{padding-top:6px;padding-bottom:6px;padding-left:16px}
+.content{padding:8px}
+.seclab{margin:8px 0 6px}
+.risk-context{margin:8px 12px 0}
+.risk-field{padding:7px 10px}
+.pad{padding:10px 12px}
+.data-table th{padding:8px 12px}
+.data-table td{padding:9px 12px}
+.spec-table th{padding:7px 10px}
+.spec-table td{padding:8px 10px}
+.tt-bar{padding:6px 10px;gap:6px}
+.tt-foot{padding:5px 10px}
+.tt-search{height:30px}
+.tt-bar .csel-btn,.dw-tbar .csel-btn{height:30px}
