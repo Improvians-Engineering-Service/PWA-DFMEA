@@ -49,7 +49,6 @@
       + '<td class="data-muted">' + (description ? escapeHtml(description) : "") + '</td>'
       + '<td>' + (spec ? '<span class="req-standard">' + escapeHtml(spec.standard) + '</span>' : '<span class="spec-none">-</span>') + '</td>'
       + '<td>' + (spec ? '<span class="data-count">' + spec.rows.length + '</span>' : '<span class="spec-none">-</span>') + '</td>'
-      + '<td>' + (spec && spec.sourceFile ? '<span class="np-chip-mini">' + escapeHtml(spec.sourceFile) + '</span>' : '<span class="spec-none">-</span>') + '</td>'
       + '<td><span class="data-count">' + docCount + '</span></td>'
       + '<td><span class="data-badge ' + status + '">' + STATUS_LABELS[status] + '</span></td>'
       + '</tr>';
@@ -79,7 +78,7 @@
   }
   render();
   if(window.TableTools) window.TableTools.attach(document.getElementById("projTableBody").closest("table"), { noun: "projects", placeholder: "Search projects",
-    filters: [{ col: 6, label: "All statuses" }] });
+    filters: [{ col: 5, label: "All statuses" }] });
   // A project or DFMEA created in another open tab shows up in this table
   // straight away too, the same way it does in the sidebar's project list.
   window.addEventListener("storage", function(event){
