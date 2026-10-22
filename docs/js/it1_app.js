@@ -698,7 +698,7 @@
   });
 
   // ---------------------------------------------------------------
-  // Double-click a cause's title to rename it in place. Restricted to
+  // The edit button on a cause renames it in place. Restricted to
   // real causes (level >= 1): the failure mode / function nodes feed
   // several other parts of the page (KPIs, breadcrumb) that a plain
   // text-rename here would silently fall out of sync with.
@@ -759,9 +759,9 @@
     refreshPageData();
     showToast("Cause renamed.");
   }
-  svg.addEventListener("dblclick", function(event){
+  svg.addEventListener("editnode", function(event){
     var g = event.target.closest && event.target.closest(".hitbox");
-    if(g && g.dataset.nodeId){ event.preventDefault(); startInlineEdit(g); }
+    if(g && g.dataset.nodeId) startInlineEdit(g);
   });
 
   // ---------------------------------------------------------------
@@ -1477,9 +1477,12 @@
     });
   });
 
-  function exportSvg(){
+  // An export always carries the complete diagram, whichever branches are open on screen.
+  function withOpenTree(run){ return window.treeWithAllOpen ? window.treeWithAllOpen(run) : run(); }
+  function exportSvg(){ return withOpenTree(exportSvgNow); }
+  function exportSvgNow(){
     var clone = svg.cloneNode(true);
-    Array.prototype.slice.call(clone.querySelectorAll(".pl")).forEach(function(plus){ plus.remove(); });
+    Array.prototype.slice.call(clone.querySelectorAll(".pl, .cx-toggle, .cx-edit")).forEach(function(plus){ plus.remove(); });
     var style = svgElement("style", {});
     style.textContent = ".hitbox>rect:nth-of-type(2){rx:12;stroke-width:1.2;filter:drop-shadow(0 3px 5px rgba(15,23,42,.10))}.hitbox .ttag{font-size:8px;letter-spacing:.65px}.hitbox .ttl2{font-size:11px;font-weight:600}.hitbox .tsub{font-size:9px}.hitbox.is-tbd>rect:nth-of-type(2){fill:#FEF2F2;stroke:#FCA5A5}.hitbox.is-tbd>rect:nth-of-type(3){fill:#EF4444}.hitbox.is-tbd .ttag,.hitbox.is-tbd .ttl2,.hitbox.is-tbd .tsub{fill:#B91C1C}.local-cause-link{stroke:#0F766E;stroke-dasharray:6 4}";
     clone.insertBefore(style, clone.firstChild);
@@ -1502,7 +1505,7 @@
   function svgToPngDataUrl(){
     return new Promise(function(resolve, reject){
       var clone = svg.cloneNode(true);
-      Array.prototype.slice.call(clone.querySelectorAll(".pl")).forEach(function(plus){ plus.remove(); });
+      Array.prototype.slice.call(clone.querySelectorAll(".pl, .cx-toggle, .cx-edit")).forEach(function(plus){ plus.remove(); });
       var vb = svg.viewBox.baseVal;
       var scale = Math.min(1, 8192 / vb.width, 8192 / vb.height);
       var width = Math.ceil(vb.width * scale);
@@ -1534,7 +1537,8 @@
     });
   }
 
-  async function exportExcel(){
+  function exportExcel(){ return withOpenTree(exportExcelNow); }
+  async function exportExcelNow(){
     if(!window.ExcelJS){ window.alert("Excel export could not load. Keep the source/node_modules folder beside this page."); return; }
     var button = document.querySelector(".top .btn.acc");
     if(button) button.setAttribute("aria-busy", "true");
