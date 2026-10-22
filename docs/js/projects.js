@@ -38,6 +38,7 @@
   // A project with no DFMEA yet says so, same as a real tool would right
   // after creating one.
   function rowHtml(project, status, docCount, description){
+    var spec = window.DfmeaReqDocs.readAll().filter(function(d){ return d.projectId === project.id; })[0];
     var icon = status === "empty"
       ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'
       : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>';
@@ -46,6 +47,9 @@
       + '<td><div class="data-name"><span class="data-icon' + (status === "empty" ? " empty" : "") + '">' + icon + '</span>'
       + escapeHtml(project.name) + '</div></td>'
       + '<td class="data-muted">' + (description ? escapeHtml(description) : "") + '</td>'
+      + '<td>' + (spec ? '<span class="req-standard">' + escapeHtml(spec.standard) + '</span>' : '<span class="spec-none">-</span>') + '</td>'
+      + '<td>' + (spec ? '<span class="data-count">' + spec.rows.length + '</span>' : '<span class="spec-none">-</span>') + '</td>'
+      + '<td>' + (spec && spec.sourceFile ? '<span class="np-chip-mini">' + escapeHtml(spec.sourceFile) + '</span>' : '<span class="spec-none">-</span>') + '</td>'
       + '<td><span class="data-count">' + docCount + '</span></td>'
       + '<td><span class="data-badge ' + status + '">' + STATUS_LABELS[status] + '</span></td>'
       + '</tr>';
@@ -75,7 +79,7 @@
   }
   render();
   if(window.TableTools) window.TableTools.attach(document.getElementById("projTableBody").closest("table"), { noun: "projects", placeholder: "Search projects",
-    filters: [{ col: 3, label: "All statuses" }] });
+    filters: [{ col: 6, label: "All statuses" }] });
   // A project or DFMEA created in another open tab shows up in this table
   // straight away too, the same way it does in the sidebar's project list.
   window.addEventListener("storage", function(event){
