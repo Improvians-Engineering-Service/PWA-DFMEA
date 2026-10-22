@@ -17,7 +17,8 @@
 
   var logoutBtn = document.getElementById("logoutBtn");
   if(logoutBtn) logoutBtn.addEventListener("click", function(){
-    try{ localStorage.removeItem("dfmeaAuth"); }catch(error){ /* nothing to clean up then */ }
+    // Logging out leaves nothing of this session behind: every saved project, document, edit and setting.
+    try{ localStorage.clear(); sessionStorage.clear(); }catch(error){ /* nothing to clean up then */ }
     window.location.href = "login.html";
   });
 
