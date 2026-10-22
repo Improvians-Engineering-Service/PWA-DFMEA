@@ -38,7 +38,7 @@
     + ".cx-toggle.is-open text{fill:#475569;font-size:13px}"
     + ".cx-in{animation:cxIn .25s ease}"
     + "@keyframes cxIn{from{opacity:0}to{opacity:1}}"
-    + ".cx-bar{display:flex;align-items:center;gap:8px;margin-left:22px}"
+    + ".cx-bar{margin-right:22px}"
     + ".cx-bar button{width:auto;padding:0 11px;font-size:11.5px;font-weight:600;color:#334155;white-space:nowrap}";
   document.head.appendChild(style);
 
