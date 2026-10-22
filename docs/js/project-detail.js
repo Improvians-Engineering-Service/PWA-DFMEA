@@ -47,7 +47,6 @@
 
   // The sidebar only lists projects, so this table is where a project's
   // DFMEAs are opened from -- every row goes straight to that document.
-  var DOC_ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>';
   function severityChip(value){
     var severity = Number(value);
     if(!Number.isInteger(severity) || severity < 1 || severity > 10) return "";
@@ -77,7 +76,7 @@
   tableBody.innerHTML = docs.map(function(doc, index){
     return '<tr data-doc-id="' + escapeHtml(doc.docId || "") + '" data-tip="Open this DFMEA">'
       + '<td>' + (index + 1) + '</td>'
-      + '<td><div class="data-name"><span class="data-icon">' + DOC_ICON + '</span>' + escapeHtml(doc.name) + '</div></td>'
+      + '<td><div class="data-name">' + escapeHtml(doc.name) + '</div></td>'
       + '<td>' + escapeHtml(doc.fn || "") + '</td>'
       + '<td>' + severityChip(doc.severity) + '</td>'
       + '<td class="data-muted">' + structureText(doc) + '</td>'
