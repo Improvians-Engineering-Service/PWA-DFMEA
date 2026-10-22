@@ -1168,7 +1168,7 @@ g.hitbox.search-current>rect:nth-of-type(2){stroke:#F87171;stroke-width:2.4}
 .spec-wide th,.spec-wide td{min-width:140px;vertical-align:top}
 .spec-wide th.spec-cat-cell,.spec-wide td.spec-cat-cell{min-width:120px}
 .spec-wide th.spec-ai-cell,.spec-wide td.spec-ai-cell{min-width:84px;width:84px}
-.spec-wide th{white-space:normal}
+.spec-wide th{white-space:nowrap}
 .spec-notes{width:100%;table-layout:auto}
 .spec-notes td:first-child{width:220px;font-weight:600;color:#0F172A}
 .spec-notes td a{color:var(--p700);overflow-wrap:anywhere}
