@@ -10,6 +10,8 @@
     var sfoot = document.getElementById("sfootUser");
     var nameEl = sfoot && sfoot.querySelector(".un");
     var roleEl = sfoot && sfoot.querySelector(".ur");
+    var avatarEl = sfoot && sfoot.querySelector(".av");
+    if(avatarEl) avatarEl.textContent = auth.email.replace(/[^a-z0-9]/gi, "").slice(0, 2).toUpperCase();
     if(nameEl) nameEl.textContent = auth.email;
     if(roleEl) roleEl.textContent = "Signed in";
     if(sfoot) sfoot.setAttribute("data-tip", "Signed in as " + auth.email);
