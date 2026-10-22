@@ -1477,12 +1477,94 @@
     });
   });
 
+  // Puts what the full-view toolbar shows (the page title, the function / failure mode summary and the
+  // colour legend) above the diagram in an exported copy, and returns the new size of the drawing.
+  function dressForExport(clone){
+    var vb = svg.viewBox.baseVal;
+    var width = vb.width;
+    var PAD = 48, FONT = "Cambria, Georgia, serif";
+    var header = svgElement("g", {});
+    function label(str, x, y, size, weight, fill){
+      var t = svgElement("text", { x: x, y: y, "font-size": size, "font-weight": weight, fill: fill, "font-family": FONT });
+      t.textContent = str;
+      header.appendChild(t);
+    }
+    function clip(str, chars){ return str.length > chars ? str.slice(0, Math.max(1, chars - 1)).trim() + "…" : str; }
+    var y = PAD + 30;
+    var heading = document.querySelector(".ttl");
+    label((heading ? heading.textContent.trim() + " – " : "") + "Product and risk breakdown", PAD, y, 34, 700, "#0F172A");
+    // Function / acceptance criteria / failure mode / effect.
+    var fields = Array.prototype.slice.call(document.querySelectorAll(".risk-context .risk-field"));
+    if(fields.length){
+      y += 52;
+      var colWidth = (width - PAD * 2) / fields.length;
+      fields.forEach(function(field, index){
+        var name = field.querySelector("span"), value = field.querySelector("strong");
+        label((name ? name.textContent : "").toUpperCase(), PAD + index * colWidth, y, 15, 700, "#94A3B8");
+        label(clip(value ? value.textContent.trim() : "", Math.floor((colWidth - 24) / 12.5)), PAD + index * colWidth, y + 28, 23, 700, "#1E293B");
+      });
+      y += 28;
+    }
+    // The colour legend, flowing and wrapping across the width like the one on screen.
+    var legend = document.querySelector("[data-node-legend]");
+    if(legend){
+      y += 52;
+      var x = PAD, rowHeight = 40;
+      var place = function(itemWidth){
+        if(x > PAD && x + itemWidth > width - PAD){ x = PAD; y += rowHeight; }
+        var at = x;
+        x += itemWidth;
+        return at;
+      };
+      Array.prototype.slice.call(legend.querySelectorAll(".nl-group")).forEach(function(group){
+        Array.prototype.slice.call(group.children).forEach(function(part){
+          var text = part.textContent.trim();
+          if(part.tagName === "B"){
+            label(text.toUpperCase(), place(text.length * 11.5 + 24), y, 15, 800, "#94A3B8");
+            return;
+          }
+          var swatch = part.querySelector("i");
+          var style = swatch ? window.getComputedStyle(swatch) : null;
+          var at = place(text.length * 11.2 + 90);
+          if(swatch && swatch.classList.contains("nl-node")){
+            header.appendChild(svgElement("rect", { x: at, y: y - 17, width: 38, height: 24, rx: 5, fill: style.backgroundColor, stroke: style.borderTopColor, "stroke-width": 2.5 }));
+            header.appendChild(svgElement("rect", { x: at, y: y - 17, width: 8, height: 24, rx: 3, fill: style.borderLeftColor }));
+          }else if(swatch && swatch.classList.contains("nl-bar")){
+            header.appendChild(svgElement("rect", { x: at + 16, y: y - 17, width: 8, height: 24, rx: 3, fill: style.backgroundColor }));
+          }else if(swatch){
+            header.appendChild(svgElement("circle", { cx: at + 15, cy: y - 5, r: 14, fill: style.backgroundColor }));
+            var letter = svgElement("text", { x: at + 15, y: y + 1, "font-size": 16, "font-weight": 800, fill: "#fff", "text-anchor": "middle", "font-family": FONT });
+            letter.textContent = swatch.textContent.trim();
+            header.appendChild(letter);
+          }
+          label(swatch ? part.textContent.replace(swatch.textContent, "").trim() : text, at + 48, y, 19, 500, "#475569");
+        });
+        x += 28;
+      });
+    }
+    var shift = y + PAD;
+    var content = svgElement("g", { transform: "translate(0 " + shift + ")" });
+    Array.prototype.slice.call(clone.childNodes).forEach(function(node){
+      if(node.nodeName !== "defs" && node.nodeName !== "style") content.appendChild(node);
+    });
+    clone.appendChild(content);
+    clone.appendChild(header);
+    header.insertBefore(svgElement("rect", { x: 0, y: 0, width: width, height: shift, fill: "#FFFFFF" }), header.firstChild);
+    var size = { width: width, height: vb.height + shift };
+    clone.setAttribute("viewBox", "0 0 " + size.width + " " + size.height);
+    clone.setAttribute("width", size.width);
+    clone.setAttribute("height", size.height);
+    return size;
+  }
+  var exportSize = null;
+
   // An export always carries the complete diagram, whichever branches are open on screen.
   function withOpenTree(run){ return window.treeWithAllOpen ? window.treeWithAllOpen(run) : run(); }
   function exportSvg(){ return withOpenTree(exportSvgNow); }
   function exportSvgNow(){
     var clone = svg.cloneNode(true);
     Array.prototype.slice.call(clone.querySelectorAll(".pl, .cx-toggle, .cx-edit")).forEach(function(plus){ plus.remove(); });
+    dressForExport(clone);
     var style = svgElement("style", {});
     style.textContent = ".hitbox>rect:nth-of-type(2){rx:12;stroke-width:1.2;filter:drop-shadow(0 3px 5px rgba(15,23,42,.10))}.hitbox .ttag{font-size:8px;letter-spacing:.65px}.hitbox .ttl2{font-size:11px;font-weight:600}.hitbox .tsub{font-size:9px}.hitbox.is-tbd>rect:nth-of-type(2){fill:#FEF2F2;stroke:#FCA5A5}.hitbox.is-tbd>rect:nth-of-type(3){fill:#EF4444}.hitbox.is-tbd .ttag,.hitbox.is-tbd .ttl2,.hitbox.is-tbd .tsub{fill:#B91C1C}.local-cause-link{stroke:#0F766E;stroke-dasharray:6 4}";
     clone.insertBefore(style, clone.firstChild);
@@ -1506,7 +1588,7 @@
     return new Promise(function(resolve, reject){
       var clone = svg.cloneNode(true);
       Array.prototype.slice.call(clone.querySelectorAll(".pl, .cx-toggle, .cx-edit")).forEach(function(plus){ plus.remove(); });
-      var vb = svg.viewBox.baseVal;
+      var vb = exportSize = dressForExport(clone);
       var scale = Math.min(1, 8192 / vb.width, 8192 / vb.height);
       var width = Math.ceil(vb.width * scale);
       var height = Math.ceil(vb.height * scale);
@@ -1623,7 +1705,7 @@
       diagramSheet.getCell("A2").font={name:"Aptos",size:10,color:{argb:"FF64748B"}};
       var png=await svgToPngDataUrl();
       var imageId=workbook.addImage({base64:png,extension:"png"});
-      var viewBox=svg.viewBox.baseVal;
+      var viewBox=exportSize;
       var imageWidth=Math.min(1800,viewBox.width);
       var imageHeight=imageWidth*viewBox.height/viewBox.width;
       diagramSheet.addImage(imageId,{tl:{col:0,row:3},ext:{width:imageWidth,height:imageHeight}});
