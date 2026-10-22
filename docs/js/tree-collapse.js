@@ -29,7 +29,10 @@
   // ---------------------------------------------------------------- style
   var style = document.createElement("style");
   style.textContent =
-    ".cx-toggle{cursor:pointer}"
+    // The diagram's top padding must sit outside the box it is scaled into, or the drawing is scaled
+    // to the box minus that padding, and its size would drift as the diagram grows and shrinks.
+    ".treezoom{box-sizing:content-box}"
+    + ".cx-toggle{cursor:pointer}"
     + ".cx-toggle .cx-bg{stroke-width:1.5}"
     + ".cx-toggle:hover .cx-bg{opacity:.88}"
     + ".cx-toggle text{font:700 10px Cambria,Georgia,serif;text-anchor:middle;pointer-events:none}"
