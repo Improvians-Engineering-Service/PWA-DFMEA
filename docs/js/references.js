@@ -33,7 +33,7 @@
   // The legacy DFMEA the client shared: the six scanned pages of their Crimp DFMEA, merged into
   // one file. It is the only legacy file on record, so every reference in the app points at it.
   var LEGACY = [
-    { name: "Crimp DFMEA.pdf", size: "563 KB", when: "Sep 22, 2026, 5:55 PM", rows: 177, structure: "390 causes · 177 paths", source: "client" }
+    { name: "Crimp DFMEA.xlsx", size: "563 KB", when: "Sep 22, 2026, 5:55 PM", rows: 177, structure: "390 causes · 177 paths", source: "client" }
   ];
   function legacyInfo(name){
     return LEGACY.filter(function(f){ return f.name === name; })[0] || null;

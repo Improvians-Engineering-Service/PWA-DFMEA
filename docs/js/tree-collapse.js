@@ -29,13 +29,12 @@
   // ---------------------------------------------------------------- style
   var style = document.createElement("style");
   style.textContent =
-    ".cx-toggle{cursor:pointer;outline:none}"
-    + ".cx-toggle .cx-bg{fill:#fff;stroke-width:1.5;transition:fill .15s ease}"
-    + ".cx-toggle:hover .cx-bg,.cx-toggle:focus-visible .cx-bg{fill:#F1F5F9}"
-    + ".cx-toggle.is-closed .cx-bg{stroke:none}"
-    + ".cx-toggle.is-closed:hover .cx-bg{opacity:.88}"
-    + ".cx-toggle text{font:700 10px Cambria,Georgia,serif;text-anchor:middle;pointer-events:none;fill:#fff}"
-    + ".cx-toggle.is-open text{fill:#475569;font-size:13px}"
+    ".cx-toggle{pointer-events:none}"
+    + ".cx-toggle .cx-bg{stroke-width:1.5}"
+    + ".cx-toggle .cx-chev{fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"
+    + ".hitbox.cx-branch{cursor:pointer}"
+    + ".cx-edit{cursor:pointer}"
+    + ".cx-edit:hover circle{fill:#F1F5F9}"
     + ".cx-in{animation:cxIn .25s ease}"
     + "@keyframes cxIn{from{opacity:0}to{opacity:1}}"
     + ".cx-bar{margin-right:22px}"
@@ -164,17 +163,13 @@
     if(!el) return;
     if(Math.abs(dy) < 0.01) el.removeAttribute("transform"); else el.setAttribute("transform", "translate(0 " + dy + ")");
   }
+  // A small marker on a card that has causes below it: a chevron, pointing right when closed and
+  // down when open. It is only a sign; clicking the card itself opens or closes the branch.
   function makeToggle(it){
     var g = document.createElementNS(NS, "g");
     g.setAttribute("class", "cx-toggle");
-    g.setAttribute("role", "button");
-    g.setAttribute("tabindex", "0");
-    g.innerHTML = '<rect class="cx-bg" rx="9" height="18" y="-9"></rect><text y="3.6"></text>';
-    g.addEventListener("click", function(event){ event.preventDefault(); event.stopPropagation(); toggle(it); });
-    g.addEventListener("keydown", function(event){
-      if(event.key === "Enter" || event.key === " "){ event.preventDefault(); event.stopPropagation(); toggle(it); }
-    });
-    // After the card's own "+" so the card, its "+" and its toggle stay together.
+    g.innerHTML = '<circle class="cx-bg" r="8"></circle><path class="cx-chev"></path>';
+    // After the card's own "+" so the card, its "+" and its marker stay together.
     var anchor = it.plus || it.el;
     anchor.parentNode.insertBefore(g, anchor.nextSibling);
     it.toggle = g;
@@ -182,22 +177,43 @@
   function paintToggle(it){
     var g = it.toggle;
     var closed = it.collapsed;
-    var label = closed ? String(Math.min(countBelow(it), 999)) : "−";
-    var width = closed ? Math.max(20, 9 + label.length * 6.5) : 18;
     var cx = it.x + it.w + 3;
     var cy = it.y + it.h - 11;
-    var rect = g.firstChild, text = g.lastChild;
-    rect.setAttribute("width", width);
-    rect.setAttribute("x", cx - width / 2);
-    rect.setAttribute("y", cy - 9);
-    if(closed){ rect.style.fill = it.accent; rect.style.stroke = ""; }
-    else{ rect.style.fill = ""; rect.style.stroke = it.accent; }
-    text.setAttribute("x", cx);
-    text.setAttribute("y", cy + 3.6);
-    text.textContent = label;
-    g.setAttribute("class", "cx-toggle " + (closed ? "is-closed" : "is-open"));
-    g.setAttribute("aria-expanded", String(!closed));
-    g.setAttribute("data-tip", closed ? "Show the " + countBelow(it) + " cause" + (countBelow(it) === 1 ? "" : "s") + " below this" : "Hide the causes below this");
+    var bg = g.firstChild, chev = g.lastChild;
+    bg.setAttribute("cx", cx);
+    bg.setAttribute("cy", cy);
+    bg.style.fill = closed ? it.accent : "#fff";
+    bg.style.stroke = closed ? "none" : it.accent;
+    chev.setAttribute("d", closed
+      ? "M" + (cx - 1.6) + "," + (cy - 3.2) + " L" + (cx + 1.6) + "," + cy + " L" + (cx - 1.6) + "," + (cy + 3.2)
+      : "M" + (cx - 3.2) + "," + (cy - 1.6) + " L" + cx + "," + (cy + 1.6) + " L" + (cx + 3.2) + "," + (cy - 1.6));
+    chev.style.stroke = closed ? "#fff" : it.accent;
+    it.el.classList.add("cx-branch");
+  }
+
+  // An edit button on each cause card (next to its flag), so renaming is a visible control and
+  // not a hidden double-click. It asks the diagram's own rename to start.
+  function addEdit(it){
+    var tag = it.el.querySelector(".ttag");
+    if(!tag || !/^CAUSE/i.test(tag.textContent.trim()) || it.el.querySelector(".cx-edit")) return;
+    var cx = it.x + it.w - 33, cy = it.y + 11;
+    var g = document.createElementNS(NS, "g");
+    g.setAttribute("class", "cx-edit");
+    g.setAttribute("role", "button");
+    g.setAttribute("tabindex", "0");
+    g.setAttribute("aria-label", "Edit this cause");
+    g.setAttribute("data-tip", "Edit this cause");
+    g.innerHTML = '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="#fff" stroke="#CBD5E1" stroke-width="1.2"></circle>'
+      + '<path d="M' + (cx - 3) + ',' + (cy + 3) + ' l.6,-2.2 L' + (cx + 2.2) + ',' + (cy - 3.4) + ' l1.6,1.6 L' + (cx - .6) + ',' + (cy + 2.4) + ' Z" fill="none" stroke="#94A3B8" stroke-width="1.2" stroke-linejoin="round"></path>';
+    function edit(event){
+      event.preventDefault();
+      event.stopPropagation();
+      it.el.dispatchEvent(new CustomEvent("editnode", { bubbles: true }));
+    }
+    g.addEventListener("click", edit);
+    g.addEventListener("pointerdown", function(event){ event.stopPropagation(); });
+    g.addEventListener("keydown", function(event){ if(event.key === "Enter" || event.key === " ") edit(event); });
+    it.el.appendChild(g);
   }
 
   function apply(){
@@ -288,6 +304,18 @@
     wrap.scrollTop = Math.max(0, cy - wrap.clientHeight / 2);
   }
 
+  // Clicking a card that has causes below it opens or closes that branch (a drag, or a click on the
+  // card's own buttons, does not).
+  var downAt = null;
+  content.addEventListener("pointerdown", function(event){ downAt = { x: event.clientX, y: event.clientY }; });
+  content.addEventListener("click", function(event){
+    if(event.target.closest(".pl, .flagbtn, .cx-edit")) return;
+    if(downAt && (Math.abs(event.clientX - downAt.x) > 5 || Math.abs(event.clientY - downAt.y) > 5)) return;
+    var g = event.target.closest("g.hitbox");
+    var it = g && byEl.get(g);
+    if(it && it.kids.length) toggle(it);
+  });
+
   // ---------------------------------------------------------------- start
   Array.prototype.slice.call(content.querySelectorAll(":scope > g.hitbox")).forEach(addItem);
   Array.prototype.slice.call(content.querySelectorAll(":scope > path")).forEach(function(p){
@@ -298,6 +326,7 @@
     lanes.push({ el: t, col: Math.round(parseFloat(t.getAttribute("x"))) });
   });
   link();
+  items.forEach(addEdit);
   // A small diagram needs no closing up; only a large one (the Crimp analysis) starts closed.
   function closeUp(){
     if(items.length > BIG) items.forEach(function(it){ it.collapsed = it.kids.length > 0 && !isFunction(it); });
@@ -385,10 +414,31 @@
       lanes = Array.prototype.slice.call(more).map(function(t){ return { el: t, col: Math.round(parseFloat(t.getAttribute("x"))) }; });
     }
     link();
+    fresh.forEach(addEdit);
     fresh.forEach(openPathTo);
     apply();
     if(fresh.length) centreOn(fresh[fresh.length - 1]);
   }
+
+  // An export carries the whole diagram: every branch is opened for the length of the export
+  // (which may be asynchronous), then the screen goes back to how it was.
+  window.treeWithAllOpen = function(run){
+    var saved = items.map(function(it){ return [it, it.collapsed]; });
+    var wrap = document.getElementById("treeWrap");
+    var left = wrap ? wrap.scrollLeft : 0, top = wrap ? wrap.scrollTop : 0;
+    items.forEach(function(it){ it.collapsed = false; });
+    apply();
+    function restore(){
+      saved.forEach(function(s){ s[0].collapsed = s[1]; });
+      apply();
+      if(wrap){ wrap.scrollLeft = left; wrap.scrollTop = top; }
+    }
+    var out;
+    try{ out = run(); }catch(error){ restore(); throw error; }
+    if(out && typeof out.then === "function") return out.then(function(r){ restore(); return r; }, function(error){ restore(); throw error; });
+    restore();
+    return out;
+  };
 
   // ---------------------------------------------------------------- toolbar
   var bar = document.querySelector("#treeWrap .treemodalbar");
