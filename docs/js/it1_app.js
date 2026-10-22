@@ -629,7 +629,7 @@
     var y2 = Number(rect.getAttribute("y")) + Number(rect.getAttribute("height")) / 2;
     var paths = Array.prototype.slice.call(treeContent.querySelectorAll("path"));
     return paths.find(function(p){
-      var d = p.getAttribute("d") || "";
+      var d = p.getAttribute("data-orig-d") || p.getAttribute("d") || "";
       var match = /[ ,](-?[\d.]+),(-?[\d.]+)\s*$/.exec(d.trim());
       if(!match) return false;
       return Math.abs(Number(match[1]) - x2) < 1.5 && Math.abs(Number(match[2]) - y2) < 1.5;
