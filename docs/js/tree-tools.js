@@ -5,31 +5,37 @@
   // hand for as long as it is held. The diagram itself is not touched, so removing this file
   // (and its <script> line) takes the tools away and leaves everything else as it was.
   var wrap = document.getElementById("treeWrap");
-  var bar = wrap && wrap.querySelector(".treemodalbar");
   var zoom = document.getElementById("treeZoom");
-  if(!wrap || !bar || !zoom) return;
+  if(!wrap || !zoom) return;
 
   var tool = "select";   // "select" | "hand"
   var spaceHeld = false;
   var panning = null;
 
   var style = document.createElement("style");
+  // The tools sit in a small bar fixed at the bottom centre of the view, like the overview map at
+  // the bottom left, so they stay put while the diagram scrolls.
   style.textContent =
-    ".tt-tools button.on{background:var(--p50);border-color:var(--p300);color:var(--p700)}"
-    + ".tt-tools button svg{display:block;margin:auto}"
+    ".tt-tools{display:none;position:fixed;left:50%;bottom:30px;transform:translateX(-50%);z-index:6;align-items:center;gap:6px;padding:6px;"
+    + "background:#fff;border:1px solid #E4EAF2;border-radius:12px;box-shadow:0 10px 28px -8px rgba(15,23,42,.28),0 2px 6px rgba(15,23,42,.08)}"
+    + "#treeWrap.open .tt-tools{display:flex}"
+    + ".tt-tools button{width:32px;height:32px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid transparent;border-radius:8px;background:transparent;color:#475569;cursor:pointer}"
+    + ".tt-tools button:hover{background:#F1F5F9}"
+    + ".tt-tools button.on{background:var(--p50);border-color:var(--p300);color:var(--p700)}"
     + "#treeWrap.hand-on #treeZoom,#treeWrap.hand-on #treeZoom *{cursor:grab!important}"
     + "#treeWrap.hand-on.panning #treeZoom,#treeWrap.hand-on.panning #treeZoom *{cursor:grabbing!important}";
   document.head.appendChild(style);
 
   var group = document.createElement("div");
-  group.className = "tzoom tt-tools";
-  group.style.marginRight = "22px";
+  group.className = "tt-tools";
+  group.setAttribute("role", "toolbar");
+  group.setAttribute("aria-label", "Diagram tools");
   group.innerHTML =
     '<button type="button" data-tool="select" data-tip="Select (V): click cards and branches. This is the normal pointer.">'
     + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l14 7-6 2-2 6z"/></svg></button>'
     + '<button type="button" data-tool="hand" data-tip="Hand (H): drag anywhere to move around the diagram. Hold Space for a moment.">'
     + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 11V6a2 2 0 0 0-4 0v1"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.4L3.4 16a2 2 0 0 1 3.2-2.4L8 15"/></svg></button>';
-  bar.insertBefore(group, bar.firstChild.nextSibling);
+  wrap.appendChild(group);
 
   function handActive(){ return tool === "hand" || spaceHeld; }
   function paint(){
