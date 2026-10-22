@@ -116,5 +116,8 @@
     }
     document.getElementById("reqSpecs").innerHTML = window.DfmeaReqDocs.specTableHtml(reqDoc);
     window.DfmeaReqDocs.enhanceSpecTable(document.getElementById("reqSpecs"), reqDoc);
+    // The table's search, filter and count sit in the same line as the specification's name and file.
+    var specBar = document.querySelector("#reqSpecs .tt-bar");
+    if(specBar) document.querySelector(".req-head").insertBefore(specBar, document.getElementById("reqOpen"));
   }
 })();
