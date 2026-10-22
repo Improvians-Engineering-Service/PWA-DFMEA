@@ -1219,4 +1219,4 @@ a[data-tip],button[data-tip],tr[data-tip],.ai-link,.ai-sum,.ai-toggle,.theme-btn
 .tt-foot{padding:6px 14px}
 /* two tables on one page share the screen */
 body.two-tables .tt-scroll,body.two-tables .spec-scroll{max-height:max(150px,calc(50vh - 170px))}
-body.two-tables #reqSpecs .spec-scroll{max-height:60vh}
+body.two-tables #reqSpecs .spec-scroll{max-height:65vh}
