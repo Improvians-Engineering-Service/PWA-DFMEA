@@ -106,51 +106,30 @@
   }
 
   // ---------------------------------------------------------------- layout
-  // Closes the diagram up around what is showing: every visible leaf takes the next free slot in
-  // its column, and a card with visible children is centred on them (pushing its branch down if
-  // that would overlap the card above it).
+  // Closes the diagram up around what is showing. A card never moves because of what is below or
+  // beside it to the right: its causes stack down from its own top, and only the cards that come
+  // after its branch (further down) make room. So opening a card leaves it, and everything to its
+  // left and above, exactly where it is.
   function layout(){
-    var free = {};
     items.forEach(function(it){ it.shown = false; });
-    function shift(it, by){
-      it.ny += by;
-      free[it.col] = Math.max(free[it.col] || 0, it.ny + it.h + GAP);
-      if(!it.collapsed) it.kids.forEach(function(k){ shift(k, by); });
-    }
-    function bottomOf(it){
-      var b = it.ny + it.h;
-      if(!it.collapsed) it.kids.forEach(function(k){ b = Math.max(b, bottomOf(k)); });
-      return b;
-    }
-    function place(it, minY){
+    // Places a card at y with its open causes below it; returns the bottom of the whole branch.
+    function place(it, y){
       it.shown = true;
-      var kids = it.collapsed ? [] : it.kids;
-      if(!kids.length){
-        it.ny = Math.max(minY, free[it.col] || 0);
-        free[it.col] = it.ny + it.h + GAP;
-        return;
-      }
-      var cursor = minY;
-      kids.forEach(function(k){
-        place(k, cursor);
-        cursor = bottomOf(k) + GAP;
-      });
-      var first = kids[0], last = kids[kids.length - 1];
-      var centre = (first.ny + first.h / 2 + last.ny + last.h / 2) / 2;
-      var y = centre - it.h / 2;
-      var floor = free[it.col] || 0;
-      if(y < floor){
-        var by = floor - y;
-        kids.forEach(function(k){ shift(k, by); });
-        y = floor;
-      }
       it.ny = y;
-      free[it.col] = y + it.h + GAP;
+      var bottom = y + it.h;
+      if(!it.collapsed){
+        var at = y;
+        it.kids.forEach(function(k){
+          var kidBottom = place(k, at);
+          bottom = Math.max(bottom, kidBottom);
+          at = kidBottom + GAP;
+        });
+      }
+      return bottom;
     }
     var cursor = TOP_PAD;
     items.filter(function(it){ return !it.parent; }).sort(function(a, b){ return a.y - b.y; }).forEach(function(root){
-      place(root, cursor);
-      cursor = bottomOf(root) + GAP;
+      cursor = place(root, cursor) + GAP;
     });
   }
 
