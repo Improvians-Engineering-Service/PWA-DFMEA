@@ -1566,7 +1566,7 @@
     Array.prototype.slice.call(clone.querySelectorAll(".pl, .cx-toggle, .cx-edit")).forEach(function(plus){ plus.remove(); });
     dressForExport(clone);
     var style = svgElement("style", {});
-    style.textContent = ".hitbox>rect:nth-of-type(2){rx:12;stroke-width:1.2;filter:drop-shadow(0 3px 5px rgba(15,23,42,.10))}.hitbox .ttag{font-size:8px;letter-spacing:.65px}.hitbox .ttl2{font-size:11px;font-weight:600}.hitbox .tsub{font-size:9px}.hitbox.is-tbd>rect:nth-of-type(2){fill:#FEF2F2;stroke:#FCA5A5}.hitbox.is-tbd>rect:nth-of-type(3){fill:#EF4444}.hitbox.is-tbd .ttag,.hitbox.is-tbd .ttl2,.hitbox.is-tbd .tsub{fill:#B91C1C}.local-cause-link{stroke:#0F766E;stroke-dasharray:6 4}";
+    style.textContent = ".hitbox>rect:nth-of-type(2){rx:12;stroke-width:1.2;filter:drop-shadow(0 3px 5px rgba(15,23,42,.10))}.hitbox .ttag{font-size:8px;letter-spacing:.65px}.hitbox .ttl2{font-size:11px;font-weight:600}.hitbox .tsub{font-size:9px}.hitbox.is-tbd>rect:nth-of-type(2){fill:#FEF2F2;stroke:#FCA5A5}.hitbox.is-tbd>rect:nth-of-type(3){fill:#EF4444}.hitbox.is-tbd .ttag,.hitbox.is-tbd .ttl2,.hitbox.is-tbd .tsub{fill:#B91C1C}.local-cause-link{stroke:#0F766E;stroke-dasharray:6 4}" + (window.treeColorCss || "");
     clone.insertBefore(style, clone.firstChild);
     var source = new XMLSerializer().serializeToString(clone);
     downloadBlob(new Blob([source], { type: "image/svg+xml;charset=utf-8" }), "Crimp-DFMEA-Risk-Tree.svg");
@@ -1597,7 +1597,7 @@
       var background = svgElement("rect", { x: 0, y: 0, width: width, height: height, fill: "#FFFFFF" });
       clone.insertBefore(background, clone.firstChild);
       var style = svgElement("style", {});
-      style.textContent = ".hitbox>rect:nth-of-type(2){rx:12;stroke-width:1.2;filter:drop-shadow(0 3px 5px rgba(15,23,42,.10))}.hitbox .ttag{font-size:8px;letter-spacing:.65px}.hitbox .ttl2{font-size:11px;font-weight:600}.hitbox .tsub{font-size:9px}.hitbox.is-tbd>rect:nth-of-type(2){fill:#FEF2F2;stroke:#FCA5A5}.hitbox.is-tbd>rect:nth-of-type(3){fill:#EF4444}.hitbox.is-tbd .ttag,.hitbox.is-tbd .ttl2,.hitbox.is-tbd .tsub{fill:#B91C1C}.local-cause-link{stroke:#0F766E;stroke-dasharray:6 4}";
+      style.textContent = ".hitbox>rect:nth-of-type(2){rx:12;stroke-width:1.2;filter:drop-shadow(0 3px 5px rgba(15,23,42,.10))}.hitbox .ttag{font-size:8px;letter-spacing:.65px}.hitbox .ttl2{font-size:11px;font-weight:600}.hitbox .tsub{font-size:9px}.hitbox.is-tbd>rect:nth-of-type(2){fill:#FEF2F2;stroke:#FCA5A5}.hitbox.is-tbd>rect:nth-of-type(3){fill:#EF4444}.hitbox.is-tbd .ttag,.hitbox.is-tbd .ttl2,.hitbox.is-tbd .tsub{fill:#B91C1C}.local-cause-link{stroke:#0F766E;stroke-dasharray:6 4}" + (window.treeColorCss || "");
       clone.insertBefore(style, clone.firstChild);
       var xml = new XMLSerializer().serializeToString(clone);
       var url = URL.createObjectURL(new Blob([xml], { type: "image/svg+xml;charset=utf-8" }));
@@ -1743,6 +1743,7 @@
   // cause's category) so the badges never drift out of sync with them.
   function refreshDmBadges(){
     Array.prototype.slice.call(svg.querySelectorAll(".dm-badge")).forEach(function(b){ b.remove(); });
+    Array.prototype.slice.call(svg.querySelectorAll(".is-mfg")).forEach(function(el){ el.classList.remove("is-mfg"); });
     var designTexts = new Set(), mfgTexts = new Set();
     Array.prototype.slice.call(tableBody.querySelectorAll("tr")).forEach(function(row){
       var d = row.cells[21] && row.cells[21].textContent.trim();
@@ -1754,6 +1755,7 @@
       var isDesign = designTexts.has(item.title);
       var isMfg = mfgTexts.has(item.title);
       if(!isDesign && !isMfg) return;
+      if(isMfg && item.el) item.el.classList.add("is-mfg");
       var rect = nodeBox(item);
       if(!rect || !item.el) return;
       var bx = Number(rect.getAttribute("x")), by = Number(rect.getAttribute("y"));
@@ -1763,7 +1765,7 @@
       [isDesign ? { letter: "D", fill: "#4338CA", tip: "Deepest cause on the Design side of this chain (from the client's Summary column)." } : null,
        isMfg ? { letter: "M", fill: "#B45309", tip: "Deepest cause on the Manufacturing side of this chain (from the client's Summary column)." } : null]
         .filter(Boolean).forEach(function(badge){
-          var g = svgElement("g", { "class": "dm-badge", "data-tip": badge.tip });
+          var g = svgElement("g", { "class": "dm-badge" + (badge.letter === "M" ? " dm-m" : ""), "data-tip": badge.tip });
           g.appendChild(svgElement("circle", { cx: cx, cy: cy, r: 7.5, fill: badge.fill, stroke: "#fff", "stroke-width": 1.3 }));
           var t = svgElement("text", { x: cx, y: cy + 2.8, "text-anchor": "middle", "font-size": "7.5", "font-weight": "700", fill: "#fff" });
           t.textContent = badge.letter;
