@@ -299,8 +299,32 @@
   });
   link();
   // A small diagram needs no closing up; only a large one (the Crimp analysis) starts closed.
-  if(items.length > BIG) items.forEach(function(it){ if(it.kids.length && !isFunction(it)) it.collapsed = true; });
+  function closeUp(){
+    if(items.length > BIG) items.forEach(function(it){ it.collapsed = it.kids.length > 0 && !isFunction(it); });
+  }
+  closeUp();
   apply();
+
+  // Closing the full view puts the diagram back to how it first appeared: branches closed again,
+  // and the search highlights and path dimming cleared.
+  var treeWrap = document.getElementById("treeWrap");
+  if(treeWrap){
+    var wasOpen = treeWrap.classList.contains("open");
+    new MutationObserver(function(){
+      var open = treeWrap.classList.contains("open");
+      if(wasOpen && !open){
+        closeUp();
+        apply();
+        Array.prototype.slice.call(svg.querySelectorAll(".dim, .search-hit, .search-current, .node-flash")).forEach(function(el){
+          el.classList.remove("dim", "search-hit", "search-current", "node-flash");
+        });
+        svg.classList.remove("searching");
+        treeWrap.scrollLeft = 0;
+        treeWrap.scrollTop = 0;
+      }
+      wasOpen = open;
+    }).observe(treeWrap, { attributes: true, attributeFilter: ["class"] });
+  }
 
   // A cause added, moved or removed later (the "+" buttons, drag to re-parent, undo) joins the
   // diagram: it opens the branch it was added to so it is not hidden the moment it is made.
