@@ -1238,3 +1238,4 @@ body.two-tables #reqSpecs .spec-scroll{max-height:70vh}
 .tt-bar .csel-btn,.dw-tbar .csel-btn{height:30px}
 .pagesize{white-space:nowrap;flex:none}
 .pagesize .csel,.pagesize .csel-btn{flex:none;white-space:nowrap}
+.tbar .fl{white-space:nowrap}
