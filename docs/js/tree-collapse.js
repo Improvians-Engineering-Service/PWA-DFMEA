@@ -345,6 +345,11 @@
     }).observe(treeWrap, { attributes: true, attributeFilter: ["class"] });
   }
 
+  // The page hides the diagram until it is closed up (see #cxHold in the page head), so the open
+  // version never flashes; it shows from here.
+  var hold = document.getElementById("cxHold");
+  if(hold) hold.remove();
+
   // A cause added, moved or removed later (the "+" buttons, drag to re-parent, undo) joins the
   // diagram: it opens the branch it was added to so it is not hidden the moment it is made.
   var pending = false;
